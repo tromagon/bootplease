@@ -1,0 +1,49 @@
+includepath
+{
+	../src/commands
+	../src/core
+	../src/events
+	../src/injection
+	../src/sequence
+	../src/tween
+	../src/utils
+}
+
+
+files
+{
+	[src/commands]
+	(../src/commands)
+	"*.h"
+	"*.cpp"
+	
+	[src/core]
+	(../src/core)
+	"*.h"
+	"*.cpp"
+	
+	[src/events]
+	(../src/events)
+	"*.h"
+	"*.cpp"
+	
+	[src/injection]
+	(../src/injection)
+	"*.h"
+	"*.cpp"
+	
+	[src/sequence]
+	(../src/sequence)
+	"*.h"
+	"*.cpp"
+	
+	[src/tween]
+	(../src/tween)
+	"*.h"
+	"*.cpp"
+	
+	[src/utils]
+	(../src/utils)
+	"*.h"
+	"*.cpp"
+}

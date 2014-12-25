@@ -40,4 +40,6 @@ Thumbs.db
 #######################
 examples/tests/build_tests_vc11/
 examples/tests/data-ram/
+marmalade/build_bootplease_lib_vc11
+marmalade/lib/
 *.free

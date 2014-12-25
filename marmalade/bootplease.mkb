@@ -2,4 +2,4 @@ option lib
 option enable-exceptions=1
 option cflags="-std=gnu++0x"
 
-subproject bootplease
+subproject bootplease-framework

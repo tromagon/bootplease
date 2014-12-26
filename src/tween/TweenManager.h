@@ -3,6 +3,7 @@
 
 #include "Updateable.h"
 #include "Tween.h"
+#include "Display.h"
 #include <vector>
 
 using namespace std;

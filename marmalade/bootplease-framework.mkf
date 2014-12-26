@@ -10,6 +10,7 @@ includepath
 	../src/events
 	../src/injection
 	../src/sequence
+	../src/screen
 	../src/tween
 	../src/utils
 }
@@ -38,6 +39,11 @@ files
 	
 	[src/sequence]
 	(../src/sequence)
+	"*.h"
+	"*.cpp"
+	
+	[src/screen]
+	(../src/screen)
 	"*.h"
 	"*.cpp"
 	

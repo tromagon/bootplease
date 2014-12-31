@@ -8,12 +8,22 @@ Tests::Tests()
 	mediatorFactory = new MediatorFactory();
 
 	mediatorMap = new MediatorMap();
-	mediatorMap->Map(SomeView::VIEW_ID, &ViewFactory::GetSomeView, *viewFactory).To(&MediatorFactory::GetSomeMediator, *mediatorFactory);
 
 	View* someView = mediatorMap->GetView(SomeView::VIEW_ID);
+	if (!someView)
+	{
+		cout << "SomeView could not be found" << endl;
+	}
+
+	mediatorMap->Map(SomeView::VIEW_ID, &ViewFactory::GetSomeView, *viewFactory).To(&MediatorFactory::GetSomeMediator, *mediatorFactory);
+	someView = mediatorMap->GetView(SomeView::VIEW_ID);
+
+
 }
 
 Tests::~Tests()
 {
 	delete mediatorMap;
+	delete mediatorFactory;
+	delete viewFactory;
 }

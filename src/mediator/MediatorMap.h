@@ -58,6 +58,8 @@ protected:
 	IMapperSpec* m_Spec;
 
 public:
+	virtual ~BaseMapper() { delete m_Spec; }
+
 	template<class C>
 	D&	(C::*GetFunction())()	{ return (static_cast<MapperSpec<D, C>*>(m_Spec))->GetFunction(); }
 
@@ -116,7 +118,7 @@ public:
 public:
 	MediatorMapItem(const char* id, ViewMapper& viewMapper) 
 		: m_Id(id), m_ViewMapper(viewMapper), m_MediatorMapper(*(new MediatorMapper())) {}
-	~MediatorMapItem() {}
+	~MediatorMapItem();
 };
 
 
@@ -135,7 +137,7 @@ public:
 public:
 	ViewMediatorItem(const char* id, View& view, Mediator& mediator) 
 		: m_Id(id), m_View(view), m_Mediator(mediator) {}
-	~ViewMediatorItem() {}
+	~ViewMediatorItem();
 };
 
 
@@ -147,15 +149,20 @@ private:
 
 public:
 	MediatorMap() {}
-	~MediatorMap() {}
+	~MediatorMap();
 
 	template<class C>
 	MediatorMapper& Map(const char* id, View& (C::*fct)(), C& proxy);
-
-	View* GetView(const char* id);
+	
+	View*	GetView(const char* id);
+	void	UnMap(const char* id);
+	void	DisposeView(View& view);
+	void	DisposeViewById(const char* id);
 
 private:
-	View* GetViewInstance(const char* id);
+	View*	GetViewInstance(const char* id);
+	void	UnMapAll();
+	void	DisposeAll();
 };
 
 template<class C>

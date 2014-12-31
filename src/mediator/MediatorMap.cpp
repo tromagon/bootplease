@@ -103,7 +103,7 @@ View* MediatorMap::GetViewInstance(const char* id)
 void MediatorMap::UnMapAll()
 {
 	const unsigned short l = m_Map.size();
-	for (unsigned int i = l - 1 ; i >= 0 ; i--)
+	for (int i = l - 1 ; i >= 0 ; i--)
 	{
 		MediatorMapItem* item = m_Map[i];
 		m_Map.erase(m_Map.begin() + i);
@@ -114,7 +114,7 @@ void MediatorMap::UnMapAll()
 void MediatorMap::DisposeAll()
 {
 	const unsigned short l = m_VmList.size();
-	for (unsigned int i = l - 1 ; i >= 0 ; i--)
+	for (int i = l - 1 ; i >= 0 ; i--)
 	{
 		ViewMediatorItem* item = m_VmList[i];
 		m_VmList.erase(m_VmList.begin() + i);

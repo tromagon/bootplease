@@ -1,58 +1,45 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
-class Display
+class IDisplay
 {
-private:
-	int		m_X;
-	int		m_Y;
-	int		m_Width;
-	int		m_Height;
-	float	m_ScaleX;
-	float	m_ScaleY;
-	float	m_Rotation;
-	float	m_Alpha;
-	int		m_ScreenWidth;
-	int		m_ScreenHeight;
 
 public:
-	 int	GetX()						{ return m_X; }
-	 void	SetX(int value)				{ m_X = value; }
+	 virtual int	GetX()						{ return 0; }
+	 virtual void	SetX(int value)				{}
 
-	 int	GetY()						{ return m_Y; }
-	 void	SetY(int value)				{ m_Y = value; }
+	 virtual int	GetY()						{ return 0; }
+	 virtual void	SetY(int value)				{}
 
-	 int	GetWidth()					{ return m_Width; }
-	 void	SetWidth(int value)			{ m_Width = value; }
+	 virtual int	GetWidth()					{ return 0; }
+	 virtual void	SetWidth(int value)			{}
 
-	 int	GetHeight()					{ return m_Height; }
-	 void	SetHeight(int value)		{ m_Height = value; }
+	 virtual int	GetHeight()					{ return 0; }
+	 virtual void	SetHeight(int value)		{}
 
-	 float	GetRotation()				{ return m_Rotation; }
-	 void	SetRotation(float value)	{ m_Rotation = value; }
+	 virtual float	GetRotation()				{ return 0; }
+	 virtual void	SetRotation(float value)	{}
 
-	 float	GetScaleX()					{ return m_ScaleX; }
-	 void	SetScaleX(float value)		{ m_ScaleX = value; }
+	 virtual float	GetScaleX()					{ return 0; }
+	 virtual void	SetScaleX(float value)		{}
 
-	 float	GetScaleY()					{ return m_ScaleY; }
-	 void	SetScaleY(float value)		{ m_ScaleY = value; }
+	 virtual float	GetScaleY()					{ return 0; }
+	 virtual void	SetScaleY(float value)		{}
 
-	 float	GetAlpha()					{ return m_Alpha; }
-	 void	SetAlpha(float value)		{ m_Alpha = value; }
+	 virtual float	GetAlpha()					{ return 0; }
+	 virtual void	SetAlpha(float value)		{}
 
-	 int	GetScreenWidth()			{ return 0; }
-	 void	SetScreenWidth(int value)	{ m_ScreenWidth = value; }
+	 virtual int	GetScreenWidth()			{ return 0; }
+	 virtual void	SetScreenWidth(int value)	{}
 
-	 int	GetScreenHeight()			{ return 0; }
-	 void	SetScreenHeight(int value)	{ m_ScreenHeight = value; }
+	 virtual int	GetScreenHeight()			{ return 0; }
+	 virtual void	SetScreenHeight(int value)	{}
 
-
+	 virtual bool	HitTest(int x, int y)		{ return false; }
 
 public:
-	Display() : m_X(0), m_Y(0), m_Width(0), m_Height(0), 
-		 m_ScaleX(1), m_ScaleY(1), m_Rotation(0), m_Alpha(1) {}
-
-	virtual ~Display() {}
+	IDisplay() {}
+	virtual ~IDisplay() {}
 };
 
 #endif

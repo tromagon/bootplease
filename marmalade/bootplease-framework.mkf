@@ -9,6 +9,7 @@ includepath
 	../src/core
 	../src/events
 	../src/injection
+	../src/mediator
 	../src/sequence
 	../src/screen
 	../src/tween
@@ -34,6 +35,11 @@ files
 	
 	[src/injection]
 	(../src/injection)
+	"*.h"
+	"*.cpp"
+
+	[src/mediator]
+	(../src/mediator)
 	"*.h"
 	"*.cpp"
 	

@@ -21,7 +21,7 @@ public:
 	void		Update(float deltaTime = 0.0f) override;
 
 	template<class C>
-	C&			CreateTween(Display& target);
+	C&			CreateTween(IDisplay& target);
 
 private:
 	void		AddTween(Tween& tween);
@@ -32,7 +32,7 @@ private:
 };
 
 template<class C>
-C& TweenManager::CreateTween(Display& target)
+C& TweenManager::CreateTween(IDisplay& target)
 {
 	C* c = new C(target);
 	AddTween(*c);

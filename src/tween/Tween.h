@@ -194,7 +194,7 @@ private:
 
 };
 
-typedef TweenSpec<int, Display, &Display::GetX, &Display::SetX> TweenX;
+typedef TweenSpec<int, IDisplay, &IDisplay::GetX, &IDisplay::SetX> TweenX;
 
 
 #endif

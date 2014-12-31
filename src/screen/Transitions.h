@@ -11,13 +11,13 @@ public:
 	static const float DEFAULT_ANIMATION_TIME;
 
 protected:
-	Display*		m_NextScreen;
-	Display*		m_PreviousScreen;
+	IDisplay*		m_NextScreen;
+	IDisplay*		m_PreviousScreen;
 	TweenManager*	m_TweenManager;
 
 public:
-	void	SetNextScreen(Display& value)		{ m_NextScreen = &value; };
-	void	SetPreviousScreen(Display& value)	{ m_PreviousScreen = &value; };
+	void	SetNextScreen(IDisplay& value)		{ m_NextScreen = &value; };
+	void	SetPreviousScreen(IDisplay& value)	{ m_PreviousScreen = &value; };
 	void	SetTweenManager(TweenManager& value)		{ m_TweenManager = &value; };
 
 public:

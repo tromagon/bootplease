@@ -4,6 +4,13 @@
 #include "MediatorMap.h"
 #include <iostream>
 
+class ModelA {};
+
+class InjectionID
+{
+public:
+	static const char* MODEL_A;
+};
 
 class SomeView : public View
 {
@@ -21,6 +28,8 @@ class SomeMediator : public Mediator
 public:
 	SomeMediator() {};
 	~SomeMediator() {};	
+
+	void OnInitialized() override;
 };
 
 

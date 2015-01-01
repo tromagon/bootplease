@@ -1,13 +1,15 @@
 #include "Injector.h"
 
-Injector::Injector()
+void Injector::SetCommandMap(ICommandMap& commandMap)
 {
-	m_CommandMap = new CommandMap(m_Dispatcher);
+	m_CommandMap = &commandMap;
+	m_CommandMap->SetInjector(*this);
 }
 
-Injector::~Injector()
+void Injector::SetMediatorMap(IMediatorMap& mediatorMap)
 {
-	delete m_CommandMap;
+	m_MediatorMap = &mediatorMap;
+	m_MediatorMap->SetInjector(*this);
 }
 
 void Injector::UnMap(const char* id)

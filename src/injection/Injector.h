@@ -3,9 +3,11 @@
 
 #include "EventDispatcher.h"
 #include "Command.h"
+#include "MediatorMap.h"
 #include <vector>
 
 using namespace std;
+
 
 class InjectorMappingSpecBase
 {
@@ -51,15 +53,21 @@ class Injector
 private:
 	EventDispatcher				m_Dispatcher;
 	vector<InjectorMapping*>	m_Maps;
-	CommandMap*					m_CommandMap;
+	ICommandMap*				m_CommandMap;
+	IMediatorMap*				m_MediatorMap;
 
 public:
-	EventDispatcher&	GetDispatcher() { return m_Dispatcher; }
-	CommandMap&			GetCommandMap() { return *m_CommandMap; }
+	EventDispatcher&	GetDispatcher()								{ return m_Dispatcher; }
+
+	ICommandMap&		GetCommandMap()								{ return *m_CommandMap; }
+	void				SetCommandMap(ICommandMap& commandMap);
+
+	IMediatorMap&		GetMediatorMap()							{ return *m_MediatorMap; }
+	void				SetMediatorMap(IMediatorMap& mediatorMap);
 
 public:
-	Injector();
-	~Injector();
+	Injector() {};
+	~Injector() {};
 
 	void	UnMap(const char* id);
 

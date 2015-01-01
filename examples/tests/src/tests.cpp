@@ -170,9 +170,15 @@ CommandMapTest::CommandMapTest()
 {
 	cout << "----------- Start CommandMapTest Test" << endl;
 
+	Injector injector;
+	ModelA* modelA = new ModelA();
+	injector.Map(modelA, InjectionID::MODEL_A);
+
 	EventDispatcher dispatcher;
 	CommandMap commandMap(dispatcher);
 	CommandFactory commandFactory;
+
+	injector.SetCommandMap(commandMap);
 
 	commandMap.Map(ExampleEvent::INIT, &CommandFactory::GetExampleCommandA, commandFactory);
 	commandMap.Map(ExampleEvent::INIT, &CommandFactory::GetExampleCommandB, commandFactory);
@@ -192,6 +198,11 @@ CommandMapTest::CommandMapTest()
 void ExampleCommandA::execute()
 {
 	cout << "ExampleCommandA is executing with event " << GetEvent().GetType() << endl;
+
+	if (GetInjector().GetInstanceById<ModelA>(InjectionID::MODEL_A))
+	{
+		cout << "Model A found in injector" << endl; 
+	}
 }
 
 void ExampleCommandB::execute()
@@ -215,7 +226,7 @@ void ExampleCommandB::onEvent(Event& evt)
 TweenTest::TweenTest()
 {
 	tweenManager = new TweenManager();
-	display = new Display();
+	display = new IDisplay();
 
 	TweenX& tweenX = tweenManager->CreateTween<TweenX>(*display);
 	tweenX.AddListener(TweenEvent::START, &TweenTest::onTweenStart, *this);

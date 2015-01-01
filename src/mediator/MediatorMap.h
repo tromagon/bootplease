@@ -2,6 +2,7 @@
 #define _MEDIATORMAP_H_
 
 #include "EventDispatcher.h"
+#include "Injected.h"
 #include <vector>
 
 using namespace std;
@@ -14,11 +15,31 @@ public:
 };
 
 
+class IMediatorMap : public Injected
+{
+public:
+	IMediatorMap() {}
+	virtual ~IMediatorMap() {}
+};
+
+
 class Mediator
 {
+private:
+	IMediatorMap*		m_MediatorMap;
+
+public:
+	IMediatorMap&		GetMediatorMap()						{ return *m_MediatorMap; }
+	void				SetMediatorMap(IMediatorMap& value)		{ m_MediatorMap = &value; }
+
+protected:
+	Injector&			GetInjector() 	{ return m_MediatorMap->GetInjector(); }
+
 public:
 	Mediator() {}
 	virtual ~Mediator() {}
+
+	virtual void OnInitialized() {};
 };
 
 
@@ -141,7 +162,7 @@ public:
 };
 
 
-class MediatorMap
+class MediatorMap : public IMediatorMap
 {
 private:
 	vector<MediatorMapItem*>	m_Map;

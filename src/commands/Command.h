@@ -2,23 +2,37 @@
 #define _COMMAND_H_
 
 #include "EventDispatcher.h"
+#include "Injected.h"
 
-class CommandMap;
+
+class Command;
+
+
+class ICommandMap : public Injected
+{
+public:
+	virtual void		Detain(Command& command) {};
+	virtual void		Release(Command& command) {};
+};
+
 
 class Command
 {
 private:
 	EventDispatcher*	m_Dispatcher;
-	CommandMap*			m_CommandMap;
+	ICommandMap*		m_CommandMap;
 	Event*				m_Event;
 
 public:
 	EventDispatcher&	GetDispatcher()								{ return *m_Dispatcher; }
 	void				SetDispatcher(EventDispatcher& dispatcher)	{ m_Dispatcher = &dispatcher; }
-	CommandMap&			GetCommandMap()								{ return *m_CommandMap; }
-	void				SetCommandMap(CommandMap& commandMap)		{ m_CommandMap = &commandMap; }
+	ICommandMap&		GetCommandMap()								{ return *m_CommandMap; }
+	void				SetCommandMap(ICommandMap& commandMap)		{ m_CommandMap = &commandMap; }
 	Event&				GetEvent()									{ return *m_Event; }
 	void				SetEvent(Event& evt)						{ m_Event = &evt; }
+
+protected:
+	Injector&			GetInjector()								{ return m_CommandMap->GetInjector(); }
 
 public:
 	Command() {}
@@ -76,7 +90,7 @@ public:
 };
 
 
-class CommandMap
+class CommandMap : public ICommandMap
 {
 private:
 	EventDispatcher&			m_Dispatcher;
@@ -87,8 +101,8 @@ public:
 	explicit CommandMap(EventDispatcher& dispatcher) : m_Dispatcher(dispatcher) {}
 	~CommandMap() {}
 
-	void				Detain(Command& command);
-	void				Release(Command& command);
+	void				Detain(Command& command) override;
+	void				Release(Command& command) override;
 
 	template<class C>
 	void				Map(const char* eventType, Command& (C::*fct)(), C& proxy);

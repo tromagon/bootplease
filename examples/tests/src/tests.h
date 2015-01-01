@@ -134,7 +134,7 @@ public:
 class TweenTest
 {
 public:
-	Display*		display;
+	IDisplay*		display;
 	TweenManager*	tweenManager;
 
 public:

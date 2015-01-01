@@ -32,6 +32,8 @@ View* MediatorMap::GetView(const char* id)
 		{
 			view = &(item.GetViewInstance());
 			Mediator& mediator = item.GetMediatorInstance();
+			mediator.SetMediatorMap(*this);
+			mediator.OnInitialized();
 
 			ViewMediatorItem* vm = new ViewMediatorItem(id, *view, mediator); 
 			m_VmList.push_back(vm);

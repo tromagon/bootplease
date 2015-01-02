@@ -38,8 +38,29 @@ public:
 	Command() {}
 	virtual ~Command() {}
 
+	template<class C>
+	int		AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+
+	template<class C>
+	void	RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+
+	void	DispatchContextEvent(Event& evt);
+
 	virtual void execute() {};
 };
+
+
+template<class C>
+int Command::AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+{
+	return GetDispatcher().AddListener(eventType, fct, proxy);
+}
+
+template<class C>
+void Command::RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+{
+	GetDispatcher().RemoveListener(eventType, fct, proxy);
+}
 
 class CommandMapItemSpecBase
 {

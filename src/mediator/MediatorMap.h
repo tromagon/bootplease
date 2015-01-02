@@ -42,10 +42,10 @@ protected:
 	Injector&			GetInjector() 	{ return m_MediatorMap->GetInjector(); }
 
 	template<class C>
-	int		AddContextListener(const char* eventType, void (C::*fct)(Event&));
+	int		AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
 
 	template<class C>
-	void	RemoveContextListener(const char* eventType, void (C::*fct)(Event&));
+	void	RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
 
 	void	DispatchContextEvent(Event& evt);
 
@@ -58,15 +58,15 @@ public:
 
 
 template<class C>
-int Mediator::AddContextListener(const char* eventType, void (C::*fct)(Event&))
+int Mediator::AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
 {
-	m_MediatorMap->GetDispatcher()->AddListener(eventType, fct, *this);
+	return m_MediatorMap->GetDispatcher()->AddListener(eventType, fct, proxy);
 }
 
 template<class C>
-void Mediator::RemoveContextListener(const char* eventType, void (C::*fct)(Event&))
+void Mediator::RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
 {
-	m_MediatorMap->GetDispatcher()->RemoveListener(eventType, fct, *this);
+	m_MediatorMap->GetDispatcher()->RemoveListener(eventType, fct, proxy);
 }
 
 

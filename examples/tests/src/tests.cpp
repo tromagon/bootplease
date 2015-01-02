@@ -211,12 +211,12 @@ void ExampleCommandB::execute()
 
 	GetCommandMap().Detain(*this);
 
-	GetDispatcher().AddListener(ExampleEvent::COMPLETE, &ExampleCommandB::onEvent, *this);
+	AddContextListener(ExampleEvent::COMPLETE, &ExampleCommandB::onEvent, *this);
 }
 
 void ExampleCommandB::onEvent(Event& evt)
 {
-	GetDispatcher().RemoveListener(ExampleEvent::COMPLETE, &ExampleCommandB::onEvent, *this);
+	RemoveContextListener(ExampleEvent::COMPLETE, &ExampleCommandB::onEvent, *this);
 
 	cout << "ExampleCommandB is releasing" << endl;
 

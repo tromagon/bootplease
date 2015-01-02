@@ -1,6 +1,11 @@
 #include "Command.h"
 #include "EventDispatcher.h"
 
+void Command::DispatchContextEvent(Event& evt)
+{
+	GetDispatcher().Dispatch(evt);
+}
+
 void CommandMap::Detain(Command& command)
 {
 	m_Detained.push_back(&command);

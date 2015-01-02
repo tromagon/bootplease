@@ -1,5 +1,4 @@
 #include "tests.h"
-#include "Easing.h"
 
 #include <iostream>
 
@@ -192,6 +191,9 @@ CommandMapTest::CommandMapTest()
 	commandMap.UnMap(ExampleEvent::INIT, &CommandFactory::GetExampleCommandA, commandFactory);
 	commandMap.UnMap(ExampleEvent::INIT, &CommandFactory::GetExampleCommandB, commandFactory);
 
+	injector.UnMap(InjectionID::MODEL_A);
+	delete modelA;
+
 	cout << "----------- End CommandMapTest Test" << endl;
 }
 
@@ -223,63 +225,6 @@ void ExampleCommandB::onEvent(Event& evt)
 	GetCommandMap().Release(*this);
 }
 
-TweenTest::TweenTest()
-{
-	tweenManager = new TweenManager();
-	display = new IDisplay();
-
-	TweenX& tweenX = tweenManager->CreateTween<TweenX>(*display);
-	tweenX.AddListener(TweenEvent::START, &TweenTest::onTweenStart, *this);
-
-	tweenX
-		.From(0).To(60).Duration(3.0f)
-		.Delay(1.0f)
-		.Easing(Linear::EaseNone)
-		.OnComplete(&TweenTest::onTweenComplete, *this)
-		.OnUpdate(&TweenTest::onTweenUpdate, *this)
-		.Play();
-
-	//tween.Stop();
-
-	/*Timeline timeline = new Timeline();
-	timeline.AddEventListener(TimelineEvent::PLAY, onStart);
-	timeline.AddEventListener(TimelineEvent::STOP, onStop);
-	timeline.AddEventListener(TimelineEvent::COMPLETE, onComplete);
-
-	timeline.insert(new Tween(display, 0.3, TweenX.from(0).to(100), ease), 0.2);
-	timeline.insert(new Tween(display, 0.3, TweenY.from(0).to(100), ease), 0.2);
-
-	tween.play();*/
-}
-
-TweenTest::~TweenTest()
-{
-	delete tweenManager;
-	delete display;
-}
-
-void TweenTest::onTweenStart(Event& evt)
-{
-	
-}
-
-void TweenTest::onTweenUpdate(Event& evt)
-{
-	
-}
-
-void TweenTest::onTweenComplete(Event& evt)
-{
-	
-}
-
-void TweenTest::Update(float deltaTime)
-{
-	tweenManager->Update(deltaTime);
-
-	cout << display->GetX() << endl;
-}
-
 Tests::Tests()
 {
 	EventDispatcherTest* test1 = new EventDispatcherTest();
@@ -293,16 +238,12 @@ Tests::Tests()
 
 	CommandMapTest* test4 = new CommandMapTest();
 	delete test4;
-
-	test5 = new TweenTest();
 }
 
 Tests::~Tests()
 {
-	delete test5;
 }
 
 void Tests::Update(float deltaTime)
 {
-	test5->Update(deltaTime);
 }

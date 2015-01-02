@@ -4,7 +4,6 @@
 #include "EventDispatcher.h"
 #include "Sequence.h"
 #include "Injector.h"
-#include "TweenManager.h"
 
 #include <iostream>
 
@@ -131,28 +130,8 @@ public:
 };
 
 
-class TweenTest
-{
-public:
-	IDisplay*		display;
-	TweenManager*	tweenManager;
-
-public:
-	TweenTest();
-	~TweenTest();
-
-	void onTweenStart(Event& evt);
-	void onTweenUpdate(Event& evt);
-	void onTweenComplete(Event& evt);
-
-	void Update(float deltaTime);
-};
-
-
 class Tests
 {
-private:
-	TweenTest* test5;
 
 public:
 	Tests();

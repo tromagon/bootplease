@@ -1,5 +1,10 @@
 #include "MediatorMap.h"
 
+void Mediator::DispatchContextEvent(Event& evt)
+{
+	m_MediatorMap->GetDispatcher()->Dispatch(evt);
+}
+
 MediatorMapItem::~MediatorMapItem()
 {
 	delete &m_ViewMapper;
@@ -32,6 +37,7 @@ View* MediatorMap::GetView(const char* id)
 		{
 			view = &(item.GetViewInstance());
 			Mediator& mediator = item.GetMediatorInstance();
+			mediator.SetView(*view);
 			mediator.SetMediatorMap(*this);
 			mediator.OnInitialized();
 

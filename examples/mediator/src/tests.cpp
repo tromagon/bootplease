@@ -13,7 +13,9 @@ Tests::Tests()
 	viewFactory = new ViewFactory();
 	mediatorFactory = new MediatorFactory();
 
-	mediatorMap = new MediatorMap();
+	EventDispatcher eventDispatcher;
+
+	mediatorMap = new MediatorMap(eventDispatcher);
 	injector.SetMediatorMap(*mediatorMap);
 
 	View* someView = mediatorMap->GetView(SomeView::VIEW_ID);
@@ -39,6 +41,8 @@ void SomeMediator::OnInitialized()
 
 	if (GetInjector().GetInstanceById<ModelA>(InjectionID::MODEL_A))
 	{
-		cout << "Model A found in injector" << endl; 
+		cout << "Model A found in injector" << endl;
 	}
+
+	cout << "SomeView displayed has int set to " << GetSomeView().someInt << endl;
 }

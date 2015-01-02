@@ -18,7 +18,10 @@ public:
 	static const char* VIEW_ID;
 
 public:
-	SomeView() {};
+	int someInt;
+
+public:
+	SomeView() : someInt(64) {};
 	~SomeView() {};	
 };
 
@@ -30,6 +33,8 @@ public:
 	~SomeMediator() {};	
 
 	void OnInitialized() override;
+
+	SomeView& GetSomeView() { return static_cast<SomeView&>(GetView()); }
 };
 
 

@@ -20,20 +20,34 @@ class IMediatorMap : public Injected
 public:
 	IMediatorMap() {}
 	virtual ~IMediatorMap() {}
+
+	virtual EventDispatcher* GetDispatcher() { return nullptr; }
 };
 
 
 class Mediator
 {
 private:
+	View*				m_View;
 	IMediatorMap*		m_MediatorMap;
 
 public:
+	View&				GetView()						{ return *m_View; }
+	void				SetView(View& value)			{ m_View = &value; }
+
 	IMediatorMap&		GetMediatorMap()						{ return *m_MediatorMap; }
 	void				SetMediatorMap(IMediatorMap& value)		{ m_MediatorMap = &value; }
 
 protected:
 	Injector&			GetInjector() 	{ return m_MediatorMap->GetInjector(); }
+
+	template<class C>
+	int		AddContextListener(const char* eventType, void (C::*fct)(Event&));
+
+	template<class C>
+	void	RemoveContextListener(const char* eventType, void (C::*fct)(Event&));
+
+	void	DispatchContextEvent(Event& evt);
 
 public:
 	Mediator() {}
@@ -41,6 +55,19 @@ public:
 
 	virtual void OnInitialized() {};
 };
+
+
+template<class C>
+int Mediator::AddContextListener(const char* eventType, void (C::*fct)(Event&))
+{
+	m_MediatorMap->GetDispatcher()->AddListener(eventType, fct, *this);
+}
+
+template<class C>
+void Mediator::RemoveContextListener(const char* eventType, void (C::*fct)(Event&))
+{
+	m_MediatorMap->GetDispatcher()->RemoveListener(eventType, fct, *this);
+}
 
 
 class IMapperSpec
@@ -165,11 +192,15 @@ public:
 class MediatorMap : public IMediatorMap
 {
 private:
+	EventDispatcher&			m_Dispatcher;
 	vector<MediatorMapItem*>	m_Map;
 	vector<ViewMediatorItem*>	m_VmList;
 
 public:
-	MediatorMap() {}
+	virtual EventDispatcher* GetDispatcher() override { return &m_Dispatcher; }
+
+public:
+	explicit MediatorMap(EventDispatcher& dispatcher) : m_Dispatcher(dispatcher) {}
 	~MediatorMap();
 
 	template<class C>

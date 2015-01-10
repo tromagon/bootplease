@@ -81,7 +81,7 @@ public:
 
 	void	RemoveListener(int listenerId);
 	bool	HasListener(const char* eventType);
-	void	Dispatch(Event& evt);
+	void	Dispatch(const Event& evt);
 
 	template<class C>
 	int		AddListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);

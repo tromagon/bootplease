@@ -57,7 +57,7 @@ SequenceTest::SequenceTest()
 	sequence->AddListener(SequenceEvent::COMPLETE, &SequenceTest::onSequenceComplete, *this);
 
 	sequence->Call(&SequenceTest::methodA, *this);
-	ExampleEvent evt(ExampleEvent::INIT);
+	const ExampleEvent evt(ExampleEvent::INIT);
 	sequence->Dispatch(evt);
 	sequence->WaitFor(ExampleEvent::COMPLETE, &SequenceTest::onComplete, *this);
 	sequence->WaitFor(ExampleEvent::SECOND_COMPLETE);

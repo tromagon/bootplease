@@ -21,7 +21,7 @@ Sequence::~Sequence()
 	}
 }
 
-void Sequence::Dispatch(Event& evt, EventDispatcher* dispatcher)
+void Sequence::Dispatch(const Event& evt, EventDispatcher* dispatcher)
 {
 	if (!m_List)
 	{

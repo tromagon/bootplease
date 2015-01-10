@@ -79,11 +79,11 @@ void CallStep<C, void>::Run()
 class EventStep : public Step
 {
 private:
-	Event&				m_Event;
+	const Event&		m_Event;
 	EventDispatcher&	m_Dispatcher;
 
 public:
-	EventStep(ISequence& sequence, Event& evt, EventDispatcher& dispatcher) : 
+	EventStep(ISequence& sequence, const Event& evt, EventDispatcher& dispatcher) : 
 		Step(sequence), m_Event(evt), m_Dispatcher(dispatcher) {}
 
 	void Run() override;

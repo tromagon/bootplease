@@ -53,7 +53,7 @@ bool EventDispatcher::HasListener(const char* eventType)
 	return false;
 }
 
-void EventDispatcher::Dispatch(Event& evt)
+void EventDispatcher::Dispatch(const Event& evt)
 {
 	if (!m_Listeners)
 	{

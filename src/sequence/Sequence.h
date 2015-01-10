@@ -25,7 +25,7 @@ public:
 	virtual void	CompleteStep() override;
 	virtual bool	IsNextStepAsync() override;
 
-	void			Dispatch(Event& evt, EventDispatcher* dispatcher = nullptr);
+	void			Dispatch(const Event& evt, EventDispatcher* dispatcher = nullptr);
 
 	template<class C>
 	void			Call(void (C::*fct)(), C& proxy);

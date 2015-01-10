@@ -227,7 +227,7 @@ void ExampleCommandB::onEvent(Event& evt)
 
 Tests::Tests()
 {
-	EventDispatcherTest* test1 = new EventDispatcherTest();
+	const EventDispatcherTest* test1 = new EventDispatcherTest();
 	delete test1;
 
 	SequenceTest* test2 = new SequenceTest();

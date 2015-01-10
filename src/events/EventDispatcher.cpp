@@ -43,7 +43,7 @@ bool EventDispatcher::HasListener(const char* eventType)
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
 		Listener* listener = (*m_Listeners)[i];
-		EventCallBack& cb = listener->GetCallBack();
+		const EventCallBack& cb = listener->GetCallBack();
 		if (listener->GetType() == eventType)
 		{
 			return true;

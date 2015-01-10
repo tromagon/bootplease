@@ -1,0 +1,24 @@
+options
+{
+	module_path="../../marmalade/"
+	enable-exceptions=1
+}
+
+includepath 
+{
+	src
+}
+
+files
+{
+	[src]
+	(src)
+	"*.h"
+	"*.cpp"
+}
+
+subprojects
+{
+	iw2d
+	bootplease-framework
+}

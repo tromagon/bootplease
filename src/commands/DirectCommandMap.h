@@ -2,13 +2,12 @@
 #define _DIRECTCOMMANDMAP_H_
 
 #include "EventDispatcher.h"
-#include "Injected.h"
 #include "CommandMap.h"
 
 class Context;
 class Command;
 
-class DirectCommandMap : public CommandMap
+class DirectCommandMap final : public CommandMap
 {
 	friend class Context;
 
@@ -59,11 +58,10 @@ private:
 
 private:
 	vector<DirectCommandMapItem*>	m_Maps;
-	Context*						m_Context;
 
 public:
 	explicit DirectCommandMap(Context& context) : CommandMap(context) {}
-	~DirectCommandMap() {}
+	~DirectCommandMap();
 
 	void				Execute();
 
@@ -73,6 +71,8 @@ public:
 	template<class C>
 	void				UnMap(Command& (C::*fct)(), C& proxy);
 
+private:
+	void				UnMapAll();
 };
 
 template<class C>
@@ -80,6 +80,8 @@ void DirectCommandMap::Map(Command& (C::*fct)(), C& proxy)
 {
 	DirectCommandMapItem* mapItem = new DirectCommandMapItem(proxy, fct);
 	m_Maps.push_back(mapItem);
+
+	m_NumMap++;
 }
 
 template<class C>
@@ -93,11 +95,12 @@ void DirectCommandMap::UnMap(Command& (C::*fct)(), C& proxy)
 		if (mapping.GetFct<C>() == fct && &(mapping.GetProxy<C>()) == &proxy)
 		{
 			m_Maps.erase(m_Maps.begin() + i);
+
+			m_NumMap--;
 			delete &mapping;
 			return;
 		}
 	}
-
 }
 
 #endif

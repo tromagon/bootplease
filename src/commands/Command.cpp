@@ -1,5 +1,6 @@
 #include "Command.h"
 #include "EventDispatcher.h"
+#include "CommandMap.h"
 
 void Command::DispatchContextEvent(Event& evt)
 {

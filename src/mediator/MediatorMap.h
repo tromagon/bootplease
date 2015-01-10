@@ -10,7 +10,7 @@ using namespace std;
 
 class Mediator;
 
-class MediatorMap
+class MediatorMap final
 {
 private:
 	class IMapperSpec

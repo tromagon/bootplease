@@ -25,9 +25,11 @@ Context::~Context()
 
 void Context::Configure(ContextConfig& config)
 {
-	config.SetInjector(*m_Injector);
-	config.SetCommandMap(*m_EventCommandMap);
-	config.SetMediatorMap(*m_MediatorMap);
-
+	config.SetContext(*this);
 	config.Configure();
+}
+
+void Context::Execute()
+{
+	m_DirectCommandMap->Execute();
 }

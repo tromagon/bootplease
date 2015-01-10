@@ -32,6 +32,7 @@ public:
 	void Render() {}
 
 	void Configure(ContextConfig& config);
+	void Execute();
 };
 
 #endif

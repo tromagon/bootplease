@@ -7,7 +7,7 @@
 
 class Command;
 
-class EventCommandMap : public CommandMap
+class EventCommandMap final : public CommandMap
 {
 	friend class Context;
 
@@ -39,8 +39,8 @@ private:
 	class EventCommandMapItem
 	{
 	private:
-		const char*					m_EventType;
-		EventCommandMapItemSpecBase*		m_Spec;
+		const char*						m_EventType;
+		EventCommandMapItemSpecBase*	m_Spec;
 
 	public:
 		const char*					GetEventType()	{ return m_EventType; };
@@ -66,7 +66,7 @@ private:
 
 public:
 	explicit EventCommandMap(Context& context) : CommandMap(context) {}
-	~EventCommandMap() {}
+	~EventCommandMap();
 
 	template<class C>
 	void				Map(const char* eventType, Command& (C::*fct)(), C& proxy);
@@ -75,6 +75,7 @@ public:
 	void				UnMap(const char* eventType, Command& (C::*fct)(), C& proxy);
 
 private:
+	void				UnMapAll();
 	void				OnCommandEvent(const Event& evt);
 };
 
@@ -89,6 +90,8 @@ void EventCommandMap::Map(const char* eventType, Command& (C::*fct)(), C& proxy)
 	
 	EventCommandMapItem* mapItem = new EventCommandMapItem(eventType, proxy, fct);
 	m_Maps.push_back(mapItem);
+
+	m_NumMap++;
 }
 
 template<class C>
@@ -109,6 +112,7 @@ void EventCommandMap::UnMap(const char* eventType, Command& (C::*fct)(), C& prox
 			&& &(mapping.GetProxy<C>()) == &proxy)
 		{
 			m_Maps.erase(m_Maps.begin() + i);
+			m_NumMap--;
 			delete &mapping;
 			return;
 		}

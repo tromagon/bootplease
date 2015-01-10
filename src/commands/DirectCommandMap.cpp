@@ -1,9 +1,14 @@
 #include "DirectCommandMap.h"
 #include "Command.h"
 
+DirectCommandMap::~DirectCommandMap()
+{
+	UnMapAll();
+}
+
 void DirectCommandMap::Execute()
 {
-	const unsigned short l = m_Maps.size();
+	const unsigned short l = m_NumMap;
 	DirectCommandMapItem* item;
 	Command* command;
 
@@ -11,11 +16,27 @@ void DirectCommandMap::Execute()
 	{
 		item = m_Maps[i];
 		command = &(item->GetCommand());
+		command->SetContext(m_Context);
+		command->SetCommandMap(*this);
 		command->Execute();
 
 		if (GetDetainedIndex(*command) == -1)
 		{
-			delete &command;
+			delete command;
 		}
 	}
+}
+
+void DirectCommandMap::UnMapAll()
+{
+	int i = m_NumMap;
+	DirectCommandMapItem* item;
+
+	while(i-- > 0)
+	{
+		item = m_Maps[i];
+		delete item;
+	}
+
+	m_Maps.clear();
 }

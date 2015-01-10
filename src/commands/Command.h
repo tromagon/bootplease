@@ -2,11 +2,15 @@
 #define _COMMAND_H_
 
 #include "EventDispatcher.h"
-#include "EventCommandMap.h"
 #include "Context.h"
+
+class CommandMap;
+class EventCommandMap;
+class DirectCommandMap;
 
 class Command
 {
+public:
 	friend class EventCommandMap;
 	friend class DirectCommandMap;
 
@@ -26,7 +30,7 @@ protected:
 	Injector&			GetInjector()								{ return m_Context->GetInjector(); }
 
 public:
-	Command() {}
+	Command() : m_Event(nullptr) {}
 	virtual ~Command() {}
 
 protected:

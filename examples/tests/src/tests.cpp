@@ -1,6 +1,7 @@
 #include "tests.h"
 
 #include <iostream>
+#include <SequenceEvent.h>
 
 using namespace std;
 
@@ -33,12 +34,12 @@ EventDispatcherTest::~EventDispatcherTest()
 	delete dispatcher;
 }
 
-void EventDispatcherTest::hello(Event& evt)
+void EventDispatcherTest::hello(const Event& evt)
 {
 	std::cout << "Hello " << evt.GetType() << std::endl;
 }
 
-void EventDispatcherTest::hello2(Event& evt)
+void EventDispatcherTest::hello2(const Event& evt)
 {
 	std::cout << "Hello2 " << evt.GetType() << std::endl;
 }
@@ -91,7 +92,7 @@ void SequenceTest::methodB(Params& params)
 	cout << "methodB : x=" << params.m_X << ", y=" << params.m_Y << endl;
 }
 
-void SequenceTest::onInit(Event& evt)
+void SequenceTest::onInit(const Event& evt)
 {
 	cout << "onInit() " << evt.GetType() << endl;
 
@@ -102,27 +103,27 @@ void SequenceTest::onInit(Event& evt)
 	dispatcher->Dispatch(secondCompleteEvent);
 }
 
-void SequenceTest::onComplete(Event& evt)
+void SequenceTest::onComplete(const Event& evt)
 {
 	cout << "onComplete() " << evt.GetType() << endl;
 }
 
-void SequenceTest::onSequenceStarted(Event& evt)
+void SequenceTest::onSequenceStarted(const Event& evt)
 {
 	sequence->RemoveListener(SequenceEvent::STARTED, &SequenceTest::onSequenceStarted, *this);
 	cout << "Sequence has started" << endl;
 }
 
-void SequenceTest::onSequenceStepComplete(Event& evt)
+void SequenceTest::onSequenceStepComplete(const Event& evt)
 {
-	SequenceEvent& seqEvt = static_cast<SequenceEvent&>(evt);
+	const SequenceEvent& seqEvt = static_cast<const SequenceEvent&>(evt);
 	sequence->RemoveListener(SequenceEvent::STEP_COMPLETE, &SequenceTest::onSequenceStarted, *this);
 	cout << "Sequence Step is complete" << endl;
 }
 
-void SequenceTest::onSequenceComplete(Event& evt)
+void SequenceTest::onSequenceComplete(const Event& evt)
 {
-	SequenceEvent& seqEvt = static_cast<SequenceEvent&>(evt);
+	const SequenceEvent& seqEvt = static_cast<const SequenceEvent&>(evt);
 	seqEvt.GetSequence().RemoveListener(SequenceEvent::COMPLETE, &SequenceTest::onSequenceComplete, *this);
 
 	dispatcher->RemoveListener(ExampleEvent::INIT, &SequenceTest::onInit, *this);
@@ -216,7 +217,7 @@ void ExampleCommandB::execute()
 	AddContextListener(ExampleEvent::COMPLETE, &ExampleCommandB::onEvent, *this);
 }
 
-void ExampleCommandB::onEvent(Event& evt)
+void ExampleCommandB::onEvent(const Event& evt)
 {
 	RemoveContextListener(ExampleEvent::COMPLETE, &ExampleCommandB::onEvent, *this);
 

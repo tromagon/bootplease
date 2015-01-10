@@ -35,7 +35,7 @@ int CommandMap::GetDetainedIndex(Command& command)
 	return -1;
 }
 
-void CommandMap::OnCommandEvent(Event& evt)
+void CommandMap::OnCommandEvent(const Event& evt)
 {
 	const unsigned short l = m_Maps.size();
 	for (unsigned int i = 0 ; i < l ; i++)

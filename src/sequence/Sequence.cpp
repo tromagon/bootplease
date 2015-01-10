@@ -1,9 +1,5 @@
 #include "Sequence.h"
-
-const char* SequenceEvent::STARTED = "SequenceEvent_STARTED";
-const char* SequenceEvent::COMPLETE = "SequenceEvent_COMPLETE";
-const char* SequenceEvent::STEP_COMPLETE = "SequenceEvent_STEP_COMPLETE";
-
+#include "SequenceEvent.h"
 
 Sequence::Sequence(EventDispatcher& dispatcher) : m_Dispatcher(dispatcher)
 {
@@ -75,7 +71,6 @@ bool Sequence::IsNextStepAsync()
 void Sequence::NextStep()
 {
 	Step* step = (*m_List)[m_CurrentIndex];
-	bool isAsync = false;
 
 	if (IsNextStepAsync())
 	{

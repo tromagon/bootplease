@@ -5,9 +5,6 @@
 #include "Sequence.h"
 #include "Injector.h"
 
-#include <iostream>
-
-
 class ExampleEvent : public Event
 {
 public:
@@ -30,8 +27,8 @@ public:
 	EventDispatcherTest();
 	~EventDispatcherTest();
 
-	void hello(Event& evt);
-	void hello2(Event& evt);
+	void hello(const Event& evt);
+	void hello2(const Event& evt);
 };
 
 class Params;
@@ -49,11 +46,11 @@ public:
 	void methodA();
 	void methodB(Params& params);
 
-	void onInit(Event& evt);
-	void onComplete(Event& evt);
-	void onSequenceStarted(Event& evt);
-	void onSequenceStepComplete(Event& evt);
-	void onSequenceComplete(Event& evt);
+	void onInit(const Event& evt);
+	void onComplete(const Event& evt);
+	void onSequenceStarted(const Event& evt);
+	void onSequenceStepComplete(const Event& evt);
+	void onSequenceComplete(const Event& evt);
 };
 
 class Params
@@ -116,7 +113,7 @@ public:
 	virtual void execute() override;
 
 private:
-	void onEvent(Event& evt);
+	void onEvent(const Event& evt);
 };
 
 class CommandFactory

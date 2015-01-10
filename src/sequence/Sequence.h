@@ -7,28 +7,6 @@
 
 using namespace std;
 
-class Sequence;
-
-class SequenceEvent : public Event
-{
-public:
-	static const char* STARTED;
-	static const char* COMPLETE;
-	static const char* STEP_COMPLETE;
-
-private:
-	Sequence& m_Sequence;
-
-public:
-	Sequence&	GetSequence()	{ return m_Sequence; }
-
-public:
-	explicit SequenceEvent(const char* type, Sequence& sequence) : Event(type), m_Sequence(sequence) {}
-	virtual ~SequenceEvent() {};
-};
-
-
-/** Sequence **/
 
 class Sequence : public ISequence
 {
@@ -47,12 +25,6 @@ public:
 	virtual void	CompleteStep() override;
 	virtual bool	IsNextStepAsync() override;
 
-	template<class C>
-	int				AddListener(const char* eventType, void (C::*fct)(Event&), C& o);
-
-	template<class C>
-	void			RemoveListener(const char* eventType, void (C::*fct)(Event&), C& o);
-
 	void			Dispatch(Event& evt, EventDispatcher* dispatcher = nullptr);
 
 	template<class C>
@@ -64,25 +36,13 @@ public:
 	void			WaitFor(const char* eventType, EventDispatcher* dispatcher = nullptr);
 
 	template<class C>
-	void			WaitFor(const char* eventType, void (C::*fct)(Event&), C& proxy, EventDispatcher* dispatcher = nullptr);
+	void			WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcher* dispatcher = nullptr);
 
 	void			Start();
 
 private:
 	void NextStep();
 };
-
-template<class C>
-int Sequence::AddListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
-{
-	return m_SequenceDispatcher.AddListener(eventType, fct, proxy);
-}
-
-template<class C>
-void Sequence::RemoveListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
-{
-	return m_SequenceDispatcher.RemoveListener(eventType, fct, proxy);
-}
 
 template<class C>
 void Sequence::Call(void (C::*fct)(), C& proxy)
@@ -109,7 +69,7 @@ void Sequence::Call(void (C::*fct)(P&), C& proxy, P& params)
 }
 
 template<class C>
-void Sequence::WaitFor(const char* eventType, void (C::*fct)(Event&), C& proxy, EventDispatcher* dispatcher)
+void Sequence::WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcher* dispatcher)
 {
 	if (!m_List)
 	{

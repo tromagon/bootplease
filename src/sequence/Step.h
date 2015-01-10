@@ -98,13 +98,13 @@ class WaitForEventStep : public Step
 {
 private:
 	const char*			m_Type;
-	void				(C::*m_Fct)(Event&);
+	void				(C::*m_Fct)(const Event&);
 	C&					m_Proxy;
 	EventDispatcher&	m_Dispatcher;
 	int					m_EventId;
 
 public:
-	WaitForEventStep(ISequence& sequence, const char* type, void (C::*fct)(Event&), C& proxy, EventDispatcher& dispatcher) :
+	WaitForEventStep(ISequence& sequence, const char* type, void (C::*fct)(const Event&), C& proxy, EventDispatcher& dispatcher) :
 		Step(sequence), m_Type(type), m_Fct(fct), m_Proxy(proxy), m_Dispatcher(dispatcher) {};
 
 	bool IsAsync() override { return true; }

@@ -21,15 +21,15 @@ class Command
 private:
 	EventDispatcher*	m_Dispatcher;
 	ICommandMap*		m_CommandMap;
-	Event*				m_Event;
+	const Event*		m_Event;
 
 public:
 	EventDispatcher&	GetDispatcher()								{ return *m_Dispatcher; }
 	void				SetDispatcher(EventDispatcher& dispatcher)	{ m_Dispatcher = &dispatcher; }
 	ICommandMap&		GetCommandMap()								{ return *m_CommandMap; }
 	void				SetCommandMap(ICommandMap& commandMap)		{ m_CommandMap = &commandMap; }
-	Event&				GetEvent()									{ return *m_Event; }
-	void				SetEvent(Event& evt)						{ m_Event = &evt; }
+	const Event&		GetEvent()									{ return *m_Event; }
+	void				SetEvent(const Event& evt)					{ m_Event = &evt; }
 
 protected:
 	Injector&			GetInjector()								{ return m_CommandMap->GetInjector(); }
@@ -39,10 +39,10 @@ public:
 	virtual ~Command() {}
 
 	template<class C>
-	int		AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+	int		AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
 	template<class C>
-	void	RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+	void	RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
 	void	DispatchContextEvent(Event& evt);
 
@@ -51,13 +51,13 @@ public:
 
 
 template<class C>
-int Command::AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+int Command::AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
 	return GetDispatcher().AddListener(eventType, fct, proxy);
 }
 
 template<class C>
-void Command::RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+void Command::RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
 	GetDispatcher().RemoveListener(eventType, fct, proxy);
 }
@@ -133,7 +133,7 @@ public:
 
 private:
 	int					GetDetainedIndex(Command& command);
-	void				OnCommandEvent(Event& evt);
+	void				OnCommandEvent(const Event& evt);
 };
 
 template<class C>

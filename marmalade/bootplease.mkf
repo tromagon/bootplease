@@ -5,7 +5,6 @@ includepath
 	../src/events
 	../src/injection
 	../src/sequence
-	../src/utils
 }
 
 library
@@ -33,9 +32,5 @@ files
 	
 	[src/sequence]
 	(../src/sequence)
-	"*.h"
-	
-	[src/utils]
-	(../src/utils)
 	"*.h"
 }

@@ -3,7 +3,7 @@
 
 #include "EventDispatcher.h"
 
-class ISequence
+class ISequence : public EventDispatcher
 {
 public:
 	ISequence() {}

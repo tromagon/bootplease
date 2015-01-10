@@ -6,7 +6,7 @@ void Injector::SetCommandMap(CommandMap& commandMap)
 	m_CommandMap->SetInjector(*this);
 }
 
-void Injector::SetMediatorMap(IMediatorMap& mediatorMap)
+void Injector::SetMediatorMap(MediatorMap& mediatorMap)
 {
 	m_MediatorMap = &mediatorMap;
 	m_MediatorMap->SetInjector(*this);

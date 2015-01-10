@@ -53,7 +53,7 @@ private:
 	EventDispatcher				m_Dispatcher;
 	vector<InjectorMapping*>	m_Maps;
 	CommandMap*					m_CommandMap;
-	IMediatorMap*				m_MediatorMap;
+	MediatorMap*				m_MediatorMap;
 
 public:
 	EventDispatcher&	GetDispatcher()								{ return m_Dispatcher; }
@@ -61,8 +61,8 @@ public:
 	CommandMap&			GetCommandMap()								{ return *m_CommandMap; }
 	void				SetCommandMap(CommandMap& commandMap);
 
-	IMediatorMap&		GetMediatorMap()							{ return *m_MediatorMap; }
-	void				SetMediatorMap(IMediatorMap& mediatorMap);
+	MediatorMap&		GetMediatorMap()							{ return *m_MediatorMap; }
+	void				SetMediatorMap(MediatorMap& mediatorMap);
 
 public:
 	Injector() {};

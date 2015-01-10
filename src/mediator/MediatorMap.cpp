@@ -1,17 +1,13 @@
 #include "MediatorMap.h"
+#include "Mediator.h"
 
-void Mediator::DispatchContextEvent(Event& evt)
-{
-	m_MediatorMap->GetDispatcher()->Dispatch(evt);
-}
-
-MediatorMapItem::~MediatorMapItem()
+MediatorMap::MediatorMapItem::~MediatorMapItem()
 {
 	delete &m_ViewMapper;
 	delete &m_MediatorMapper;
 }
 
-ViewMediatorItem::~ViewMediatorItem()
+MediatorMap::ViewMediatorItem::~ViewMediatorItem()
 {
 	delete &m_View;
 	delete &m_Mediator;

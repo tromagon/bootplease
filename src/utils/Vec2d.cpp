@@ -34,7 +34,7 @@ Vec2d Vec2d::Clone()
 	return Vec2d(x, y);
 }
 
-int Vec2d::GetLength()
+double Vec2d::GetLength()
 {
 	return sqrt(pow(x, 2) + pow(y, 2));
 }

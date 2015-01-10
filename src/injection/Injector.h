@@ -2,65 +2,64 @@
 #define _INJECTOR_H_
 
 #include "EventDispatcher.h"
-#include "Command.h"
+#include "CommandMap.h"
 #include "MediatorMap.h"
 #include <vector>
 
 using namespace std;
 
-
-class InjectorMappingSpecBase
-{
-public:
-	InjectorMappingSpecBase() {};
-	virtual ~InjectorMappingSpecBase() {};
-};
-
-template<class C>
-class InjectorMappingSpec : public InjectorMappingSpecBase
-{
-private:
-	C&				m_Instance;
-	
-public:
-	C&				GetInstance()	{ return m_Instance; }
-
-public:
-	explicit InjectorMappingSpec(C& instance) : m_Instance(instance) {};
-	virtual ~InjectorMappingSpec() {};
-};
-
-class InjectorMapping
-{
-private:
-	InjectorMappingSpecBase*	spec;
-	const char*					m_Id;
-
-public:
-	template<class C>
-	C&				GetInstance()	{ return static_cast<InjectorMappingSpec<C>*>(spec)->GetInstance(); }
-	const char*		GetId()			{ return m_Id; }
-
-public:
-	template<class C>
-	InjectorMapping(C& instance, const char* id) : m_Id(id) { spec = new InjectorMappingSpec<C>(instance); };
-	virtual ~InjectorMapping() { delete spec; };
-};
-
-
 class Injector
 {
 private:
+	class InjectorMappingSpecBase
+	{
+	public:
+		InjectorMappingSpecBase() {};
+		virtual ~InjectorMappingSpecBase() {};
+	};
+
+	template<class C>
+	class InjectorMappingSpec : public InjectorMappingSpecBase
+	{
+	private:
+		C&				m_Instance;
+	
+	public:
+		C&				GetInstance()	{ return m_Instance; }
+
+	public:
+		explicit InjectorMappingSpec(C& instance) : m_Instance(instance) {};
+		virtual ~InjectorMappingSpec() {};
+	};
+
+	class InjectorMapping
+	{
+	private:
+		InjectorMappingSpecBase*	m_Spec;
+		const char*					m_Id;
+
+	public:
+		template<class C>
+		C&				GetInstance()	{ return static_cast<InjectorMappingSpec<C>*>(m_Spec)->GetInstance(); }
+		const char*		GetId()			{ return m_Id; }
+
+	public:
+		template<class C>
+		InjectorMapping(C& instance, const char* id) : m_Id(id) { m_Spec = new InjectorMappingSpec<C>(instance); };
+		virtual ~InjectorMapping() { delete m_Spec; };
+	};
+
+private:
 	EventDispatcher				m_Dispatcher;
 	vector<InjectorMapping*>	m_Maps;
-	ICommandMap*				m_CommandMap;
+	CommandMap*					m_CommandMap;
 	IMediatorMap*				m_MediatorMap;
 
 public:
 	EventDispatcher&	GetDispatcher()								{ return m_Dispatcher; }
 
-	ICommandMap&		GetCommandMap()								{ return *m_CommandMap; }
-	void				SetCommandMap(ICommandMap& commandMap);
+	CommandMap&			GetCommandMap()								{ return *m_CommandMap; }
+	void				SetCommandMap(CommandMap& commandMap);
 
 	IMediatorMap&		GetMediatorMap()							{ return *m_MediatorMap; }
 	void				SetMediatorMap(IMediatorMap& mediatorMap);

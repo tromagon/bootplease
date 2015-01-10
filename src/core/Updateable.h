@@ -28,6 +28,4 @@ public:
 	void    Remove(IUpdateable* updateable);
 };
 
-extern UpdateManager* g_pUpdateManager;
-
 #endif

@@ -28,6 +28,4 @@ public:
 	void    Remove(IRenderable* renderable);
 };
 
-extern Renderer* g_pRenderer;
-
 #endif

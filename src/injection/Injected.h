@@ -3,7 +3,6 @@
 
 class Injector;
 
-
 class Injected
 {
 private:

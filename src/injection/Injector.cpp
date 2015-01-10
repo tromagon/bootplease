@@ -1,6 +1,6 @@
 #include "Injector.h"
 
-void Injector::SetCommandMap(ICommandMap& commandMap)
+void Injector::SetCommandMap(CommandMap& commandMap)
 {
 	m_CommandMap = &commandMap;
 	m_CommandMap->SetInjector(*this);

@@ -4,6 +4,7 @@
 #include "EventDispatcher.h"
 #include "Sequence.h"
 #include "Injector.h"
+#include "Command.h"
 
 class ExampleEvent : public Event
 {

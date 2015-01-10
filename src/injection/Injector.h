@@ -1,9 +1,6 @@
 #ifndef _INJECTOR_H_
 #define _INJECTOR_H_
 
-#include "EventDispatcher.h"
-#include "CommandMap.h"
-#include "MediatorMap.h"
 #include <vector>
 
 using namespace std;
@@ -50,23 +47,12 @@ private:
 	};
 
 private:
-	EventDispatcher				m_Dispatcher;
 	vector<InjectorMapping*>	m_Maps;
-	CommandMap*					m_CommandMap;
-	MediatorMap*				m_MediatorMap;
+	int							m_NumInjections;
 
 public:
-	EventDispatcher&	GetDispatcher()								{ return m_Dispatcher; }
-
-	CommandMap&			GetCommandMap()								{ return *m_CommandMap; }
-	void				SetCommandMap(CommandMap& commandMap);
-
-	MediatorMap&		GetMediatorMap()							{ return *m_MediatorMap; }
-	void				SetMediatorMap(MediatorMap& mediatorMap);
-
-public:
-	Injector() {};
-	~Injector() {};
+	Injector() : m_NumInjections(0) {}
+	~Injector() {}
 
 	void	UnMap(const char* id);
 
@@ -85,32 +71,39 @@ void Injector::Map(C& instance, const char* id)
 {
 	InjectorMapping* mapping = new InjectorMapping(instance, id);
 	m_Maps.push_back(mapping);
+	m_NumInjections++;
 }
 
 template<class C>
 void Injector::UnMap(C& obj)
 {
+	InjectorMapping* mapping;
+
 	const unsigned short l = m_Maps.size();
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
-		InjectorMapping& mapping = *m_Maps[i];
-		if (mapping.GetInstance<C>() == obj)
+		mapping = m_Maps[i];
+		if (mapping->GetInstance<C>() == obj)
 		{
 			m_Maps.erase(m_Maps.begin() + i);
-			delete &mapping;
+			delete mapping;
 			return;
 		}
 	}
+
+	m_NumInjections--;
 }
 
 template<class C>
 C* Injector::GetInstanceById(const char* id)
 {
-	const unsigned short l = m_Maps.size();
+	InjectorMapping* mapping;
+
+	const unsigned short l = m_NumInjections;
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
-		InjectorMapping& mapping = *m_Maps[i];
-		if (mapping.GetId() == id)
+		mapping = m_Maps[i];
+		if (mapping->GetId() == id)
 		{
 			return &(mapping.GetInstance<C>());
 		}

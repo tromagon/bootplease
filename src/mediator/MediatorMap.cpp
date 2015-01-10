@@ -25,16 +25,18 @@ View* MediatorMap::GetView(const char* id)
 
 	if (view) return view;
 
+	MediatorMapItem* item;
+
 	const unsigned short l = m_Map.size();
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
-		MediatorMapItem& item = *(m_Map[i]);
-		if (item.GetId() == id)
+		item = m_Map[i];
+		if (item->GetId() == id)
 		{
-			view = &(item.GetViewInstance());
-			Mediator& mediator = item.GetMediatorInstance();
+			view = &(item->GetViewInstance());
+			Mediator& mediator = item->GetMediatorInstance();
+			//mediator.SetContext()
 			mediator.SetView(*view);
-			mediator.SetMediatorMap(*this);
 			mediator.OnInitialized();
 
 			ViewMediatorItem* vm = new ViewMediatorItem(id, *view, mediator); 

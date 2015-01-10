@@ -1,22 +1,29 @@
 #ifndef _CONTEXT_H_
 #define _CONTEXT_H_
 
-#include "Injector.h"
-#include "CommandMap.h"
-#include "ContextConfig.h"
+class EventDispatcher;
+class Injector;
+class EventCommandMap;
+class DirectCommandMap;
+class MediatorMap;
+class ContextConfig;
 
 class Context
 {
 private:
-	EventDispatcher m_Dispatcher;
-	Injector		m_Injector;
-	CommandMap*		m_CommandMap;
-	MediatorMap*	m_MediatorMap;
-
+	EventDispatcher*	m_Dispatcher;
+	Injector*			m_Injector;
+	EventCommandMap*	m_EventCommandMap;
+	DirectCommandMap*	m_DirectCommandMap;
+	MediatorMap*		m_MediatorMap;
+		
 public:
-	Injector&		GetInjector()	{ return m_Injector; }
-	CommandMap&		GetCommandMap()	{ return *m_CommandMap; }
-
+	EventDispatcher&	GetDispatcher()			{ return *m_Dispatcher; }
+	Injector&			GetInjector()			{ return *m_Injector; }
+	EventCommandMap&	GetEventCommandMap()	{ return *m_EventCommandMap; }
+	DirectCommandMap&	GetDirectCommandMap()	{ return *m_DirectCommandMap; }
+	MediatorMap&		GetMediatorMap()		{ return *m_MediatorMap; }
+	
 public:
 	Context();
 	~Context();

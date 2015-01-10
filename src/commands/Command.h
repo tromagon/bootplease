@@ -2,31 +2,34 @@
 #define _COMMAND_H_
 
 #include "EventDispatcher.h"
-#include "Injected.h"
-#include "CommandMap.h"
+#include "EventCommandMap.h"
+#include "Context.h"
 
 class Command
 {
-private:
-	EventDispatcher*	m_Dispatcher;
-	CommandMap*			m_CommandMap;
-	const Event*		m_Event;
+	friend class EventCommandMap;
+	friend class DirectCommandMap;
 
-public:
-	EventDispatcher&	GetDispatcher()								{ return *m_Dispatcher; }
-	void				SetDispatcher(EventDispatcher& dispatcher)	{ m_Dispatcher = &dispatcher; }
-	CommandMap&			GetCommandMap()								{ return *m_CommandMap; }
-	void				SetCommandMap(CommandMap& commandMap)		{ m_CommandMap = &commandMap; }
-	const Event&		GetEvent()									{ return *m_Event; }
+private:
+	Context*			m_Context;
+	const Event*		m_Event;
+	CommandMap*			m_CommandMap;			
+
+private:
+	void				SetContext(Context& value)					{ m_Context = &value; }
 	void				SetEvent(const Event& evt)					{ m_Event = &evt; }
+	void				SetCommandMap(CommandMap& value)			{ m_CommandMap = & value; }
 
 protected:
-	Injector&			GetInjector()								{ return m_CommandMap->GetInjector(); }
+	EventDispatcher&	GetDispatcher()								{ return m_Context->GetDispatcher(); }
+	const Event&		GetEvent()									{ return *m_Event; }
+	Injector&			GetInjector()								{ return m_Context->GetInjector(); }
 
 public:
 	Command() {}
 	virtual ~Command() {}
 
+protected:
 	template<class C>
 	int		AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
@@ -35,7 +38,9 @@ public:
 
 	void	DispatchContextEvent(Event& evt);
 
-	virtual void execute() {};
+	virtual void Execute() {}
+	virtual void Detain() final;
+	virtual void Release() final;
 };
 
 

@@ -2,7 +2,7 @@
 #define _MEDIATORMAP_H_
 
 #include "View.h"
-#include "Injected.h"
+#include "Context.h"
 #include "EventDispatcher.h"
 #include <vector>
 
@@ -10,7 +10,7 @@ using namespace std;
 
 class Mediator;
 
-class MediatorMap : public Injected
+class MediatorMap
 {
 private:
 	class IMapperSpec
@@ -121,15 +121,16 @@ private:
 
 
 private:
-	EventDispatcher&			m_Dispatcher;
+	Context&					m_Context;
 	vector<MediatorMapItem*>	m_Map;
 	vector<ViewMediatorItem*>	m_VmList;
 
 public:
-	EventDispatcher* GetDispatcher() { return &m_Dispatcher; }
+	EventDispatcher&	GetDispatcher()		{ return m_Context.GetDispatcher(); }
+	Injector&			GetInjector()		{ return m_Context.GetInjector(); }
 
 public:
-	explicit MediatorMap(EventDispatcher& dispatcher) : m_Dispatcher(dispatcher) {}
+	explicit MediatorMap(Context& context) : m_Context(context) {}
 	~MediatorMap();
 
 	template<class C>

@@ -1,6 +1,5 @@
 #include "CommandMap.h"
 #include "Command.h"
-#include "EventDispatcher.h"
 
 void CommandMap::Detain(Command& command)
 {
@@ -29,26 +28,4 @@ int CommandMap::GetDetainedIndex(Command& command)
 	}
 
 	return -1;
-}
-
-void CommandMap::OnCommandEvent(const Event& evt)
-{
-	const unsigned short l = m_Maps.size();
-	for (unsigned int i = 0 ; i < l ; i++)
-	{
-		CommandMapItem& item = *(m_Maps[i]);
-		if (item.GetEventType() == evt.GetType())
-		{
-			Command& command = item.GetCommand();
-			command.SetCommandMap(*this);
-			command.SetDispatcher(m_Dispatcher);
-			command.SetEvent(evt);
-			command.execute();
-
-			if (GetDetainedIndex(command) == -1)
-			{
-				delete &command;
-			}
-		}
-	}
 }

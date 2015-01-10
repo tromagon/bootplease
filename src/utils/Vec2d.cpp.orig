@@ -1,5 +1,4 @@
 #include "Vec2d.h"
-#include <math.h>
 
 Vec2d::Vec2d()
 {
@@ -17,31 +16,30 @@ Vec2d::Vec2d(int x, int y)
 	Set(x, y);
 }
 
+<<<<<<< HEAD
 void Vec2d::Set(float x, float y)
+=======
+Vec2d::Vec2d(float x, float y)
+{
+	Set(x, y);
+}
+
+void Vec2d::Set(int x, int y)
+>>>>>>> origin/master
 {
 	this->x = x;
 	this->y = y;
 }
 
+<<<<<<< HEAD
 void Vec2d::Set(int x, int y)
 {
 	this->x = static_cast<float>(x);
 	this->y = static_cast<float>(y);
-}
-
-Vec2d Vec2d::Clone()
+=======
+void Vec2d::Set(float x, float y)
 {
-	return Vec2d(x, y);
-}
-
-int Vec2d::GetLength()
-{
-	return sqrt(pow(x, 2) + pow(y, 2));
-}
-
-Vec2d& Vec2d::operator-(Vec2d& vec)
-{
-	x -= vec.x;
-	y -= vec.y;
-	return *this;
+	this->x = x;
+	this->y = y;
+>>>>>>> origin/master
 }

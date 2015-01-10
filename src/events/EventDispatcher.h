@@ -15,7 +15,7 @@ private:
 		IEventCallBackSpec() {}
 		virtual ~IEventCallBackSpec() {}
 
-		virtual void operator()(Event& evt) {}
+		virtual void operator()(const Event& evt) {}
 	};
 
 	template<class C>
@@ -23,15 +23,15 @@ private:
 	{
 	private:
 		C&		m_Proxy;
-		void	(C::*m_Fct)(Event&);
+		void	(C::*m_Fct)(const Event&);
 
 	public:
-		C&		GetProxy()						{ return m_Proxy; }
-		void	(C::*GetFct())(Event&)			{ return m_Fct; }
+		C&		GetProxy()								{ return m_Proxy; }
+		void	(C::*GetFct())(const Event&)			{ return m_Fct; }
 
 	public:
-		EventCallBackSpec(C& proxy, void (C::*fct)(Event&)) : m_Proxy(proxy), m_Fct(fct) {}
-		void operator()(Event& evt) override	{ (&m_Proxy->*m_Fct)(evt); }
+		EventCallBackSpec(C& proxy, void (C::*fct)(const Event&)) : m_Proxy(proxy), m_Fct(fct) {}
+		void operator()(const Event& evt) override		{ (&m_Proxy->*m_Fct)(evt); }
 	};
 
 
@@ -42,16 +42,16 @@ private:
 
 	public:
 		template<class C>
-		void	(C::*GetFct())(Event&)				{ return static_cast<EventCallBackSpec<C>*>(spec)->GetFct(); }
+		void	(C::*GetFct())(const Event&)					{ return static_cast<EventCallBackSpec<C>*>(spec)->GetFct(); }
 		template<class C>
-		C&		GetProxy()							{ return static_cast<EventCallBackSpec<C>*>(spec)->GetProxy(); }
+		C&		GetProxy()										{ return static_cast<EventCallBackSpec<C>*>(spec)->GetProxy(); }
 
 	public:
 		template<class C>
-		EventCallBack(C& proxy, void (C::*fct)(Event&)) { spec = new EventCallBackSpec<C>(proxy, fct); }
-		~EventCallBack()								{ delete spec; }
+		EventCallBack(C& proxy, void (C::*fct)(const Event&))	{ spec = new EventCallBackSpec<C>(proxy, fct); }
+		~EventCallBack()										{ delete spec; }
 
-		void operator()(Event& evt)					{ (*spec)(evt);	}
+		void operator()(const Event& evt)						{ (*spec)(evt);	}
 	};
 
 	struct Listener
@@ -64,7 +64,7 @@ private:
 	public:
 		int						GetId()				{ return m_Id; }
 		const char*				GetType()			{ return m_Type; }
-		EventCallBack&			GetCallBack()				{ return m_Cb; }
+		EventCallBack&			GetCallBack()		{ return m_Cb; }
 
 	public:
 		Listener(const int id, const char* type, EventCallBack& cb) : 
@@ -84,17 +84,17 @@ public:
 	void	Dispatch(Event& evt);
 
 	template<class C>
-	int		AddListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+	int		AddListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
 	template<class C>
-	void	RemoveListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+	void	RemoveListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
 private:
 	void	RemoveAllListeners();
 };
 
 template<class C>
-int EventDispatcher::AddListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+int EventDispatcher::AddListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
 	if (!m_Listeners)
 	{
@@ -113,7 +113,7 @@ int EventDispatcher::AddListener(const char* eventType, void (C::*fct)(Event&), 
 }
 
 template<class C>
-void EventDispatcher::RemoveListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+void EventDispatcher::RemoveListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
 	const unsigned short l = m_Listeners->size();
 	for (unsigned int i = 0 ; i < l ; i++)

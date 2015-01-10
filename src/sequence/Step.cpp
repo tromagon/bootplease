@@ -19,7 +19,7 @@ void WaitForEventStep<void>::Run()
 	m_Dispatcher.AddListener(m_Type, &WaitForEventStep<void>::OnWaitForEventReceived, *this);
 }
 
-void WaitForEventStep<void>::OnWaitForEventReceived(Event& evt)
+void WaitForEventStep<void>::OnWaitForEventReceived(const Event& evt)
 {
 	m_Dispatcher.RemoveListener(m_Type, &WaitForEventStep<void>::OnWaitForEventReceived, *this);
 

@@ -110,7 +110,7 @@ public:
 	bool IsAsync() override { return true; }
 	void Run() override;
 
-	void OnWaitForEventReceived(Event& evt);
+	void OnWaitForEventReceived(const Event& evt);
 };
 
 template<class C>
@@ -120,7 +120,7 @@ void WaitForEventStep<C>::Run()
 }
 
 template<class C>
-void WaitForEventStep<C>::OnWaitForEventReceived(Event& evt)
+void WaitForEventStep<C>::OnWaitForEventReceived(const Event& evt)
 {
 	m_Dispatcher.RemoveListener(m_Type, &WaitForEventStep<C>::OnWaitForEventReceived, *this);
 
@@ -153,7 +153,7 @@ public:
 
 	void Run() override;
 
-	void OnWaitForEventReceived(Event& evt);
+	void OnWaitForEventReceived(const Event& evt);
 };
 
 #endif

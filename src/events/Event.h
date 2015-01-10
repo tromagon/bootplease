@@ -7,7 +7,7 @@ private:
 	const char* m_Type;
 
 public:
-	const char* GetType() { return m_Type; }
+	const char* GetType() const { return m_Type; }
 
 public:
 	explicit Event(const char* type):m_Type(type) {};

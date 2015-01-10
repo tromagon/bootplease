@@ -25,8 +25,8 @@ public:
 	EventDispatcherTest();
 	~EventDispatcherTest();
 
-	void hello(Event& evt);
-	void hello2(Event& evt);
+	void hello(const Event& evt);
+	void hello2(const Event& evt);
 };
 
 #endif

@@ -28,12 +28,12 @@ EventDispatcherTest::~EventDispatcherTest()
 	delete dispatcher;
 }
 
-void EventDispatcherTest::hello(Event& evt)
+void EventDispatcherTest::hello(const Event& evt)
 {
 	std::cout << "Hello " << evt.GetType() << std::endl;
 }
 
-void EventDispatcherTest::hello2(Event& evt)
+void EventDispatcherTest::hello2(const Event& evt)
 {
 	std::cout << "Hello2 " << evt.GetType() << std::endl;
 }

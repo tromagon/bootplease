@@ -7,10 +7,12 @@
 
 class Step
 {
+	friend class Sequence;
+
 protected:
 	ISequence& m_Sequence;
 
-public:
+protected:
 	explicit Step(ISequence& sequence) : m_Sequence(sequence) {}
 	virtual ~Step(){}
 
@@ -25,12 +27,14 @@ public:
 template<class C, class P = void>
 class CallStep : public Step
 {
+	friend class Sequence;
+
 private:
 	void	(C::*m_Fct)(P&);
 	C&		m_Proxy;
 	P&		m_Params;
 
-public:
+protected:
 	CallStep(ISequence& sequence, void (C::*fct)(P&), C& proxy, P& params) : 
 		Step(sequence), m_Fct(fct), m_Proxy(proxy), m_Params(params) {}
 	
@@ -51,11 +55,13 @@ void CallStep<C, P>::Run()
 template<class C>
 class CallStep<C, void> : public Step
 {
+	friend class Sequence;
+
 private:
 	void	(C::*m_Fct)();
 	C&		m_Proxy;    
 
-public:
+protected:
 	CallStep(ISequence& sequence, void (C::*fct)(), C& proxy) : 
 		Step(sequence), m_Fct(fct), m_Proxy(proxy) {}
 
@@ -78,11 +84,13 @@ void CallStep<C, void>::Run()
 
 class EventStep : public Step
 {
+	friend class Sequence;
+
 private:
 	const Event&		m_Event;
 	EventDispatcher&	m_Dispatcher;
 
-public:
+protected:
 	EventStep(ISequence& sequence, const Event& evt, EventDispatcher& dispatcher) : 
 		Step(sequence), m_Event(evt), m_Dispatcher(dispatcher) {}
 
@@ -96,6 +104,8 @@ public:
 template<class C>
 class WaitForEventStep : public Step
 {
+	friend class Sequence;
+
 private:
 	const char*			m_Type;
 	void				(C::*m_Fct)(const Event&);
@@ -103,7 +113,7 @@ private:
 	EventDispatcher&	m_Dispatcher;
 	int					m_EventId;
 
-public:
+protected:
 	WaitForEventStep(ISequence& sequence, const char* type, void (C::*fct)(const Event&), C& proxy, EventDispatcher& dispatcher) :
 		Step(sequence), m_Type(type), m_Fct(fct), m_Proxy(proxy), m_Dispatcher(dispatcher) {};
 
@@ -141,11 +151,13 @@ void WaitForEventStep<C>::OnWaitForEventReceived(const Event& evt)
 template<>
 class WaitForEventStep<void> : public Step
 {
+	friend class Sequence;
+
 private:
 	const char*			m_Type;
 	EventDispatcher&	m_Dispatcher;
 
-public:
+protected:
 	WaitForEventStep(ISequence& sequence, const char* type, EventDispatcher& dispatcher) : 
 		Step(sequence), m_Type(type), m_Dispatcher(dispatcher) {};
 

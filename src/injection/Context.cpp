@@ -4,6 +4,8 @@
 #include "MediatorMap.h"
 #include "ContextConfig.h"
 #include "Injector.h"
+#include "UpdateManager.h"
+#include "Renderer.h"
 
 Context::Context()
 {
@@ -12,6 +14,8 @@ Context::Context()
 	m_EventCommandMap = new EventCommandMap(*this);
 	m_DirectCommandMap = new DirectCommandMap(*this);
 	m_MediatorMap = new MediatorMap(*this);
+	m_Renderer = new Renderer();
+	m_UpdateManager = new UpdateManager();
 }
 
 Context::~Context()
@@ -21,10 +25,18 @@ Context::~Context()
 	delete m_MediatorMap;
 	delete m_EventCommandMap;
 	delete m_DirectCommandMap;
+	delete m_Renderer;
+	delete m_UpdateManager;
 }
 
 void Context::Update(float deltaTime)
 {
+	m_UpdateManager->Update(deltaTime);
+}
+
+void Context::Render()
+{
+	m_Renderer->Render();
 }
 
 void Context::Configure(ContextConfig& config)
@@ -37,6 +49,26 @@ void Context::Configure(ContextConfig& config)
 void Context::Execute()
 {
 	m_DirectCommandMap->Execute();
+}
+
+void Context::AddToUpdate(Updateable& updateable)
+{
+	m_UpdateManager->Add(updateable);
+}
+
+void Context::AddToRenderer(Renderable& renderable)
+{
+	m_Renderer->Add(renderable);
+}
+
+void Context::RemoveFromUpdate(Updateable& updateable)
+{
+	m_UpdateManager->Remove(updateable);
+}
+
+void Context::RemoveFromRenderer(Renderable& renderable)
+{
+	m_Renderer->Remove(renderable);
 }
 
 void Context::Dispose()

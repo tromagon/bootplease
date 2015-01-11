@@ -16,13 +16,14 @@ private:
 	Context*			m_Context;
 
 public:
-	Injector&			GetInjector()							{ return m_Context->GetInjector(); }
-	EventCommandMap&	GetEventCommandMap()					{ return m_Context->GetEventCommandMap(); }
-	DirectCommandMap&	GetDirectCommandMap()					{ return m_Context->GetDirectCommandMap(); }
-	MediatorMap&		GetMediatorMap()						{ return m_Context->GetMediatorMap(); }
+	Context&			GetContext()					{ return *m_Context; }
+	Injector&			GetInjector()					{ return m_Context->GetInjector(); }
+	EventCommandMap&	GetEventCommandMap()			{ return m_Context->GetEventCommandMap(); }
+	DirectCommandMap&	GetDirectCommandMap()			{ return m_Context->GetDirectCommandMap(); }
+	MediatorMap&		GetMediatorMap()				{ return m_Context->GetMediatorMap(); }
 
 private:
-	void			SetContext(Context& value)					{ m_Context = &value; }
+	void				SetContext(Context& value)		{ m_Context = &value; }
 
 public:
 	ContextConfig() {};

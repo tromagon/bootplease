@@ -19,36 +19,6 @@ MediatorMap::~MediatorMap()
 	UnMapAll();
 }
 
-View* MediatorMap::GetView(const char* id)
-{
-	View* view = GetViewInstance(id);
-
-	if (view) return view;
-
-	MediatorMapItem* item;
-
-	const unsigned short l = m_Map.size();
-	for (unsigned int i = 0 ; i < l ; i++)
-	{
-		item = m_Map[i];
-		if (item->GetId() == id)
-		{
-			view = &(item->GetViewInstance());
-			Mediator& mediator = item->GetMediatorInstance();
-			//mediator.SetContext()
-			mediator.SetView(*view);
-			mediator.OnInitialized();
-
-			ViewMediatorItem* vm = new ViewMediatorItem(id, *view, mediator); 
-			m_VmList.push_back(vm);
-
-			return view;
-		}
-	}
-
-	return nullptr;
-}
-
 void MediatorMap::UnMap(const char* id)
 {
 	MediatorMapItem* item;
@@ -112,6 +82,20 @@ View* MediatorMap::GetViewInstance(const char* id)
 	}
 
 	return nullptr;
+}
+
+MediatorMap::ViewMediatorItem& MediatorMap::AddViewMediatorItem(MediatorMapItem* item)
+{
+	View* view = &(item->GetViewInstance());
+	Mediator& mediator = item->GetMediatorInstance();
+	mediator.SetContext(m_Context);
+	mediator.SetView(*view);
+	mediator.OnInitialized();
+
+	ViewMediatorItem* vm = new ViewMediatorItem(item->GetId(), *view, mediator); 
+	m_VmList.push_back(vm);
+
+	return *vm;
 }
 
 void MediatorMap::UnMapAll()

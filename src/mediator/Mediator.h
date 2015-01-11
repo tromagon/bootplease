@@ -19,6 +19,9 @@ private:
 	void				SetContext(Context& value)				{ m_Context = &value; }
 
 public:
+	template<class C>
+	C&					GetView()								{ return static_cast<C&>(*m_View); }
+
 	View&				GetView()								{ return *m_View; }
 	void				SetView(View& value)					{ m_View = &value; }
 

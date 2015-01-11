@@ -7,6 +7,7 @@
 class CommandMap;
 class EventCommandMap;
 class DirectCommandMap;
+class MediatorMap;
 
 class Command
 {
@@ -20,14 +21,15 @@ private:
 	CommandMap*			m_CommandMap;			
 
 private:
-	void				SetContext(Context& value)					{ m_Context = &value; }
-	void				SetEvent(const Event& evt)					{ m_Event = &evt; }
-	void				SetCommandMap(CommandMap& value)			{ m_CommandMap = & value; }
+	void				SetContext(Context& value);
+	void				SetEvent(const Event& evt);
+	void				SetCommandMap(CommandMap& value);
 
 protected:
-	EventDispatcher&	GetDispatcher()								{ return m_Context->GetDispatcher(); }
-	const Event&		GetEvent()									{ return *m_Event; }
-	Injector&			GetInjector()								{ return m_Context->GetInjector(); }
+	EventDispatcher&	GetDispatcher();
+	const Event&		GetEvent();
+	Injector&			GetInjector();
+	MediatorMap&		GetMediatorMap();
 
 public:
 	Command() : m_Event(nullptr) {}

@@ -135,17 +135,44 @@ public:
 
 	template<class C>
 	MediatorMapper& Map(const char* id, View& (C::*fct)(), C& proxy);
-	
-	View*	GetView(const char* id);
+
+	template<class C>
+	C*	GetView(const char* id);
+
 	void	UnMap(const char* id);
 	void	DisposeView(View& view);
 	void	DisposeViewById(const char* id);
 
 private:
-	View*	GetViewInstance(const char* id);
-	void	UnMapAll();
-	void	DisposeAll();
+	View*				GetViewInstance(const char* id);
+	ViewMediatorItem&	AddViewMediatorItem(MediatorMapItem* item);
+	void				UnMapAll();
+	void				DisposeAll();
 };
+
+template<class C>
+C* MediatorMap::GetView(const char* id)
+{
+	C* view = static_cast<C*>(GetViewInstance(id));
+
+	if (view) return view;
+
+	MediatorMapItem* item;
+	ViewMediatorItem* vm;
+
+	const unsigned short l = m_Map.size();
+	for (unsigned int i = 0 ; i < l ; i++)
+	{
+		item = m_Map[i];
+		if (item->GetId() == id)
+		{
+			vm = &AddViewMediatorItem(item);
+			return static_cast<C*>(&vm->GetView());
+		}
+	}
+
+	return nullptr;
+}
 
 template<class C>
 MediatorMap::MediatorMapper& MediatorMap::Map(const char* id, View& (C::*fct)(), C& proxy)

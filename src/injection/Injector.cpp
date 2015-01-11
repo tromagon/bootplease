@@ -16,7 +16,7 @@ void Injector::UnMap(const char* id)
 		if (mapping->GetId() == id)
 		{
 			m_Maps.erase(m_Maps.begin() + i);
-			delete &mapping;
+			delete mapping;
 			return;
 		}
 	}
@@ -29,7 +29,8 @@ void Injector::UnMapAll()
 	int i = m_NumInjections;
 	while (i-- > 0)
 	{
-		delete &mapping;
+		mapping = m_Maps[i];
+		delete mapping;
 	}
 
 	m_Maps.clear();

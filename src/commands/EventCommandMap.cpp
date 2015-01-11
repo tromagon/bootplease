@@ -40,7 +40,7 @@ void EventCommandMap::OnCommandEvent(const Event& evt)
 
 			if (GetDetainedIndex(*command) == -1)
 			{
-				delete &command;
+				delete command;
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 #include "EventDispatcher.h"
 
-EventDispatcher::EventDispatcher()
+EventDispatcher::EventDispatcher() : m_NumListeners(0)
 {
 	m_Listeners = nullptr;
 	m_CurrentId = 0;
@@ -18,10 +18,12 @@ EventDispatcher::~EventDispatcher()
 
 void EventDispatcher::RemoveListener(int listenerId)
 {
-	const unsigned short l = m_Listeners->size();
+	Listener* listener;
+
+	const unsigned short l = m_NumListeners;
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
-		Listener* listener = (*m_Listeners)[i];
+		listener = (*m_Listeners)[i];
 		if (listener->GetId() == listenerId)
 		{
 			m_Listeners->erase(m_Listeners->begin() + i);
@@ -39,10 +41,11 @@ bool EventDispatcher::HasListener(const char* eventType)
 		return false;
 	}
 
-	const unsigned short l = m_Listeners->size();
+	Listener* listener;
+	const unsigned short l = m_NumListeners;
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
-		Listener* listener = (*m_Listeners)[i];
+		listener = (*m_Listeners)[i];
 		const EventCallBack& cb = listener->GetCallBack();
 		if (listener->GetType() == eventType)
 		{
@@ -60,10 +63,11 @@ void EventDispatcher::Dispatch(const Event& evt)
 		return;
 	}
 
-	const unsigned short l = m_Listeners->size();
+	Listener* listener;
+	const unsigned short l = m_NumListeners;
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
-		Listener* listener = (*m_Listeners)[i];
+		listener = (*m_Listeners)[i];
 		if (listener->GetType() == evt.GetType())
 		{
 			listener->GetCallBack()(evt);
@@ -75,10 +79,11 @@ void EventDispatcher::RemoveAllListeners()
 {
 	if (!m_Listeners) return;
 
-	const unsigned short l = m_Listeners->size();
+	Listener* listener;
+	const unsigned short l = m_NumListeners;
 	for (int i = l - 1 ; i >= 0 ; i--)
 	{
-		Listener* listener = (*m_Listeners)[i];
+		listener = (*m_Listeners)[i];
 		m_Listeners->erase(m_Listeners->begin() + i);
 		delete &(listener->GetCallBack());
 		delete listener;

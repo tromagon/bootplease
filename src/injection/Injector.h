@@ -19,13 +19,13 @@ private:
 	class InjectorMappingSpec : public InjectorMappingSpecBase
 	{
 	private:
-		C*				m_Instance;
+		const C*		m_Instance;
 	
 	public:
-		C*				GetInstance()	{ return m_Instance; }
+		const C*		GetInstance()	{ return m_Instance; }
 
 	public:
-		explicit InjectorMappingSpec(C* instance) : m_Instance(instance) {};
+		explicit InjectorMappingSpec(const C* instance) : m_Instance(instance) {};
 		virtual ~InjectorMappingSpec() {};
 	};
 
@@ -37,12 +37,12 @@ private:
 
 	public:
 		template<class C>
-		C*				GetInstance()	{ return static_cast<InjectorMappingSpec<C>*>(m_Spec)->GetInstance(); }
+		const C*		GetInstance()	{ return static_cast<InjectorMappingSpec<C>*>(m_Spec)->GetInstance(); }
 		const char*		GetId()			{ return m_Id; }
 
 	public:
 		template<class C>
-		InjectorMapping(C* instance, const char* id) : m_Id(id) { m_Spec = new InjectorMappingSpec<C>(instance); };
+		InjectorMapping(const C* instance, const char* id) : m_Id(id) { m_Spec = new InjectorMappingSpec<C>(instance); };
 		virtual ~InjectorMapping() { delete m_Spec; };
 	};
 
@@ -54,23 +54,23 @@ public:
 	Injector() : m_NumInjections(0) {}
 	~Injector();
 
-	void	UnMap(const char* id);
+	void		UnMap(const char* id);
 
 	template<class C>
-	void	Map(C* obj, const char* id);
+	void		Map(const C* obj, const char* id);
 
 	template<class C>
-	void	UnMap(C& obj);
+	void		UnMap(C& obj);
 
 	template<class C>
-	C*		GetInstanceById(const char* id);
+	const C*	GetInstanceById(const char* id);
 
 private:
 	void	UnMapAll();
 };
 
 template<class C>
-void Injector::Map(C* instance, const char* id)
+void Injector::Map(const C* instance, const char* id)
 {
 	InjectorMapping* mapping = new InjectorMapping(instance, id);
 	m_Maps.push_back(mapping);
@@ -98,7 +98,7 @@ void Injector::UnMap(C& obj)
 }
 
 template<class C>
-C* Injector::GetInstanceById(const char* id)
+const C* Injector::GetInstanceById(const char* id)
 {
 	InjectorMapping* mapping;
 

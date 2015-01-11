@@ -71,9 +71,9 @@ private:
 			m_Id(id), m_Type(type), m_Cb(cb) {}
 	};
 
-	vector<Listener*>* m_Listeners;
-
-	int m_CurrentId;
+	vector<Listener*>*	m_Listeners;
+	int					m_CurrentId;
+	int					m_NumListeners;
 
 public:
 	EventDispatcher();
@@ -108,6 +108,7 @@ int EventDispatcher::AddListener(const char* eventType, void (C::*fct)(const Eve
 
 	Listener* listener = new Listener(listenerId, eventType, *cb);
 	m_Listeners->push_back(listener);
+	m_NumListeners++;
 
 	return listenerId;
 }
@@ -115,18 +116,23 @@ int EventDispatcher::AddListener(const char* eventType, void (C::*fct)(const Eve
 template<class C>
 void EventDispatcher::RemoveListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
+	Listener* listener;
+	EventCallBack* cb;
+
 	const unsigned short l = m_Listeners->size();
 	for (unsigned int i = 0 ; i < l ; i++)
 	{
-		Listener* listener = (*m_Listeners)[i];
-		EventCallBack& cb = listener->GetCallBack();
+		listener = (*m_Listeners)[i];
+		cb = &listener->GetCallBack();
 
-		if (listener->GetType() == eventType && cb.GetFct<C>() == fct
-			&& &(cb.GetProxy<C>()) == &proxy)
+		if (listener->GetType() == eventType && cb->GetFct<C>() == fct
+			&& &(cb->GetProxy<C>()) == &proxy)
 		{
 			m_Listeners->erase(m_Listeners->begin() + i);
-			delete &(listener->GetCallBack());
+			delete cb;
 			delete listener;
+			m_NumListeners--;
+
 			break;
 		}
 	}

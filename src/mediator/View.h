@@ -1,7 +1,9 @@
 #ifndef _VIEW_H_
 #define _VIEW_H_
 
-class View
+#include "EventDispatcher.h"
+
+class View : public EventDispatcher
 {
 public:
 	View() {}

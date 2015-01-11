@@ -20,9 +20,12 @@ Context::Context()
 
 Context::~Context()
 {
-	delete m_Dispatcher;
-	delete m_Injector;
 	delete m_MediatorMap;
+
+	m_Config->Dispose();
+
+	delete m_Injector;
+	delete m_Dispatcher;
 	delete m_EventCommandMap;
 	delete m_DirectCommandMap;
 	delete m_Renderer;

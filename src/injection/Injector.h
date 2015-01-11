@@ -52,7 +52,7 @@ private:
 
 public:
 	Injector() : m_NumInjections(0) {}
-	~Injector() {}
+	~Injector();
 
 	void	UnMap(const char* id);
 
@@ -64,6 +64,9 @@ public:
 
 	template<class C>
 	C*		GetInstanceById(const char* id);
+
+private:
+	void	UnMapAll();
 };
 
 template<class C>
@@ -105,7 +108,7 @@ C* Injector::GetInstanceById(const char* id)
 		mapping = m_Maps[i];
 		if (mapping->GetId() == id)
 		{
-			return &(mapping.GetInstance<C>());
+			return &(mapping->GetInstance<C>());
 		}
 	}
 

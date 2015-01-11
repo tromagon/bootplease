@@ -30,6 +30,7 @@ public:
 
 protected:
 	virtual void Configure() {};
+	virtual void Dispose() {};
 };
 
 #endif

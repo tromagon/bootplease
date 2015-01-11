@@ -23,13 +23,23 @@ Context::~Context()
 	delete m_DirectCommandMap;
 }
 
+void Context::Update(float deltaTime)
+{
+}
+
 void Context::Configure(ContextConfig& config)
 {
-	config.SetContext(*this);
-	config.Configure();
+	m_Config = &config;
+	m_Config->SetContext(*this);
+	m_Config->Configure();
 }
 
 void Context::Execute()
 {
 	m_DirectCommandMap->Execute();
+}
+
+void Context::Dispose()
+{
+	m_Config->Dispose();
 }

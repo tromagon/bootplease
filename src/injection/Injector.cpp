@@ -1,5 +1,10 @@
 #include "Injector.h"
 
+Injector::~Injector()
+{
+	UnMapAll();
+}
+
 void Injector::UnMap(const char* id)
 {
 	InjectorMapping* mapping;
@@ -15,4 +20,18 @@ void Injector::UnMap(const char* id)
 			return;
 		}
 	}
+}
+
+void Injector::UnMapAll()
+{
+	InjectorMapping* mapping;
+
+	int i = m_NumInjections;
+	while (i-- > 0)
+	{
+		delete &mapping;
+	}
+
+	m_Maps.clear();
+
 }

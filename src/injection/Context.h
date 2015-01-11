@@ -16,6 +16,7 @@ private:
 	EventCommandMap*	m_EventCommandMap;
 	DirectCommandMap*	m_DirectCommandMap;
 	MediatorMap*		m_MediatorMap;
+	ContextConfig*		m_Config;
 		
 public:
 	EventDispatcher&	GetDispatcher()			{ return *m_Dispatcher; }
@@ -28,11 +29,13 @@ public:
 	Context();
 	~Context();
 
-	void Update(float deltaTime = 0.0f) {}
+	void Update(float deltaTime = 0.0f);
 	void Render() {}
 
 	void Configure(ContextConfig& config);
 	void Execute();
+
+	void Dispose();
 };
 
 #endif

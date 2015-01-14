@@ -57,6 +57,17 @@ void Sequence::Start()
 	}
 }
 
+void Sequence::Reset()
+{
+	const unsigned short l = m_List->size();
+	for (int i = l - 1 ; i >= 0 ; i--)
+	{
+		delete (*m_List)[i];
+	}
+
+	m_List->clear();
+}
+
 bool Sequence::IsNextStepAsync()
 {
 	if (m_CurrentIndex + 1 < m_NumSteps)

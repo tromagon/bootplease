@@ -1,6 +1,6 @@
 #include "Mediator.h"
 
-void Mediator::DispatchContextEvent(Event& evt)
+void Mediator::DispatchContextEvent(const Event& evt)
 {
 	GetDispatcher().Dispatch(evt);
 }

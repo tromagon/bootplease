@@ -34,25 +34,25 @@ protected:
 	virtual ~Mediator() {}
 
 	template<class C>
-	int		AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+	int		AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
 	template<class C>
-	void	RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy);
+	void	RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
-	void	DispatchContextEvent(Event& evt);
+	void	DispatchContextEvent(const Event& evt);
 
 	virtual void OnInitialized() {};
 };
 
 
 template<class C>
-int Mediator::AddContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+int Mediator::AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
 	return GetDispatcher().AddListener(eventType, fct, proxy);
 }
 
 template<class C>
-void Mediator::RemoveContextListener(const char* eventType, void (C::*fct)(Event&), C& proxy)
+void Mediator::RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
 	GetDispatcher().RemoveListener(eventType, fct, proxy);
 }

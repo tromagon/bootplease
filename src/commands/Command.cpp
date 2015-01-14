@@ -38,7 +38,7 @@ MediatorMap& Command::GetMediatorMap()
 	return m_Context->GetMediatorMap();
 }
 
-void Command::DispatchContextEvent(Event& evt)
+void Command::DispatchContextEvent(const Event& evt)
 {
 	GetDispatcher().Dispatch(evt);
 }

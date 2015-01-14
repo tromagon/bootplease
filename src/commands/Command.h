@@ -42,7 +42,7 @@ protected:
 	template<class C>
 	void	RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
-	void	DispatchContextEvent(Event& evt);
+	void	DispatchContextEvent(const Event& evt);
 
 	virtual void Execute() {}
 	virtual void Detain() final;

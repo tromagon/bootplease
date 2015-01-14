@@ -39,6 +39,7 @@ public:
 	void			WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcher* dispatcher = nullptr);
 
 	void			Start();
+	void			Reset();
 
 private:
 	void NextStep();

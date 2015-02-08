@@ -18,7 +18,7 @@ public:
 	virtual bool	IsNextStepAsync() override;
 
 	void			Start();
-    void			Dispatch(const Event& evt);
+    void            Dispatch(const Event& evt);
 	void			Dispatch(const Event& evt, EventDispatcherPtr& dispatcher);
     void			WaitFor(const char* eventType);
 	void			WaitFor(const char* eventType, EventDispatcherPtr& dispatcher);

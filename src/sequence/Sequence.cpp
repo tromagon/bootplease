@@ -1,46 +1,34 @@
 #include "Sequence.h"
 #include "SequenceEvent.h"
 
-Sequence::Sequence(EventDispatcher& dispatcher) : m_Dispatcher(dispatcher)
+Sequence::Sequence(EventDispatcherPtr& dispatcher) : m_Dispatcher(dispatcher), m_NumSteps(0) {}
+
+void Sequence::Dispatch(const Event& evt)
 {
-	m_List = nullptr;
+    StepPtr step = StepPtr(new EventStep(*this, evt, m_Dispatcher));
+    m_List.push_back(move(step));
+    m_NumSteps++;
 }
 
-Sequence::~Sequence()
+void Sequence::Dispatch(const Event& evt, EventDispatcherPtr& dispatcher)
 {
-	if (m_List)
-	{
-		const unsigned short l = m_List->size();
-		for (int i = l - 1 ; i >= 0 ; i--)
-		{
-			delete (*m_List)[i];
-			m_List->erase(m_List->begin() + i);
-		}
-
-		delete m_List;
-	}
+    StepPtr step = StepPtr(new EventStep(*this, evt, dispatcher));
+    m_List.push_back(move(step));
+    m_NumSteps++;
 }
 
-void Sequence::Dispatch(const Event& evt, EventDispatcher* dispatcher)
+void Sequence::WaitFor(const char* eventType)
 {
-	if (!m_List)
-	{
-		m_List = new vector<Step*>();
-	}
-
-	EventStep* step = new EventStep(*this, evt, (dispatcher ? *dispatcher : m_Dispatcher));
-	m_List->push_back(step);
+    StepPtr step = StepPtr(new WaitForEventStep<void>(*this, eventType, m_Dispatcher));
+    m_List.push_back(move(step));
+    m_NumSteps++;
 }
 
-void Sequence::WaitFor(const char* eventType, EventDispatcher* dispatcher)
+void Sequence::WaitFor(const char* eventType, EventDispatcherPtr& dispatcher)
 {
-	if (!m_List)
-	{
-		m_List = new vector<Step*>();
-	}
-
-	WaitForEventStep<void>* step = new WaitForEventStep<void>(*this, eventType, (dispatcher ? *dispatcher : m_Dispatcher));
-	m_List->push_back(step);
+    StepPtr step = StepPtr(new WaitForEventStep<void>(*this, eventType, dispatcher));
+    m_List.push_back(move(step));
+    m_NumSteps++;
 }
 
 void Sequence::Start()
@@ -49,30 +37,17 @@ void Sequence::Start()
 	EventDispatcher::Dispatch(evt);
 
 	m_CurrentIndex = 0;
-	m_NumSteps = m_List->size();
-
 	if (m_CurrentIndex < m_NumSteps)
 	{
 		NextStep();
 	}
 }
 
-void Sequence::Reset()
-{
-	const unsigned short l = m_List->size();
-	for (int i = l - 1 ; i >= 0 ; i--)
-	{
-		delete (*m_List)[i];
-	}
-
-	m_List->clear();
-}
-
 bool Sequence::IsNextStepAsync()
 {
 	if (m_CurrentIndex + 1 < m_NumSteps)
 	{
-		Step* nextStep = (*m_List)[m_CurrentIndex + 1];
+        StepPtr& nextStep = m_List[m_CurrentIndex + 1];
 		return nextStep->IsAsync();
 	}
 
@@ -81,11 +56,11 @@ bool Sequence::IsNextStepAsync()
 
 void Sequence::NextStep()
 {
-	Step* step = (*m_List)[m_CurrentIndex];
+	StepPtr& step = m_List[m_CurrentIndex];
 
 	if (IsNextStepAsync())
 	{
-		Step* nextStep = (*m_List)[m_CurrentIndex + 1];
+		StepPtr& nextStep = m_List[m_CurrentIndex + 1];
 		nextStep->Run();
 	}
 

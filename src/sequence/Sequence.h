@@ -7,77 +7,60 @@
 
 using namespace std;
 
-
 class Sequence : public ISequence
 {
-private:
-	EventDispatcher&	m_Dispatcher;
-	vector<Step*>*		m_List;
-	int					m_CurrentIndex;
-	int					m_NumSteps;
-
 public:
-	explicit Sequence(EventDispatcher& dispatcher);
-	~Sequence();
+	explicit Sequence(EventDispatcherPtr& dispatcher);
+    ~Sequence() {};
 
 	virtual int		IncrementIndex() override;
 	virtual void	CompleteStep() override;
 	virtual bool	IsNextStepAsync() override;
 
-	void			Dispatch(const Event& evt, EventDispatcher* dispatcher = nullptr);
+	void			Start();
+    void			Dispatch(const Event& evt);
+	void			Dispatch(const Event& evt, EventDispatcherPtr& dispatcher);
+    void			WaitFor(const char* eventType);
+	void			WaitFor(const char* eventType, EventDispatcherPtr& dispatcher);
 
 	template<class C>
 	void			Call(void (C::*fct)(), C& proxy);
-
-	template<class C, class P>
-	void			Call(void (C::*fct)(P&), C& proxy, P& params);
-
-	void			WaitFor(const char* eventType, EventDispatcher* dispatcher = nullptr);
-
+    template<class C>
+	void			WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 	template<class C>
-	void			WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcher* dispatcher = nullptr);
-
-	void			Start();
-	void			Reset();
+	void			WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcherPtr& dispatcher);
 
 private:
-	void NextStep();
+	void			NextStep();
+
+	EventDispatcherPtr&			m_Dispatcher;
+	vector<StepPtr>				m_List;
+	int							m_CurrentIndex;
+	int							m_NumSteps;
 };
 
 template<class C>
 void Sequence::Call(void (C::*fct)(), C& proxy)
 {
-	if (!m_List)
-	{
-		m_List = new vector<Step*>();
-	}
-
-	CallStep<C>* step = new CallStep<C>(*this, fct, proxy);
-	m_List->push_back(step);
-}
-
-template<class C, class P>
-void Sequence::Call(void (C::*fct)(P&), C& proxy, P& params)
-{
-	if (!m_List)
-	{
-		m_List = new vector<Step*>();
-	}
-
-	CallStep<C, P>* step = new CallStep<C, P>(*this, fct, proxy, params);
-	m_List->push_back(step);
+	StepPtr step = StepPtr(new CallStep<C>(*this, fct, proxy));
+	m_List.push_back(move(step));
+    m_NumSteps++;
 }
 
 template<class C>
-void Sequence::WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcher* dispatcher)
+void Sequence::WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
-	if (!m_List)
-	{
-		m_List = new vector<Step*>();
-	}
+    StepPtr step = StepPtr(new WaitForEventStep<C>(*this, eventType, fct, proxy, m_Dispatcher));
+    m_List.push_back(move(step));
+    m_NumSteps++;
+}
 
-	WaitForEventStep<C>* step = new WaitForEventStep<C>(*this, eventType, fct, proxy, (dispatcher ? *dispatcher : m_Dispatcher));
-	m_List->push_back(step);
+template<class C>
+void Sequence::WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcherPtr& dispatcher)
+{
+	StepPtr step = StepPtr(new WaitForEventStep<C>(*this, eventType, fct, proxy, dispatcher));
+    m_List.push_back(move(step));
+    m_NumSteps++;
 }
 
 #endif

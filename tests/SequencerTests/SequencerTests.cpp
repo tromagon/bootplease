@@ -13,7 +13,7 @@ const char* ExampleEvent::INIT = "ExampleEvent_INIT";
 const char* ExampleEvent::COMPLETE = "ExampleEvent_COMPLETE";
 const char* ExampleEvent::SECOND_COMPLETE = "ExampleEvent_SECOND_COMPLETE";
 
-EventDispatcher dispatcher;
+EventDispatcherPtr dispatcher;
 
 void A::methodA()
 {
@@ -25,10 +25,10 @@ void A::methodB(const Event& evt)
 	Console::WriteLine(L"Method B called");
 
 	ExampleEvent completeEvent(ExampleEvent::COMPLETE);
-	dispatcher.Dispatch(completeEvent);
+	dispatcher->Dispatch(completeEvent);
 
 	ExampleEvent secondCompleteEvent(ExampleEvent::SECOND_COMPLETE);
-	dispatcher.Dispatch(secondCompleteEvent);
+	dispatcher->Dispatch(secondCompleteEvent);
 }
 
 void A::methodC(const Event& evt)
@@ -55,7 +55,8 @@ int main(array<System::String ^> ^args)
 {
 	A a;
 
-	dispatcher.AddListener(ExampleEvent::INIT, &A::methodB, a);
+    dispatcher = EventDispatcherPtr(new EventDispatcher());
+	dispatcher->AddListener(ExampleEvent::INIT, &A::methodB, a);
 
 	Sequence sequence(dispatcher);
 	sequence.AddListener(SequenceEvent::STARTED, &A::onSequenceStarted, a);

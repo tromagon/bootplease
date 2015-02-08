@@ -1,7 +1,7 @@
 #ifndef _ISEQUENCE_H_
 #define _ISEQUENCE_H_
 
-#include "EventDispatcher.h"
+#include "events\EventDispatcher.h"
 
 class ISequence : public EventDispatcher
 {

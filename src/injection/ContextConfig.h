@@ -1,7 +1,7 @@
 #ifndef _CONTEXTCONFIG_H_
 #define _CONTEXTCONFIG_H_
 
-#include "Context.h"
+#include "injection\Context.h"
 
 class Injector;
 class EventCommandMap;

@@ -1,7 +1,7 @@
 #ifndef _SEQUENCESTEP_H_
 #define _SEQUENCESTEP_H_
 
-#include "ISequence.h"
+#include "sequence\ISequence.h"
 
 /** Step **/
 

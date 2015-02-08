@@ -1,7 +1,7 @@
 #ifndef _SEQUENCEEVENT_H_
 #define _SEQUENCEEVENT_H_
 
-#include "Event.h"
+#include "events\Event.h"
 
 class Sequence;
 

@@ -1,4 +1,4 @@
-#include "SequenceEvent.h"
+#include "sequence\SequenceEvent.h"
 
 const char* SequenceEvent::STARTED = "SequenceEvent_STARTED";
 const char* SequenceEvent::COMPLETE = "SequenceEvent_COMPLETE";

@@ -1,5 +1,5 @@
-#include "Sequence.h"
-#include "SequenceEvent.h"
+#include "sequence\Sequence.h"
+#include "sequence\SequenceEvent.h"
 
 Sequence::Sequence(EventDispatcherPtr& dispatcher) : m_Dispatcher(dispatcher), m_NumSteps(0) {}
 

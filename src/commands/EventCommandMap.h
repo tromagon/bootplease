@@ -1,9 +1,9 @@
 #ifndef _EVENTCOMMANDMAP_H_
 #define _EVENTCOMMANDMAP_H_
 
-#include "EventDispatcher.h"
-#include "Context.h"
-#include "CommandMap.h"
+#include "events\EventDispatcher.h"
+#include "injection\Context.h"
+#include "commands\CommandMap.h"
 
 class Command;
 

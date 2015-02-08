@@ -1,8 +1,8 @@
 #ifndef _SEQUENCE_H_
 #define _SEQUENCE_H_
 
-#include "ISequence.h"
-#include "Step.h"
+#include "sequence\ISequence.h"
+#include "sequence\Step.h"
 #include <vector>
 
 using namespace std;

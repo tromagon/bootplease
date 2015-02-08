@@ -1,40 +1,40 @@
-#include "Injector.h"
+#include "injection\Injector.h"
 
 Injector::~Injector()
 {
-	UnMapAll();
+    UnMapAll();
 }
 
 void Injector::UnMap(const char* id)
 {
-	InjectorMapping* mapping;
+    InjectorMapping* mapping;
 
-	const unsigned short l = m_NumInjections;
-	for (unsigned int i = 0 ; i < l ; i++)
-	{
-		mapping = m_Maps[i];
-		if (mapping->GetId() == id)
-		{
-			m_Maps.erase(m_Maps.begin() + i);
+    const unsigned short l = m_NumInjections;
+    for (unsigned int i = 0 ; i < l ; i++)
+    {
+        mapping = m_Maps[i];
+        if (mapping->GetId() == id)
+        {
+            m_Maps.erase(m_Maps.begin() + i);
 
-			m_NumInjections--;
-			delete mapping;
-			return;
-		}
-	}
+            m_NumInjections--;
+            delete mapping;
+            return;
+        }
+    }
 }
 
 void Injector::UnMapAll()
 {
-	InjectorMapping* mapping;
+    InjectorMapping* mapping;
 
-	int i = m_NumInjections;
-	while (i-- > 0)
-	{
-		mapping = m_Maps[i];
-		delete mapping;
-	}
+    int i = m_NumInjections;
+    while (i-- > 0)
+    {
+        mapping = m_Maps[i];
+        delete mapping;
+    }
 
-	m_Maps.clear();
+    m_Maps.clear();
 
 }

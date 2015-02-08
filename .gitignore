@@ -53,6 +53,9 @@ tests/EventDispatcherTests/EventDispatcherTests.v11.suo
 tests/SequencerTests/Debug
 tests/SequencerTests/ipch
 tests/SequencerTests/TestResults
+tests/InjectorTests/Debug
+tests/InjectorTests/ipch
+tests/InjectorTests/TestResults
 
 *.free
 *.ico

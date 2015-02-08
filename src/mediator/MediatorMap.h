@@ -1,9 +1,9 @@
 #ifndef _MEDIATORMAP_H_
 #define _MEDIATORMAP_H_
 
-#include "View.h"
-#include "Context.h"
-#include "EventDispatcher.h"
+#include "mediator\View.h"
+#include "injection\Context.h"
+#include "events\EventDispatcher.h"
 #include <vector>
 
 using namespace std;

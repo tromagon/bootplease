@@ -11,11 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{77E77D51-FADA-46F7-B0D4-8AB749FE8D64}</ProjectGuid>
+    <ProjectGuid>{0E1A4D1A-581D-4947-AEC7-5CC58CE5C31C}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>SequencerTests</RootNamespace>
-    <ProjectName>SequenceTests</ProjectName>
+    <RootNamespace>InjectorTests</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -83,26 +82,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\events\Event.h" />
-    <ClInclude Include="..\..\src\events\EventDispatcher.h" />
-    <ClInclude Include="..\..\src\sequence\ISequence.h" />
-    <ClInclude Include="..\..\src\sequence\Sequence.h" />
-    <ClInclude Include="..\..\src\sequence\SequenceEvent.h" />
-    <ClInclude Include="..\..\src\sequence\Step.h" />
+    <ClInclude Include="..\..\src\injection\Injector.h" />
+    <ClInclude Include="InjectorTests.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SequenceTests.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\events\EventDispatcher.cpp" />
-    <ClCompile Include="..\..\src\sequence\Sequence.cpp" />
-    <ClCompile Include="..\..\src\sequence\SequenceEvent.cpp" />
-    <ClCompile Include="..\..\src\sequence\Step.cpp" />
+    <ClCompile Include="..\..\src\injection\Injector.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="SequenceTests.cpp" />
+    <ClCompile Include="InjectorTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

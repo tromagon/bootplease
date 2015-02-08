@@ -1,11 +1,12 @@
-#include "Context.h"
-#include "EventCommandMap.h"
-#include "DirectCommandMap.h"
-#include "MediatorMap.h"
-#include "ContextConfig.h"
-#include "Injector.h"
-#include "UpdateManager.h"
-#include "Renderer.h"
+#include "injection\Context.h"
+#include "injection\ContextConfig.h"
+#include "injection\Injector.h"
+#include "events\EventDispatcher.h"
+#include "commands\EventCommandMap.h"
+#include "commands\DirectCommandMap.h"
+#include "mediator\MediatorMap.h"
+#include "core\UpdateManager.h"
+#include "core\Renderer.h"
 
 Context::Context()
 {

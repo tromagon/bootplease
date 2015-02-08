@@ -1,8 +1,8 @@
 #ifndef _DIRECTCOMMANDMAP_H_
 #define _DIRECTCOMMANDMAP_H_
 
-#include "EventDispatcher.h"
-#include "CommandMap.h"
+#include "events\EventDispatcher.h"
+#include "commands\CommandMap.h"
 
 class Context;
 class Command;

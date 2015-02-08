@@ -10,8 +10,8 @@ using namespace std;
 class Sequence : public ISequence
 {
 public:
-    explicit Sequence(EventDispatcherPtr& dispatcher);
-    ~Sequence() {};
+    explicit Sequence(EventDispatcherPtr& dispatcher) : m_Dispatcher(dispatcher), m_NumSteps(0) {}
+    ~Sequence() {}
 
     virtual int     IncrementIndex() override;
     virtual void    CompleteStep() override;

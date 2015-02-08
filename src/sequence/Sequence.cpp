@@ -1,8 +1,6 @@
 #include "sequence\Sequence.h"
 #include "sequence\SequenceEvent.h"
 
-Sequence::Sequence(EventDispatcherPtr& dispatcher) : m_Dispatcher(dispatcher), m_NumSteps(0) {}
-
 void Sequence::Dispatch(const Event& evt)
 {
     StepPtr step = StepPtr(new EventStep(*this, evt, m_Dispatcher));

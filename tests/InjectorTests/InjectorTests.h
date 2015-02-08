@@ -1,5 +1,10 @@
+#include <memory>
+
 class ModelA {};
 class ModelB {};
+
+typedef unique_ptr<ModelA> ModelAPtr;
+typedef unique_ptr<ModelB> ModelBPtr;
 
 class InjectionID
 {

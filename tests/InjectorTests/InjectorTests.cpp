@@ -13,31 +13,36 @@ int main(array<System::String ^> ^args)
 {
     Console::WriteLine(L"Starting InjectorTests");
 
-    ModelA* modelA = new ModelA();
-    ModelB* modelB = new ModelB();
+    ModelAPtr modelA = ModelAPtr(new ModelA());
+    ModelBPtr modelB = ModelBPtr(new ModelB());
 
     Injector injector;
 
     injector.Map(modelA, InjectionID::MODEL_A);
-    //injector.Map(modelB, InjectionID::MODEL_B);
+    injector.Map(modelB, InjectionID::MODEL_B);
 
-    if (injector.GetInstanceById<ModelA>(InjectionID::MODEL_A))
+    Console::WriteLine(L"Number of injection " + injector.GetNumInjections());
+
+    if (injector.GetInstanceById<ModelAPtr>(InjectionID::MODEL_A))
     {
         Console::WriteLine(L"Model A found in injector");
     }
 
     injector.UnMap(modelA);
-    
-    if (!injector.GetInstanceById<ModelA>(InjectionID::MODEL_A))
+
+    if (!injector.HasInjection(InjectionID::MODEL_A))
     {
-        Console::WriteLine(L"Model A removed from injector");
+        Console::WriteLine(L"Model A not found in injector");
     }
 
+    Console::WriteLine(L"Number of injection " + injector.GetNumInjections());
     injector.UnMap(InjectionID::MODEL_B);
 
-    if (!injector.GetInstanceById<ModelB>(InjectionID::MODEL_B))
+    Console::WriteLine(L"Number of injection " + injector.GetNumInjections());
+
+    if (!injector.HasInjection(modelB))
     {
-        Console::WriteLine(L"Model B removed from injector");
+        Console::WriteLine(L"Model B not found in injector");
     }
 
     system("pause");

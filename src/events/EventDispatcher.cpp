@@ -1,7 +1,5 @@
 #include "events\EventDispatcher.h"
 
-EventDispatcher::EventDispatcher() : m_NumListeners(0) {}
-
 bool EventDispatcher::HasListener(const char* eventType)
 {
     for ( int i = 0 ; i < m_NumListeners ; i++)

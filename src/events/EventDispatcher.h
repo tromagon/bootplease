@@ -10,8 +10,8 @@ using namespace std;
 class EventDispatcher
 {
 public:
-    EventDispatcher();
-    virtual ~EventDispatcher() {};
+    EventDispatcher() : m_NumListeners(0) {}
+    virtual ~EventDispatcher() {}
 
     bool    HasListener(const char* eventType);
     void    Dispatch(const Event& evt);
@@ -36,38 +36,37 @@ private:
     template<class C>
     class EventCallBackSpec : public IEventCallBackSpec
     {
+    public:
+        EventCallBackSpec(C& proxy, void (C::*fct)(const Event&)) : m_Proxy(proxy), m_Fct(fct) {}
+
+        C&      GetProxy()                      { return m_Proxy; }
+        void    (C::*GetFct())(const Event&)    { return m_Fct; }
+        void    Call(const Event& evt)          { (&m_Proxy->*m_Fct)(evt); }
+
     private:
         C&      m_Proxy;
         void    (C::*m_Fct)(const Event&);
-
-    public:
-        C&      GetProxy()                      { return m_Proxy; }
-        void    (C::*GetFct())(const Event&)    { return m_Fct; }
-
-    public:
-        EventCallBackSpec(C& proxy, void (C::*fct)(const Event&)) : m_Proxy(proxy), m_Fct(fct) {}
-        void Call(const Event& evt)             { (&m_Proxy->*m_Fct)(evt); }
     };
 
     class EventCallBack
     {
-    private:
-        IEventCallBackSpecPtr   m_Spec;
-        const char*             m_Type;
-
     public:
-        const char*             GetType()       { return m_Type; }
-
-        template<class C>
-        void    (C::*GetFct())(const Event&)    { return static_cast<EventCallBackSpec<C>*>(m_Spec.get())->GetFct(); }
-        template<class C>
-        C&      GetProxy()                      { return static_cast<EventCallBackSpec<C>*>(m_Spec.get())->GetProxy(); }
-
         template<class C>
         EventCallBack(const char* type, C& proxy, void (C::*fct)(const Event&)) 
             : m_Type(type), m_Spec(IEventCallBackSpecPtr(new EventCallBackSpec<C>(proxy, fct))) {}
 
-        void Call(const Event& evt)             { m_Spec->Call(evt); }
+        const char*  GetType()       { return m_Type; }
+
+        template<class C>
+        void        (C::*GetFct())(const Event&)    { return static_cast<EventCallBackSpec<C>*>(m_Spec.get())->GetFct(); }
+        template<class C>
+        C&          GetProxy()                      { return static_cast<EventCallBackSpec<C>*>(m_Spec.get())->GetProxy(); }
+
+        void        Call(const Event& evt)          { m_Spec->Call(evt); }
+
+    private:
+        IEventCallBackSpecPtr   m_Spec;
+        const char*             m_Type;
     };
 
     typedef unique_ptr<EventCallBack> EventCallBackPtr;

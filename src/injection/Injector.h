@@ -1,118 +1,115 @@
 #ifndef _INJECTOR_H_
 #define _INJECTOR_H_
 
-#include <vector>
+#include <unordered_map>
+#include <memory>
 
 using namespace std;
 
 class Injector
 {
-private:
-    class InjectorMappingSpecBase
-    {
-    public:
-        InjectorMappingSpecBase() {};
-        virtual ~InjectorMappingSpecBase() {};
-    };
+public:
+    Injector() : m_NumInjections(0) {}
+
+    int     GetNumInjections() { return m_NumInjections; }
+    bool    HasInjection(const char* id);
+    void    UnMap(const char* id);
 
     template<class C>
-    class InjectorMappingSpec : public InjectorMappingSpecBase
-    {
-    private:
-        C*      m_Instance;
-    
-    public:
-        C*      GetInstance()   { return m_Instance; }
+    bool    HasInjection(C& obj);
 
+    template<class C>
+    void    Map(C& obj, const char* id);
+
+    template<class C>
+    void    UnMap(C& obj);
+
+    template<class C>
+    C&      GetInstanceById(const char* id);
+
+private:
+    class IInjectorMappingSpec
+    {
     public:
-        explicit InjectorMappingSpec(C* instance) : m_Instance(instance) {};
+        IInjectorMappingSpec() {};
+        virtual ~IInjectorMappingSpec() {};
+    };
+
+    typedef unique_ptr<IInjectorMappingSpec> IInjectorMappingSpecPtr;
+
+    template<class C>
+    class InjectorMappingSpec : public IInjectorMappingSpec
+    {
+    public:
+        explicit InjectorMappingSpec(C& instance) : m_Instance(instance) {};
         virtual ~InjectorMappingSpec() {};
+
+        C&  GetInstance()   { return m_Instance; }
+
+    private:
+        C&  m_Instance;
     };
 
     class InjectorMapping
     {
+    public:
+        template<class C>
+        InjectorMapping(C& instance) : m_Spec(IInjectorMappingSpecPtr(new InjectorMappingSpec<C>(instance))) {}
+
+        template<class C>
+        C&  GetInstance() { return static_cast<InjectorMappingSpec<C>*>(m_Spec.get())->GetInstance(); }
+
     private:
-        InjectorMappingSpecBase*    m_Spec;
-        const char*                 m_Id;
-
-    public:
-        template<class C>
-        C*      GetInstance()           { return static_cast<InjectorMappingSpec<C>*>(m_Spec)->GetInstance(); }
-        const char*     GetId()         { return m_Id; }
-
-    public:
-        template<class C>
-        InjectorMapping(C* instance, const char* id) : m_Id(id) { m_Spec = new InjectorMappingSpec<C>(instance); };
-        virtual ~InjectorMapping() { delete m_Spec; };
+        IInjectorMappingSpecPtr     m_Spec;
     };
 
-private:
-    vector<InjectorMapping*>    m_Maps;
-    int                         m_NumInjections;
+    typedef unique_ptr<InjectorMapping> InjectorMappingPtr;
 
-public:
-    Injector() : m_NumInjections(0) {}
-    ~Injector();
-
-    void        UnMap(const char* id);
-
-    template<class C>
-    void        Map(C* obj, const char* id);
-
-    template<class C>
-    void        UnMap(C* obj);
-
-    template<class C>
-    C*  GetInstanceById(const char* id);
-
-private:
     void    UnMapAll();
+
+    unordered_map<const char*, InjectorMappingPtr>  m_Map;
+    int                                             m_NumInjections;
 };
 
 template<class C>
-void Injector::Map(C* instance, const char* id)
+bool Injector::HasInjection(C& obj)
 {
-    InjectorMapping* mapping = new InjectorMapping(instance, id);
-    m_Maps.push_back(mapping);
+    for(auto it = begin(m_Map); it != end(m_Map); it++)
+    {
+        if (it->second->GetInstance<C>() == obj)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+template<class C>
+void Injector::Map(C& instance, const char* id)
+{
+    m_Map[id] = InjectorMappingPtr(new InjectorMapping(instance));
     m_NumInjections++;
 }
 
 template<class C>
-void Injector::UnMap(C* obj)
+void Injector::UnMap(C& obj)
 {
-    InjectorMapping* mapping;
-
-    const unsigned short l = m_Maps.size();
-    for (unsigned int i = 0 ; i < l ; i++)
+    for(auto it = begin(m_Map); it != end(m_Map); it++)
     {
-        mapping = m_Maps[i];
-        if (mapping->GetInstance<C>() == obj)
+        if (it->second->GetInstance<C>() == obj)
         {
             m_NumInjections--;
-
-            m_Maps.erase(m_Maps.begin() + i);
-            delete mapping;
+            m_Map.erase(it->first);
             return;
         }
     }
 }
 
 template<class C>
-C* Injector::GetInstanceById(const char* id)
+C& Injector::GetInstanceById(const char* id)
 {
-    InjectorMapping* mapping;
-
-    const unsigned short l = m_NumInjections;
-    for (unsigned int i = 0 ; i < l ; i++)
-    {
-        mapping = m_Maps[i];
-        if (mapping->GetId() == id)
-        {
-            return mapping->GetInstance<C>();
-        }
-    }
-
-    return nullptr;
+    return m_Map[id]->GetInstance<C>();
 }
 
 #endif

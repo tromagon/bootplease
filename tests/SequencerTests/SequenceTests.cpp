@@ -3,9 +3,9 @@
 #include "stdafx.h"
 #include "SequenceTests.h"
 #include <iostream>
-#include "Sequence.h"
-#include "EventDispatcher.h"
-#include "SequenceEvent.h"
+#include "sequence\Sequence.h"
+#include "events\EventDispatcher.h"
+#include "sequence\SequenceEvent.h"
 
 using namespace System;
 

@@ -46,4 +46,15 @@ examples/mediator/build_mediator_vc11/
 examples/mediator/data-ram/
 marmalade/build_bootplease_vc11
 marmalade/lib/
+tests/EventDispatcherTests/Debug
+tests/EventDispatcherTests/ipch
+tests/EventDispatcherTests/TestResults
+tests/SequencerTests/Debug
+tests/SequencerTests/ipch
+tests/SequencerTests/TestResults
 *.free
+*.ico
+*.rc
+*.sdf
+*.opensdf
+*.obj

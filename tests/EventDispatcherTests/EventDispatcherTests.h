@@ -3,15 +3,15 @@
 class CustomEvent : public Event
 {
 public:
-	static const char* INIT;
+    static const char* INIT;
 
-	explicit CustomEvent(const char* type) : Event(type) {}
+    explicit CustomEvent(const char* type) : Event(type) {}
 };
 
 class EventReceiver
 {
 public:
-	void onEventReceived(const Event& evt);
+    void onEventReceived(const Event& evt);
 };
 
 int main(array<System::String ^> ^args);

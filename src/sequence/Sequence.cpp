@@ -33,57 +33,57 @@ void Sequence::WaitFor(const char* eventType, EventDispatcherPtr& dispatcher)
 
 void Sequence::Start()
 {
-	SequenceEvent evt(SequenceEvent::STARTED, *this);
-	EventDispatcher::Dispatch(evt);
+    SequenceEvent evt(SequenceEvent::STARTED, *this);
+    EventDispatcher::Dispatch(evt);
 
-	m_CurrentIndex = 0;
-	if (m_CurrentIndex < m_NumSteps)
-	{
-		NextStep();
-	}
+    m_CurrentIndex = 0;
+    if (m_CurrentIndex < m_NumSteps)
+    {
+        NextStep();
+    }
 }
 
 bool Sequence::IsNextStepAsync()
 {
-	if (m_CurrentIndex + 1 < m_NumSteps)
-	{
+    if (m_CurrentIndex + 1 < m_NumSteps)
+    {
         StepPtr& nextStep = m_List[m_CurrentIndex + 1];
-		return nextStep->IsAsync();
-	}
+        return nextStep->IsAsync();
+    }
 
-	return false;
+    return false;
 }
 
 void Sequence::NextStep()
 {
-	StepPtr& step = m_List[m_CurrentIndex];
+    StepPtr& step = m_List[m_CurrentIndex];
 
-	if (IsNextStepAsync())
-	{
-		StepPtr& nextStep = m_List[m_CurrentIndex + 1];
-		nextStep->Run();
-	}
+    if (IsNextStepAsync())
+    {
+        StepPtr& nextStep = m_List[m_CurrentIndex + 1];
+        nextStep->Run();
+    }
 
-	step->Run();
+    step->Run();
 }
 
 int Sequence::IncrementIndex()
 {
-	return ++m_CurrentIndex;
+    return ++m_CurrentIndex;
 }
 
 void Sequence::CompleteStep()
 {
-	SequenceEvent stepCompleteEvt(SequenceEvent::STEP_COMPLETE, *this);
-	EventDispatcher::Dispatch(stepCompleteEvt);
+    SequenceEvent stepCompleteEvt(SequenceEvent::STEP_COMPLETE, *this);
+    EventDispatcher::Dispatch(stepCompleteEvt);
 
-	if (m_CurrentIndex < m_NumSteps)
-	{
-		NextStep();
-	}
-	else
-	{
-		SequenceEvent evt(SequenceEvent::COMPLETE, *this);
-		EventDispatcher::Dispatch(evt);
-	}
+    if (m_CurrentIndex < m_NumSteps)
+    {
+        NextStep();
+    }
+    else
+    {
+        SequenceEvent evt(SequenceEvent::COMPLETE, *this);
+        EventDispatcher::Dispatch(evt);
+    }
 }

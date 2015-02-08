@@ -17,64 +17,64 @@ EventDispatcherPtr dispatcher;
 
 void A::methodA()
 {
-	Console::WriteLine(L"Method A called");
+    Console::WriteLine(L"Method A called");
 }
 
 void A::methodB(const Event& evt)
 {
-	Console::WriteLine(L"Method B called");
+    Console::WriteLine(L"Method B called");
 
-	ExampleEvent completeEvent(ExampleEvent::COMPLETE);
-	dispatcher->Dispatch(completeEvent);
+    ExampleEvent completeEvent(ExampleEvent::COMPLETE);
+    dispatcher->Dispatch(completeEvent);
 
-	ExampleEvent secondCompleteEvent(ExampleEvent::SECOND_COMPLETE);
-	dispatcher->Dispatch(secondCompleteEvent);
+    ExampleEvent secondCompleteEvent(ExampleEvent::SECOND_COMPLETE);
+    dispatcher->Dispatch(secondCompleteEvent);
 }
 
 void A::methodC(const Event& evt)
 {
-	Console::WriteLine(L"Method C called");
+    Console::WriteLine(L"Method C called");
 }
 
 void A::onSequenceStarted(const Event& evt)
 {
-	Console::WriteLine(L"Sequence Started");
+    Console::WriteLine(L"Sequence Started");
 }
 
 void A::onSequenceStepComplete(const Event& evt)
 {
-	Console::WriteLine(L"SequenceStep Complete");
+    Console::WriteLine(L"SequenceStep Complete");
 }
 
 void A::onSequenceComplete(const Event& evt)
 {
-	Console::WriteLine(L"Sequence Complete");
+    Console::WriteLine(L"Sequence Complete");
 }
 
 int main(array<System::String ^> ^args)
 {
-	A a;
+    A a;
 
     dispatcher = EventDispatcherPtr(new EventDispatcher());
-	dispatcher->AddListener(ExampleEvent::INIT, &A::methodB, a);
+    dispatcher->AddListener(ExampleEvent::INIT, &A::methodB, a);
 
-	Sequence sequence(dispatcher);
-	sequence.AddListener(SequenceEvent::STARTED, &A::onSequenceStarted, a);
-	sequence.AddListener(SequenceEvent::STEP_COMPLETE, &A::onSequenceStepComplete, a);
-	sequence.AddListener(SequenceEvent::COMPLETE, &A::onSequenceComplete, a);
+    Sequence sequence(dispatcher);
+    sequence.AddListener(SequenceEvent::STARTED, &A::onSequenceStarted, a);
+    sequence.AddListener(SequenceEvent::STEP_COMPLETE, &A::onSequenceStepComplete, a);
+    sequence.AddListener(SequenceEvent::COMPLETE, &A::onSequenceComplete, a);
 
-	sequence.Call(&A::methodA, a);
-	const ExampleEvent evt(ExampleEvent::INIT);
-	sequence.Dispatch(evt);
+    sequence.Call(&A::methodA, a);
+    const ExampleEvent evt(ExampleEvent::INIT);
+    sequence.Dispatch(evt);
 
-	sequence.WaitFor(ExampleEvent::COMPLETE, &A::methodC, a);
-	sequence.WaitFor(ExampleEvent::SECOND_COMPLETE);
-	sequence.Dispatch(evt);
-	sequence.WaitFor(ExampleEvent::COMPLETE);
-	sequence.WaitFor(ExampleEvent::SECOND_COMPLETE);
+    sequence.WaitFor(ExampleEvent::COMPLETE, &A::methodC, a);
+    sequence.WaitFor(ExampleEvent::SECOND_COMPLETE);
+    sequence.Dispatch(evt);
+    sequence.WaitFor(ExampleEvent::COMPLETE);
+    sequence.WaitFor(ExampleEvent::SECOND_COMPLETE);
 
-	sequence.Start();
+    sequence.Start();
 
-	system("pause");
+    system("pause");
     return 0;
 }

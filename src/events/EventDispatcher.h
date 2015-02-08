@@ -3,6 +3,7 @@
 
 #include "Event.h"
 #include <vector>
+#include <memory>
 
 using namespace std;
 
@@ -14,9 +15,10 @@ private:
 	public:
 		IEventCallBackSpec() {}
 		virtual ~IEventCallBackSpec() {}
-
-		virtual void operator()(const Event& evt) {}
+		virtual void Call(const Event& evt)	= 0;
 	};
+
+	typedef unique_ptr<IEventCallBackSpec> IEventCallBackSpecPtr;
 
 	template<class C>
 	class EventCallBackSpec : public IEventCallBackSpec
@@ -31,108 +33,70 @@ private:
 
 	public:
 		EventCallBackSpec(C& proxy, void (C::*fct)(const Event&)) : m_Proxy(proxy), m_Fct(fct) {}
-		void operator()(const Event& evt) override		{ (&m_Proxy->*m_Fct)(evt); }
+		void Call(const Event& evt)						{ (&m_Proxy->*m_Fct)(evt); }
 	};
-
 
 	class EventCallBack
 	{
 	private:
-		IEventCallBackSpec* spec;
-
-	public:
-		template<class C>
-		void	(C::*GetFct())(const Event&)					{ return static_cast<EventCallBackSpec<C>*>(spec)->GetFct(); }
-		template<class C>
-		C&		GetProxy()										{ return static_cast<EventCallBackSpec<C>*>(spec)->GetProxy(); }
-
-	public:
-		template<class C>
-		EventCallBack(C& proxy, void (C::*fct)(const Event&))	{ spec = new EventCallBackSpec<C>(proxy, fct); }
-		~EventCallBack()										{ delete spec; }
-
-		void operator()(const Event& evt)						{ (*spec)(evt);	}
-	};
-
-	struct Listener
-	{
-	private:
-		const int				m_Id;
+		IEventCallBackSpecPtr	m_Spec;
 		const char*				m_Type;
-		EventCallBack&			m_Cb;
 
 	public:
-		int						GetId()				{ return m_Id; }
-		const char*				GetType()			{ return m_Type; }
-		EventCallBack&			GetCallBack()		{ return m_Cb; }
+		const char*				GetType()						{ return m_Type; }
+
+		template<class C>
+		void	(C::*GetFct())(const Event&)					{ return static_cast<EventCallBackSpec<C>*>(m_Spec.get())->GetFct(); }
+		template<class C>
+		C&		GetProxy()										{ return static_cast<EventCallBackSpec<C>*>(m_Spec.get())->GetProxy(); }
 
 	public:
-		Listener(const int id, const char* type, EventCallBack& cb) : 
-			m_Id(id), m_Type(type), m_Cb(cb) {}
+		template<class C>
+		EventCallBack(const char* type, C& proxy, void (C::*fct)(const Event&)) 
+			: m_Type(type), m_Spec(IEventCallBackSpecPtr(new EventCallBackSpec<C>(proxy, fct))) {}
+
+		void Call(const Event& evt)								{ m_Spec->Call(evt); }
 	};
 
-	vector<Listener*>*	m_Listeners;
-	int					m_CurrentId;
-	int					m_NumListeners;
+	typedef unique_ptr<EventCallBack> EventCallBackPtr;
+
+	vector<EventCallBackPtr>	m_EventCallBacks;
+	int							m_NumListeners;
 
 public:
 	EventDispatcher();
-	virtual ~EventDispatcher();
+	virtual ~EventDispatcher() {};
 
-	void	RemoveListener(int listenerId);
 	bool	HasListener(const char* eventType);
 	void	Dispatch(const Event& evt);
 
 	template<class C>
-	int		AddListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
+	void	AddListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
 	template<class C>
 	void	RemoveListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
-
-private:
-	void	RemoveAllListeners();
 };
 
 template<class C>
-int EventDispatcher::AddListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
+void EventDispatcher::AddListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
-	if (!m_Listeners)
-	{
-		m_Listeners = new vector<Listener*>();
-	}
-
-	int listenerId = m_CurrentId;
-	m_CurrentId++;
-
-	EventCallBack* cb = new EventCallBack(proxy, fct);
-
-	Listener* listener = new Listener(listenerId, eventType, *cb);
-	m_Listeners->push_back(listener);
+	EventCallBackPtr cb = EventCallBackPtr(new EventCallBack(eventType, proxy, fct));
+	m_EventCallBacks.push_back(move(cb));
 	m_NumListeners++;
-
-	return listenerId;
 }
 
 template<class C>
 void EventDispatcher::RemoveListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
-	Listener* listener;
-	EventCallBack* cb;
-
-	const unsigned short l = m_Listeners->size();
-	for (unsigned int i = 0 ; i < l ; i++)
+	for (int i = 0 ; i < m_NumListeners ; i++)
 	{
-		listener = (*m_Listeners)[i];
-		cb = &listener->GetCallBack();
-
-		if (listener->GetType() == eventType && cb->GetFct<C>() == fct
+		EventCallBackPtr& cb = m_EventCallBacks[i];
+		
+		if (cb->GetType() == eventType && cb->GetFct<C>() == fct
 			&& &(cb->GetProxy<C>()) == &proxy)
 		{
-			m_Listeners->erase(m_Listeners->begin() + i);
-			delete cb;
-			delete listener;
+			m_EventCallBacks.erase(m_EventCallBacks.begin() + i);
 			m_NumListeners--;
-
 			break;
 		}
 	}

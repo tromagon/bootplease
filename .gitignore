@@ -49,12 +49,15 @@ marmalade/lib/
 tests/EventDispatcherTests/Debug
 tests/EventDispatcherTests/ipch
 tests/EventDispatcherTests/TestResults
+tests/EventDispatcherTests/EventDispatcherTests.v11.suo
 tests/SequencerTests/Debug
 tests/SequencerTests/ipch
 tests/SequencerTests/TestResults
+
 *.free
 *.ico
 *.rc
 *.sdf
 *.opensdf
 *.obj
+*.suo

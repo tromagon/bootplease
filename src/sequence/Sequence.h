@@ -13,30 +13,30 @@ public:
     explicit Sequence(EventDispatcherPtr& dispatcher);
     ~Sequence() {};
 
-    virtual int		IncrementIndex() override;
-    virtual void	CompleteStep() override;
-    virtual bool	IsNextStepAsync() override;
+    virtual int     IncrementIndex() override;
+    virtual void    CompleteStep() override;
+    virtual bool    IsNextStepAsync() override;
 
-    void			Start();
+    void            Start();
     void            Dispatch(const Event& evt);
-    void			Dispatch(const Event& evt, EventDispatcherPtr& dispatcher);
-    void			WaitFor(const char* eventType);
-    void			WaitFor(const char* eventType, EventDispatcherPtr& dispatcher);
+    void            Dispatch(const Event& evt, EventDispatcherPtr& dispatcher);
+    void            WaitFor(const char* eventType);
+    void            WaitFor(const char* eventType, EventDispatcherPtr& dispatcher);
 
     template<class C>
-    void			Call(void (C::*fct)(), C& proxy);
+    void            Call(void (C::*fct)(), C& proxy);
     template<class C>
-    void			WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy);
+    void            WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy);
     template<class C>
-    void			WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcherPtr& dispatcher);
+    void            WaitFor(const char* eventType, void (C::*fct)(const Event&), C& proxy, EventDispatcherPtr& dispatcher);
 
 private:
-    void			NextStep();
+    void            NextStep();
 
-    EventDispatcherPtr&			m_Dispatcher;
-    vector<StepPtr>				m_List;
-    int							m_CurrentIndex;
-    int							m_NumSteps;
+    EventDispatcherPtr&         m_Dispatcher;
+    vector<StepPtr>             m_List;
+    int                         m_CurrentIndex;
+    int                         m_NumSteps;
 };
 
 template<class C>

@@ -52,7 +52,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories>F:\2015\bootplease\src\sequence;F:\2015\bootplease\src\events;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -81,13 +82,24 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\events\Event.h" />
+    <ClInclude Include="..\..\src\events\EventDispatcher.h" />
+    <ClInclude Include="..\..\src\sequence\ISequence.h" />
+    <ClInclude Include="..\..\src\sequence\Sequence.h" />
+    <ClInclude Include="..\..\src\sequence\SequenceEvent.h" />
+    <ClInclude Include="..\..\src\sequence\Step.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SequencerTests.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\events\EventDispatcher.cpp" />
+    <ClCompile Include="..\..\src\sequence\Sequence.cpp" />
+    <ClCompile Include="..\..\src\sequence\SequenceEvent.cpp" />
+    <ClCompile Include="..\..\src\sequence\Step.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="SequencerTests.cpp" />
     <ClCompile Include="stdafx.cpp">

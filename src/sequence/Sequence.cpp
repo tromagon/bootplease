@@ -46,7 +46,7 @@ void Sequence::WaitFor(const char* eventType, EventDispatcher* dispatcher)
 void Sequence::Start()
 {
 	SequenceEvent evt(SequenceEvent::STARTED, *this);
-	m_SequenceDispatcher.Dispatch(evt);
+	EventDispatcher::Dispatch(evt);
 
 	m_CurrentIndex = 0;
 	m_NumSteps = m_List->size();
@@ -100,7 +100,7 @@ int Sequence::IncrementIndex()
 void Sequence::CompleteStep()
 {
 	SequenceEvent stepCompleteEvt(SequenceEvent::STEP_COMPLETE, *this);
-	m_SequenceDispatcher.Dispatch(stepCompleteEvt);
+	EventDispatcher::Dispatch(stepCompleteEvt);
 
 	if (m_CurrentIndex < m_NumSteps)
 	{
@@ -109,6 +109,6 @@ void Sequence::CompleteStep()
 	else
 	{
 		SequenceEvent evt(SequenceEvent::COMPLETE, *this);
-		m_SequenceDispatcher.Dispatch(evt);
+		EventDispatcher::Dispatch(evt);
 	}
 }

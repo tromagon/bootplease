@@ -11,7 +11,6 @@ using namespace std;
 class Sequence : public ISequence
 {
 private:
-	EventDispatcher		m_SequenceDispatcher;
 	EventDispatcher&	m_Dispatcher;
 	vector<Step*>*		m_List;
 	int					m_CurrentIndex;

@@ -1,7 +1,7 @@
 // SequencerTests.cpp : main project file.
 
 #include "stdafx.h"
-#include "SequencerTests.h"
+#include "SequenceTests.h"
 #include <iostream>
 #include "Sequence.h"
 #include "EventDispatcher.h"

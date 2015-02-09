@@ -1,9 +1,6 @@
 #ifndef _COMMAND_H_
 #define _COMMAND_H_
 
-//#include "events\EventDispatcher.h"
-//#include "injection\Injector.h"
-
 #include <memory>
 
 using namespace std;
@@ -24,23 +21,8 @@ class Event;
 
 class Command
 {
-public:
     friend class EventCommandMap;
     friend class DirectCommandMap;
-
-private:
-    CommandMap&         m_CommandMap;
-    MediatorMap*        m_MediatorMap;
-    const Event*        m_Event;
-
-private:
-    void                SetEvent(const Event& evt);
-
-protected:
-    EventDispatcherPtr& GetDispatcher();
-    InjectorPtr&        GetInjector();
-    MediatorMap&        GetMediatorMap();
-    const Event&        GetEvent();
 
 public:
     Command(CommandMap& commandMap) : m_CommandMap(commandMap), m_Event(nullptr) {}
@@ -58,8 +40,21 @@ protected:
     virtual void Execute() {}
     virtual void Detain() final;
     virtual void Release() final;
+
+    EventDispatcherPtr& GetDispatcher();
+    InjectorPtr&        GetInjector();
+    MediatorMap&        GetMediatorMap();
+    const Event&        GetEvent();
+
+private:
+    void                SetEvent(const Event& evt);
+
+    CommandMap&         m_CommandMap;
+    MediatorMap*        m_MediatorMap;
+    const Event*        m_Event;
 };
 
+typedef unique_ptr<Command> CommandPtr;
 
 template<class C>
 int Command::AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)

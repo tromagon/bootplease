@@ -1,65 +1,76 @@
 #ifndef _COMMAND_H_
 #define _COMMAND_H_
 
-#include "EventDispatcher.h"
-#include "Context.h"
+//#include "events\EventDispatcher.h"
+//#include "injection\Injector.h"
 
-class CommandMap;
+#include <memory>
+
+using namespace std;
+
 class EventCommandMap;
 class DirectCommandMap;
 class MediatorMap;
 
+class Injector;
+typedef unique_ptr<Injector> InjectorPtr;
+
+class CommandMap;
+
+class EventDispatcher;
+typedef unique_ptr<EventDispatcher> EventDispatcherPtr;
+
+class Event;
+
 class Command
 {
 public:
-	friend class EventCommandMap;
-	friend class DirectCommandMap;
+    friend class EventCommandMap;
+    friend class DirectCommandMap;
 
 private:
-	Context*			m_Context;
-	const Event*		m_Event;
-	CommandMap*			m_CommandMap;			
+    CommandMap&         m_CommandMap;
+    MediatorMap*        m_MediatorMap;
+    const Event*        m_Event;
 
 private:
-	void				SetContext(Context& value);
-	void				SetEvent(const Event& evt);
-	void				SetCommandMap(CommandMap& value);
+    void                SetEvent(const Event& evt);
 
 protected:
-	EventDispatcher&	GetDispatcher();
-	const Event&		GetEvent();
-	Injector&			GetInjector();
-	MediatorMap&		GetMediatorMap();
+    EventDispatcherPtr& GetDispatcher();
+    InjectorPtr&        GetInjector();
+    MediatorMap&        GetMediatorMap();
+    const Event&        GetEvent();
 
 public:
-	Command() : m_Event(nullptr) {}
-	virtual ~Command() {}
+    Command(CommandMap& commandMap) : m_CommandMap(commandMap), m_Event(nullptr) {}
+    virtual ~Command() {}
 
 protected:
-	template<class C>
-	int		AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
+    template<class C>
+    int     AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
-	template<class C>
-	void	RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
+    template<class C>
+    void    RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
-	void	DispatchContextEvent(const Event& evt);
+    void    DispatchContextEvent(const Event& evt);
 
-	virtual void Execute() {}
-	virtual void Detain() final;
-	virtual void Release() final;
+    virtual void Execute() {}
+    virtual void Detain() final;
+    virtual void Release() final;
 };
 
 
 template<class C>
 int Command::AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
-	return GetDispatcher().AddListener(eventType, fct, proxy);
+    return GetDispatcher().AddListener(eventType, fct, proxy);
 }
 
 template<class C>
 void Command::RemoveContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
-	GetDispatcher().RemoveListener(eventType, fct, proxy);
+    GetDispatcher().RemoveListener(eventType, fct, proxy);
 }
 
 #endif

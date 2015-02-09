@@ -1,54 +1,45 @@
-#include "Command.h"
-#include "EventDispatcher.h"
-#include "CommandMap.h"
-#include "MediatorMap.h"
-
-void Command::SetContext(Context& value)
-{
-	m_Context = &value;
-}
+#include "commands\Command.h"
+#include "events\EventDispatcher.h"
+#include "commands\CommandMap.h"
+#include "mediator\MediatorMap.h"
+#include "injection\Injector.h"
 
 void Command::SetEvent(const Event& evt)
 {
-	m_Event = &evt;
+    m_Event = &evt;
 }
 
-void Command::SetCommandMap(CommandMap& value)
+EventDispatcherPtr& Command::GetDispatcher()
 {
-	m_CommandMap = & value;
-}
-
-EventDispatcher& Command::GetDispatcher()
-{
-	return m_Context->GetDispatcher();
+    return m_CommandMap.GetDispatcher();
 }
 
 const Event& Command::GetEvent()
 {
-	return *m_Event;
+    return *m_Event;
 }
 
-Injector& Command::GetInjector()
+InjectorPtr& Command::GetInjector()
 {
-	return m_Context->GetInjector();
+    return m_CommandMap.GetInjector();
 }
 
 MediatorMap& Command::GetMediatorMap()
 {
-	return m_Context->GetMediatorMap();
+    return *m_MediatorMap;
 }
 
 void Command::DispatchContextEvent(const Event& evt)
 {
-	GetDispatcher().Dispatch(evt);
+    GetDispatcher()->Dispatch(evt);
 }
 
 void Command::Detain()
 {
-	m_CommandMap->Detain(*this);
+    m_CommandMap.Detain(*this);
 }
 
 void Command::Release()
 {
-	m_CommandMap->Release(*this);
+    m_CommandMap.Release(*this);
 }

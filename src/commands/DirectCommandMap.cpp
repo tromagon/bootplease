@@ -1,42 +1,40 @@
-#include "DirectCommandMap.h"
-#include "Command.h"
+#include "commands\DirectCommandMap.h"
+#include "commands\Command.h"
 
 DirectCommandMap::~DirectCommandMap()
 {
-	UnMapAll();
+    UnMapAll();
 }
 
 void DirectCommandMap::Execute()
 {
-	const unsigned short l = m_NumMap;
-	DirectCommandMapItem* item;
-	Command* command;
+    const unsigned short l = m_NumMap;
+    DirectCommandMapItem* item;
+    Command* command;
 
-	for (unsigned int i = 0 ; i < l ; i++)
-	{
-		item = m_Maps[i];
-		command = &(item->GetCommand());
-		command->SetContext(m_Context);
-		command->SetCommandMap(*this);
-		command->Execute();
+    for (unsigned int i = 0 ; i < l ; i++)
+    {
+        item = m_Maps[i];
+        command = &(item->GetCommand());
+        command->Execute();
 
-		if (GetDetainedIndex(*command) == -1)
-		{
-			delete command;
-		}
-	}
+        if (GetDetainedIndex(*command) == -1)
+        {
+            delete command;
+        }
+    }
 }
 
 void DirectCommandMap::UnMapAll()
 {
-	int i = m_NumMap;
-	DirectCommandMapItem* item;
+    int i = m_NumMap;
+    DirectCommandMapItem* item;
 
-	while(i-- > 0)
-	{
-		item = m_Maps[i];
-		delete item;
-	}
+    while(i-- > 0)
+    {
+        item = m_Maps[i];
+        delete item;
+    }
 
-	m_Maps.clear();
+    m_Maps.clear();
 }

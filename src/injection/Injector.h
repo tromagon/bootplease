@@ -71,6 +71,8 @@ private:
     int                                             m_NumInjections;
 };
 
+typedef unique_ptr<Injector> InjectorPtr;
+
 template<class C>
 bool Injector::HasInjection(C& obj)
 {

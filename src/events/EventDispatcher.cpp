@@ -25,4 +25,3 @@ void EventDispatcher::Dispatch(const Event& evt)
         }
     }
 }
-

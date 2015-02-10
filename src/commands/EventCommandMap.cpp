@@ -2,11 +2,6 @@
 #include "commands\Command.h"
 #include "events\EventDispatcher.h"
 
-EventCommandMap::~EventCommandMap()
-{
-    UnMapAll();
-}
-
 void EventCommandMap::UnMapAll()
 {
     m_Maps.clear();
@@ -14,21 +9,19 @@ void EventCommandMap::UnMapAll()
 
 void EventCommandMap::OnCommandEvent(const Event& evt)
 {
-    Command* command;
-
-    const unsigned short l = m_NumMap;
-    for (unsigned int i = 0 ; i < l ; i++)
+    for (int i = 0 ; i < m_NumMap ; i++)
     {
         EventCommandMapItemPtr& item = m_Maps[i];
         if (item->GetEventType() == evt.GetType())
         {
-            command = &item->GetCommand();
-            command->SetEvent(evt);
-            command->Execute();
+            CommandPtr cmd = CommandPtr(&item->GetCommand());
+            cmd->SetEvent(evt);
+            cmd->Execute();
 
-            if (GetDetainedIndex(*command) == -1)
+            if (cmd->GetIsDetained())
             {
-                delete command;
+                m_Detained.push_back(move(cmd));
+                m_NumDetained++;
             }
         }
     }

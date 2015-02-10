@@ -29,6 +29,11 @@ MediatorMap& Command::GetMediatorMap()
     return *m_MediatorMap;
 }
 
+bool Command::GetIsDetained()
+{
+    return m_IsDetained;
+}
+
 void Command::DispatchContextEvent(const Event& evt)
 {
     GetDispatcher()->Dispatch(evt);
@@ -36,10 +41,12 @@ void Command::DispatchContextEvent(const Event& evt)
 
 void Command::Detain()
 {
-    m_CommandMap.Detain(*this);
+    m_IsDetained = true;
 }
 
 void Command::Release()
 {
+    m_IsDetained = false;
+
     m_CommandMap.Release(*this);
 }

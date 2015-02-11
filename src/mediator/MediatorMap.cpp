@@ -88,6 +88,7 @@ MediatorMap::ViewMediatorItem& MediatorMap::AddViewMediatorItem(MediatorMapItem*
 {
     View* view = &(item->GetViewInstance());
     Mediator& mediator = item->GetMediatorInstance();
+    mediator.SetMediatorMap(*this);
     mediator.SetView(*view);
     mediator.OnInitialized();
 

@@ -150,16 +150,18 @@ private:
     View&               CreateView();
 };
 
+typedef unique_ptr<MediatorMap> MediatorMapPtr;
+
 template<class T>
 Mediator& MediatorMap::MediatorMapper::CreateMediator()
 {
-    return *(new T(/**this*/));
+    return *(new T());
 }
 
 template<class T>
 View& MediatorMap::CreateView()
 {
-    return *(new T(/**this*/));
+    return *(new T());
 }
 
 template<class C>

@@ -12,6 +12,7 @@ class Mediator
 
 private:
     View*               m_View;
+    MediatorMap*        m_MediatorMap;
 
 public:
     template<class C>
@@ -20,9 +21,9 @@ public:
     View&               GetView()                               { return *m_View; }
     void                SetView(View& value)                    { m_View = &value; }
 
-    /*MediatorMap&        GetMediatorMap()                        { return m_Context->GetMediatorMap(); }
-    Injector&           GetInjector()                           { return m_Context->GetInjector(); } 
-    EventDispatcher&    GetDispatcher()                         { return m_Context->GetDispatcher(); }*/
+    MediatorMap&            GetMediatorMap()                        { return *m_MediatorMap; }
+    InjectorPtr&            GetInjector()                           { return m_MediatorMap->GetInjector(); } 
+    EventDispatcherPtr&     GetDispatcher()                         { return m_MediatorMap->GetDispatcher(); }
 
 protected:
     Mediator() {}
@@ -37,6 +38,9 @@ protected:
     void    DispatchContextEvent(const Event& evt);
 
     virtual void OnInitialized() {};
+
+private:
+    void    SetMediatorMap(MediatorMap& mediatorMap)            { m_MediatorMap = &mediatorMap; }
 };
 
 

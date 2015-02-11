@@ -2,5 +2,5 @@
 
 void Mediator::DispatchContextEvent(const Event& evt)
 {
-    //GetDispatcher().Dispatch(evt);
+    GetDispatcher()->Dispatch(evt);
 }

@@ -10,20 +10,16 @@ class Mediator
 {
     friend class MediatorMap;
 
-private:
-    View*               m_View;
-    MediatorMap*        m_MediatorMap;
-
 public:
     template<class C>
-    C&                  GetView()                               { return static_cast<C&>(*m_View); }
+    C&                  GetView()               { return static_cast<C&>(*m_View); }
 
-    View&               GetView()                               { return *m_View; }
-    void                SetView(View& value)                    { m_View = &value; }
+    View&               GetView()               { return *m_View; }
+    void                SetView(View& value)    { m_View = &value; }
 
-    MediatorMap&            GetMediatorMap()                        { return *m_MediatorMap; }
-    InjectorPtr&            GetInjector()                           { return m_MediatorMap->GetInjector(); } 
-    EventDispatcherPtr&     GetDispatcher()                         { return m_MediatorMap->GetDispatcher(); }
+    MediatorMap&            GetMediatorMap()    { return *m_MediatorMap; }
+    InjectorPtr&            GetInjector()       { return m_MediatorMap->GetInjector(); } 
+    EventDispatcherPtr&     GetDispatcher()     { return m_MediatorMap->GetDispatcher(); }
 
 protected:
     Mediator() {}
@@ -41,6 +37,9 @@ protected:
 
 private:
     void    SetMediatorMap(MediatorMap& mediatorMap)            { m_MediatorMap = &mediatorMap; }
+
+    View*               m_View;
+    MediatorMap*        m_MediatorMap;
 };
 
 

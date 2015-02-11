@@ -20,12 +20,11 @@ int main(array<System::String ^> ^args)
 {
     Console::WriteLine(L"Starting MediatorTests");
 
-    Config config;
     InjectorPtr injector;
     EventDispatcherPtr eventDispatcher;
 
     MediatorMap mediatorMap(eventDispatcher, injector);
-    mediatorMap.Map(ViewA::ID, &Config::GetView, config).To(&Config::GetMediator, config);
+    mediatorMap.Map<ViewA>(ViewA::ID).To<MediatorA>();
 
     ViewA* view = mediatorMap.GetView<ViewA>(ViewA::ID);
 

@@ -24,7 +24,7 @@ public:
     InjectorPtr&        GetInjector()       { return m_Injector; }
 
     template<class C>
-    MediatorMapper& Map(const char* id, View& (C::*fct)(), C& proxy);
+    MediatorMapper& Map(const char* id);
 
     template<class C>
     C*  GetView(const char* id);
@@ -93,7 +93,11 @@ private:
         ~MediatorMapper() {}
 
         template<class C>
-        void To(Mediator& (C::*fct)(), C& proxy);
+        void To();
+
+    private:
+        template<class T>
+        Mediator&           CreateMediator();
     };
 
     class MediatorMapItem
@@ -143,22 +147,19 @@ private:
     void                DisposeAll();
 
     template<class T>
-    Mediator&           CreateMediator();
-
-    template<class T>
     View&               CreateView();
 };
 
 template<class T>
-Mediator& MediatorMap::CreateMediator()
+Mediator& MediatorMap::MediatorMapper::CreateMediator()
 {
-    return *(new T(*this));
+    return *(new T(/**this*/));
 }
 
 template<class T>
 View& MediatorMap::CreateView()
 {
-    return *(new T(*this));
+    return *(new T(/**this*/));
 }
 
 template<class C>
@@ -186,10 +187,10 @@ C* MediatorMap::GetView(const char* id)
 }
 
 template<class C>
-MediatorMap::MediatorMapper& MediatorMap::Map(const char* id, View& (C::*fct)(), C& proxy)
+MediatorMap::MediatorMapper& MediatorMap::Map(const char* id)
 {
     MediatorMapItem* item;
-    item = new MediatorMapItem(id, *(new ViewMapper(fct, proxy)));
+    item = new MediatorMapItem(id, *(new ViewMapper(&MediatorMap::CreateView<C>, *this)));
     m_Map.push_back(item);
 
     return item->GetMediatorMapper();
@@ -202,9 +203,9 @@ MediatorMap::ViewMapper::ViewMapper(View& (C::*fct)(), C& proxy)
 }
 
 template<class C>
-void MediatorMap::MediatorMapper::To(Mediator& (C::*fct)(), C& proxy)
+void MediatorMap::MediatorMapper::To()
 {
-    m_Spec = new MapperSpec<Mediator, C>(fct, proxy);
+    m_Spec = new MapperSpec<Mediator, MediatorMap::MediatorMapper>(&MediatorMap::MediatorMapper::CreateMediator<C>, *this);
 }
 
 #endif

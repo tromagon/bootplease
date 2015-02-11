@@ -24,9 +24,9 @@ int main(array<System::String ^> ^args)
     EventDispatcherPtr eventDispatcher;
 
     MediatorMap mediatorMap(eventDispatcher, injector);
-    mediatorMap.Map<ViewA>(ViewA::ID).To<MediatorA>();
+    mediatorMap.Map<ViewA, MediatorA>(ViewA::ID);
 
-    ViewA* view = mediatorMap.GetView<ViewA>(ViewA::ID);
+    ViewA& view = mediatorMap.GetView<ViewA>(ViewA::ID);
 
     system("pause");
     return 0;

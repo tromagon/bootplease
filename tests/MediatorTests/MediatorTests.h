@@ -22,6 +22,6 @@ public:
 class Config
 {
 public:
-    Mediator& GetMediator()			{ return *(new MediatorA()); }
-    View& GetView()			{ return *(new ViewA()); }
+    Mediator& GetMediator() { return *(new MediatorA()); }
+    View& GetView()         { return *(new ViewA()); }
 };

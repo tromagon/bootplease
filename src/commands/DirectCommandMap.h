@@ -4,101 +4,105 @@
 #include "events\EventDispatcher.h"
 #include "commands\CommandMap.h"
 
-class Context;
 class Command;
 
 class DirectCommandMap final : public CommandMap
 {
-    friend class Context;
+public:
+    explicit DirectCommandMap(EventDispatcherPtr& dispatcher, InjectorPtr& injector) 
+        : CommandMap(dispatcher, injector) {}
+    ~DirectCommandMap() {};
 
-private:
-    class DirectCommandMapItemSpecBase
-    {
-    public:
-        DirectCommandMapItemSpecBase() {}
-        virtual ~DirectCommandMapItemSpecBase() {}
-        virtual Command* GetCommand() { return nullptr; }
-    };
+    void        Execute();
 
     template<class C>
-    class DirectCommandMapItemSpec : public DirectCommandMapItemSpecBase
+    void        Map();
+
+    template<class C>
+    void        UnMap();
+
+private:
+    class IDirectCommandMapItemSpec
     {
+    public:
+        IDirectCommandMapItemSpec() {}
+        virtual ~IDirectCommandMapItemSpec() {}
+        virtual Command* GetCommand() = 0;
+    };
+
+    typedef unique_ptr<IDirectCommandMapItemSpec> DirectCommandMapItemSpecPtr;
+
+    template<class C>
+    class DirectCommandMapItemSpec : public IDirectCommandMapItemSpec
+    {
+    public:
+        DirectCommandMapItemSpec(C& proxy, Command& (C::*fct)()) : m_Proxy(proxy), m_Fct(fct) {}
+        virtual Command* GetCommand() override { return &((&m_Proxy->*m_Fct)()); }
+
+        C&          GetProxy()                      { return m_Proxy; }
+        Command&    (C::*GetFct())()                { return m_Fct; }
+
     private:
         C&          m_Proxy;
         Command&    (C::*m_Fct)();
 
-    public:
-        C&          GetProxy()                      { return m_Proxy; }
-        Command&    (C::*GetFct())()                { return m_Fct; }
-
-    public:
-        DirectCommandMapItemSpec(C& proxy, Command& (C::*fct)()) : m_Proxy(proxy), m_Fct(fct) {}
-        virtual Command* GetCommand() override { return &((&m_Proxy->*m_Fct)()); }
     };
 
     class DirectCommandMapItem
     {
+    public:
+        template<class C>
+        DirectCommandMapItem(C& proxy, Command& (C::*fct)()) 
+            : m_Spec(DirectCommandMapItemSpecPtr(new DirectCommandMapItemSpec<C>(proxy, fct))) {}
+
+        Command&    GetCommand()        { return *(m_Spec->GetCommand()); }
+
+        template<class C>
+        Command&    (C::*GetFct())()    { return static_cast<DirectCommandMapItemSpec<C>*>(m_Spec.get())->GetFct(); }
+
+        template<class C>
+        C&          GetProxy()          { return static_cast<DirectCommandMapItemSpec<C>*>(m_Spec.get())->GetProxy(); }
+
     private:
-        DirectCommandMapItemSpecBase*       m_Spec;
+        DirectCommandMapItemSpecPtr    m_Spec;
 
-    public:
-        Command&                    GetCommand()    { return *(m_Spec->GetCommand()); }
-
-        template<class C>
-        Command&    (C::*GetFct())()                { return static_cast<DirectCommandMapItemSpec<C>*>(m_Spec)->GetFct(); }
-
-        template<class C>
-        C&          GetProxy()                      { return static_cast<DirectCommandMapItemSpec<C>*>(m_Spec)->GetProxy(); }
-
-    public:
-        template<class C>
-        DirectCommandMapItem(C& proxy, Command& (C::*fct)()) { m_Spec = new DirectCommandMapItemSpec<C>(proxy, fct); };
-        ~DirectCommandMapItem() { delete m_Spec; };
     };
 
-private:
-    vector<DirectCommandMapItem*>   m_Maps;
+    typedef unique_ptr<DirectCommandMapItem> DirectCommandMapItemPtr;
 
-public:
-    explicit DirectCommandMap(EventDispatcherPtr& dispatcher, InjectorPtr& injector) 
-        : CommandMap(dispatcher, injector) {}
-    ~DirectCommandMap();
+    void            UnMapAll();
 
-    void                Execute();
+    template<class T>
+    Command&        CreateCommand();
 
-    template<class C>
-    void                Map(Command& (C::*fct)(), C& proxy);
-
-    template<class C>
-    void                UnMap(Command& (C::*fct)(), C& proxy);
-
-private:
-    void                UnMapAll();
+    vector<DirectCommandMapItemPtr>   m_Maps;
 };
 
-template<class C>
-void DirectCommandMap::Map(Command& (C::*fct)(), C& proxy)
+template<class T>
+Command& DirectCommandMap::CreateCommand()
 {
-    DirectCommandMapItem* mapItem = new DirectCommandMapItem(proxy, fct);
-    m_Maps.push_back(mapItem);
+    return *(new T(*this));
+}
 
+template<class C>
+void DirectCommandMap::Map()
+{
+    m_Maps.push_back(DirectCommandMapItemPtr(new DirectCommandMapItem(*this, &DirectCommandMap::CreateCommand<C>)));
     m_NumMap++;
 }
 
 template<class C>
-void DirectCommandMap::UnMap(Command& (C::*fct)(), C& proxy)
+void DirectCommandMap::UnMap()
 {
     const unsigned short l = m_Maps.size();
     for (unsigned int i = 0 ; i < l ; i++)
     {
-        DirectCommandMapItem& mapping = *m_Maps[i];
+        DirectCommandMapItemPtr& mapping = m_Maps[i];
 
-        if (mapping.GetFct<C>() == fct && &(mapping.GetProxy<C>()) == &proxy)
+        if (mapping.GetFct<DirectCommandMap>() == &DirectCommandMap::CreateCommand<C>)
         {
             m_Maps.erase(m_Maps.begin() + i);
-
             m_NumMap--;
-            delete &mapping;
             return;
         }
     }

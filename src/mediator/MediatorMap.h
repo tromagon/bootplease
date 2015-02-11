@@ -2,7 +2,7 @@
 #define _MEDIATORMAP_H_
 
 #include "mediator\View.h"
-#include "injection\Context.h"
+#include "injection\Injector.h"
 #include "events\EventDispatcher.h"
 #include <vector>
 
@@ -13,187 +13,190 @@ class Mediator;
 class MediatorMap final
 {
 private:
-	class IMapperSpec
-	{
-	public:
-		IMapperSpec() {}
-		virtual ~IMapperSpec() {}
+    class IMapperSpec
+    {
+    public:
+        IMapperSpec() {}
+        virtual ~IMapperSpec() {}
 
-		virtual void* GetInstance() { return nullptr; }
-	};
-
-
-	template<class D, class C>
-	class MapperSpec : public IMapperSpec
-	{
-	private:
-		D& (C::*m_Fct)();
-		C& m_Proxy;
-
-	public:
-		D&	(C::*GetFunction())()	{ return m_Fct; }
-		C&	GetProxy()				{ return m_Proxy; }
-
-	public:
-		MapperSpec(D& (C::*fct)(), C& proxy) : m_Fct(fct), m_Proxy(proxy) {}
-		virtual ~MapperSpec() {}
-	
-		void* GetInstance() override { return &(&m_Proxy->*m_Fct)(); }
-	};
+        virtual void* GetInstance() { return nullptr; }
+    };
 
 
-	template<class D>
-	class BaseMapper
-	{
-	protected:
-		IMapperSpec* m_Spec;
+    template<class D, class C>
+    class MapperSpec : public IMapperSpec
+    {
+    private:
+        D& (C::*m_Fct)();
+        C& m_Proxy;
 
-	public:
-		virtual ~BaseMapper() { delete m_Spec; }
+    public:
+        D&  (C::*GetFunction())()   { return m_Fct; }
+        C&  GetProxy()              { return m_Proxy; }
 
-		template<class C>
-		D&	(C::*GetFunction())()	{ return (static_cast<MapperSpec<D, C>*>(m_Spec))->GetFunction(); }
-
-		template<class C>
-		C&	GetProxy()				{ return (static_cast<MapperSpec<D, C>*>(m_Spec))->GetProxy(); }
-
-		D&	GetInstance()			{ return *(static_cast<D*>(m_Spec->GetInstance())); }
-	};
-
-
-	class ViewMapper : public BaseMapper<View>
-	{
-	public:
-		template<class C>
-		ViewMapper(View& (C::*fct)(), C& proxy);
-		~ViewMapper() {}
-	};
+    public:
+        MapperSpec(D& (C::*fct)(), C& proxy) : m_Fct(fct), m_Proxy(proxy) {}
+        virtual ~MapperSpec() {}
+    
+        void* GetInstance() override { return &(&m_Proxy->*m_Fct)(); }
+    };
 
 
-	class MediatorMapper : public BaseMapper<Mediator>
-	{
-	public:
-		MediatorMapper() {}
-		~MediatorMapper() {}
+    template<class D>
+    class BaseMapper
+    {
+    protected:
+        IMapperSpec* m_Spec;
 
-		template<class C>
-		void To(Mediator& (C::*fct)(), C& proxy);
-	};
+    public:
+        virtual ~BaseMapper() { delete m_Spec; }
 
+        template<class C>
+        D&  (C::*GetFunction())()   { return (static_cast<MapperSpec<D, C>*>(m_Spec))->GetFunction(); }
 
-	class MediatorMapItem
-	{
-	private:
-		const char*			m_Id;
-		ViewMapper&			m_ViewMapper;
-		MediatorMapper&		m_MediatorMapper;
+        template<class C>
+        C&  GetProxy()              { return (static_cast<MapperSpec<D, C>*>(m_Spec))->GetProxy(); }
 
-	public:
-		const char*			GetId()						{ return m_Id; }
-		MediatorMapper&		GetMediatorMapper()			{ return m_MediatorMapper; }
-		View&				GetViewInstance()			{ return m_ViewMapper.GetInstance(); }
-		Mediator&			GetMediatorInstance()		{ return m_MediatorMapper.GetInstance(); }
-
-	public:
-		MediatorMapItem(const char* id, ViewMapper& viewMapper) 
-			: m_Id(id), m_ViewMapper(viewMapper), m_MediatorMapper(*(new MediatorMapper())) {}
-		~MediatorMapItem();
-	};
+        D&  GetInstance()           { return *(static_cast<D*>(m_Spec->GetInstance())); }
+    };
 
 
-	class ViewMediatorItem
-	{
-	private:
-		const char*			m_Id;
-		View&				m_View;
-		Mediator&			m_Mediator;
-
-	public:
-		const char*		GetId()			{ return m_Id; }
-		View&			GetView()		{ return m_View; }
-		Mediator&		GetMediator()	{ return m_Mediator; }
-
-	public:
-		ViewMediatorItem(const char* id, View& view, Mediator& mediator) 
-			: m_Id(id), m_View(view), m_Mediator(mediator) {}
-		~ViewMediatorItem();
-	};
+    class ViewMapper : public BaseMapper<View>
+    {
+    public:
+        template<class C>
+        ViewMapper(View& (C::*fct)(), C& proxy);
+        ~ViewMapper() {}
+    };
 
 
-private:
-	Context&					m_Context;
-	vector<MediatorMapItem*>	m_Map;
-	vector<ViewMediatorItem*>	m_VmList;
+    class MediatorMapper : public BaseMapper<Mediator>
+    {
+    public:
+        MediatorMapper() {}
+        ~MediatorMapper() {}
 
-public:
-	EventDispatcher&	GetDispatcher()		{ return m_Context.GetDispatcher(); }
-	Injector&			GetInjector()		{ return m_Context.GetInjector(); }
+        template<class C>
+        void To(Mediator& (C::*fct)(), C& proxy);
+    };
 
-public:
-	explicit MediatorMap(Context& context) : m_Context(context) {}
-	~MediatorMap();
 
-	template<class C>
-	MediatorMapper& Map(const char* id, View& (C::*fct)(), C& proxy);
+    class MediatorMapItem
+    {
+    private:
+        const char*         m_Id;
+        ViewMapper&         m_ViewMapper;
+        MediatorMapper&     m_MediatorMapper;
 
-	template<class C>
-	C*	GetView(const char* id);
+    public:
+        const char*         GetId()                     { return m_Id; }
+        MediatorMapper&     GetMediatorMapper()         { return m_MediatorMapper; }
+        View&               GetViewInstance()           { return m_ViewMapper.GetInstance(); }
+        Mediator&           GetMediatorInstance()       { return m_MediatorMapper.GetInstance(); }
 
-	void	UnMap(const char* id);
-	void	DisposeView(View& view);
-	void	DisposeViewById(const char* id);
+    public:
+        MediatorMapItem(const char* id, ViewMapper& viewMapper) 
+            : m_Id(id), m_ViewMapper(viewMapper), m_MediatorMapper(*(new MediatorMapper())) {}
+        ~MediatorMapItem();
+    };
+
+
+    class ViewMediatorItem
+    {
+    private:
+        const char*         m_Id;
+        View&               m_View;
+        Mediator&           m_Mediator;
+
+    public:
+        const char*     GetId()         { return m_Id; }
+        View&           GetView()       { return m_View; }
+        Mediator&       GetMediator()   { return m_Mediator; }
+
+    public:
+        ViewMediatorItem(const char* id, View& view, Mediator& mediator) 
+            : m_Id(id), m_View(view), m_Mediator(mediator) {}
+        ~ViewMediatorItem();
+    };
+
 
 private:
-	View*				GetViewInstance(const char* id);
-	ViewMediatorItem&	AddViewMediatorItem(MediatorMapItem* item);
-	void				UnMapAll();
-	void				DisposeAll();
+    vector<MediatorMapItem*>    m_Map;
+    vector<ViewMediatorItem*>   m_VmList;
+
+    EventDispatcherPtr&         m_EventDispatcher;
+    InjectorPtr&                 m_Injector;
+
+public:
+    EventDispatcherPtr& GetDispatcher()     { return m_EventDispatcher; }
+    InjectorPtr&        GetInjector()       { return m_Injector; }
+
+public:
+    explicit MediatorMap(EventDispatcherPtr& eventDispatcher, InjectorPtr& injector) 
+        : m_EventDispatcher(eventDispatcher), m_Injector(injector) {}
+    ~MediatorMap();
+
+    template<class C>
+    MediatorMapper& Map(const char* id, View& (C::*fct)(), C& proxy);
+
+    template<class C>
+    C*  GetView(const char* id);
+
+    void    UnMap(const char* id);
+    void    DisposeView(View& view);
+    void    DisposeViewById(const char* id);
+
+private:
+    View*               GetViewInstance(const char* id);
+    ViewMediatorItem&   AddViewMediatorItem(MediatorMapItem* item);
+    void                UnMapAll();
+    void                DisposeAll();
 };
 
 template<class C>
 C* MediatorMap::GetView(const char* id)
 {
-	C* view = static_cast<C*>(GetViewInstance(id));
+    C* view = static_cast<C*>(GetViewInstance(id));
 
-	if (view) return view;
+    if (view) return view;
 
-	MediatorMapItem* item;
-	ViewMediatorItem* vm;
+    MediatorMapItem* item;
+    ViewMediatorItem* vm;
 
-	const unsigned short l = m_Map.size();
-	for (unsigned int i = 0 ; i < l ; i++)
-	{
-		item = m_Map[i];
-		if (item->GetId() == id)
-		{
-			vm = &AddViewMediatorItem(item);
-			return static_cast<C*>(&vm->GetView());
-		}
-	}
+    const unsigned short l = m_Map.size();
+    for (unsigned int i = 0 ; i < l ; i++)
+    {
+        item = m_Map[i];
+        if (item->GetId() == id)
+        {
+            vm = &AddViewMediatorItem(item);
+            return static_cast<C*>(&vm->GetView());
+        }
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 template<class C>
 MediatorMap::MediatorMapper& MediatorMap::Map(const char* id, View& (C::*fct)(), C& proxy)
 {
-	MediatorMapItem* item;
-	item = new MediatorMapItem(id, *(new ViewMapper(fct, proxy)));
-	m_Map.push_back(item);
+    MediatorMapItem* item;
+    item = new MediatorMapItem(id, *(new ViewMapper(fct, proxy)));
+    m_Map.push_back(item);
 
-	return item->GetMediatorMapper();
+    return item->GetMediatorMapper();
 }
 
 template<class C>
 MediatorMap::ViewMapper::ViewMapper(View& (C::*fct)(), C& proxy)
 {
-	m_Spec = new MapperSpec<View, C>(fct, proxy);
+    m_Spec = new MapperSpec<View, C>(fct, proxy);
 }
 
 template<class C>
 void MediatorMap::MediatorMapper::To(Mediator& (C::*fct)(), C& proxy)
 {
-	m_Spec = new MapperSpec<Mediator, C>(fct, proxy);
+    m_Spec = new MapperSpec<Mediator, C>(fct, proxy);
 }
 
 #endif

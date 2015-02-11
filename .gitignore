@@ -59,6 +59,9 @@ tests/InjectorTests/TestResults
 tests/CommandMapTests/Debug
 tests/CommandMapTests/ipch
 tests/CommandMapTests/TestResults
+tests/MediatorTests/Debug
+tests/MediatorTests/ipch
+tests/MediatorTests/TestResults
 
 *.free
 *.ico

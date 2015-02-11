@@ -12,11 +12,9 @@ class Command;
 
 class EventCommandMap final : public CommandMap
 {
-    friend class Context;
-
 public:
     explicit EventCommandMap(EventDispatcherPtr& dispatcher, InjectorPtr& injector) : CommandMap(dispatcher, injector) {}
-    ~EventCommandMap();
+    ~EventCommandMap() {};
 
     template<class C>
     void                Map(const char* eventType);
@@ -38,26 +36,25 @@ private:
     template<class C>
     class EventCommandMapItemSpec : public IEventCommandMapItemSpec
     {
-    private:
-        C&          m_Proxy;
-        Command&    (C::*m_Fct)();
-
-    public:
-        C&          GetProxy()          { return m_Proxy; }
-        Command&    (C::*GetFct())()    { return m_Fct; }
-
     public:
         EventCommandMapItemSpec(C& proxy, Command& (C::*fct)()) : m_Proxy(proxy), m_Fct(fct) {}
         virtual Command* GetCommand() override { return &((&m_Proxy->*m_Fct)()); }
+
+        C&          GetProxy()          { return m_Proxy; }
+        Command&    (C::*GetFct())()    { return m_Fct; }
+
+    private:
+        C&          m_Proxy;
+        Command&    (C::*m_Fct)();
     };
 
     class EventCommandMapItem
     {
-    private:
-        const char*                     m_EventType;
-        EventCommandMapItemSpecPtr      m_Spec;
-
     public:
+        template<class C>
+        EventCommandMapItem(const char* eventType, C& proxy, Command& (C::*fct)()) 
+            : m_EventType(eventType), m_Spec(EventCommandMapItemSpecPtr(new EventCommandMapItemSpec<C>(proxy, fct))) {}
+
         const char* GetEventType()      { return m_EventType; };
         Command&    GetCommand()        { return *(m_Spec->GetCommand()); }
 
@@ -67,10 +64,9 @@ private:
         template<class C>
         C&          GetProxy()          { return static_cast<EventCommandMapItemSpec<C>*>(m_Spec.get())->GetProxy(); }
 
-    public:
-        template<class C>
-        EventCommandMapItem(const char* eventType, C& proxy, Command& (C::*fct)()) 
-            : m_EventType(eventType), m_Spec(EventCommandMapItemSpecPtr(new EventCommandMapItemSpec<C>(proxy, fct))) {}
+    private:
+        const char*                     m_EventType;
+        EventCommandMapItemSpecPtr      m_Spec;
     };
 
     typedef unique_ptr<EventCommandMapItem> EventCommandMapItemPtr;
@@ -82,7 +78,6 @@ private:
     Command&            CreateCommand();
 
     vector<EventCommandMapItemPtr>  m_Maps;
-    vector<Command*>                m_Detained;
 };
 
 template<class T>
@@ -114,6 +109,7 @@ void EventCommandMap::UnMap(const char* eventType)
         {
             m_Maps.erase(m_Maps.begin() + i);
             m_NumMap--;
+            return;
         }
     }
 }

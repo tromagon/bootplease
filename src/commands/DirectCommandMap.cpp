@@ -7,6 +7,7 @@ void DirectCommandMap::Execute()
     {
         DirectCommandMapItemPtr& item = m_Maps[i];
         CommandPtr command = CommandPtr(&item->GetCommand());
+        command->SetCommandMap(*this);
         command->Execute();
 
         if (command->GetIsDetained())

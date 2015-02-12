@@ -15,6 +15,7 @@ void EventCommandMap::OnCommandEvent(const Event& evt)
         if (item->GetEventType() == evt.GetType())
         {
             CommandPtr cmd = CommandPtr(&item->GetCommand());
+            cmd->SetCommandMap(*this);
             cmd->SetEvent(evt);
             cmd->Execute();
 

@@ -11,7 +11,7 @@ void Command::SetEvent(const Event& evt)
 
 EventDispatcherPtr& Command::GetDispatcher()
 {
-    return m_CommandMap.GetDispatcher();
+    return m_CommandMap->GetDispatcher();
 }
 
 const Event& Command::GetEvent()
@@ -21,12 +21,7 @@ const Event& Command::GetEvent()
 
 InjectorPtr& Command::GetInjector()
 {
-    return m_CommandMap.GetInjector();
-}
-
-MediatorMap& Command::GetMediatorMap()
-{
-    return *m_MediatorMap;
+    return m_CommandMap->GetInjector();
 }
 
 bool Command::GetIsDetained()
@@ -48,5 +43,5 @@ void Command::Release()
 {
     m_IsDetained = false;
 
-    m_CommandMap.Release(*this);
+    m_CommandMap->Release(*this);
 }

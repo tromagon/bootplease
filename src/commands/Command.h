@@ -25,7 +25,7 @@ class Command
     friend class DirectCommandMap;
 
 public:
-    Command(CommandMap& commandMap) : m_CommandMap(commandMap), m_IsDetained(false), m_Event(nullptr) {}
+    Command() : m_IsDetained(false), m_Event(nullptr) {}
     virtual ~Command() {}
 
 protected:
@@ -43,15 +43,14 @@ protected:
 
     EventDispatcherPtr& GetDispatcher();
     InjectorPtr&        GetInjector();
-    MediatorMap&        GetMediatorMap();
     const Event&        GetEvent();
     bool                GetIsDetained();
 
 private:
     void                SetEvent(const Event& evt);
+    void                SetCommandMap(CommandMap& commandMap)   { m_CommandMap = &commandMap; }
 
-    CommandMap&         m_CommandMap;
-    MediatorMap*        m_MediatorMap;
+    CommandMap*         m_CommandMap;
     const Event*        m_Event;
     bool                m_IsDetained;
 };

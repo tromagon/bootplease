@@ -81,7 +81,7 @@ private:
 template<class T>
 Command& DirectCommandMap::CreateCommand()
 {
-    return *(new T(*this));
+    return *(new T());
 }
 
 template<class C>

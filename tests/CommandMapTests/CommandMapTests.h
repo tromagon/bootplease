@@ -4,7 +4,7 @@
 class CommandA : public Command
 {
 public:
-    CommandA(CommandMap& commandMap) : Command(commandMap) {};
+    CommandA() {}
     ~CommandA();
 
     virtual void Execute() override;
@@ -15,7 +15,7 @@ public:
 class CommandB : public Command
 {
 public:
-    CommandB(CommandMap& commandMap) : Command(commandMap) {};
+    CommandB() {}
     ~CommandB();
 
     virtual void Execute() override;

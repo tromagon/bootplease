@@ -3,9 +3,11 @@
 
 #include "injection\Injector.h"
 #include "events\EventDispatcher.h"
+#include "mediator\View.h"
+#include "mediator\Mediator.h"
 
-class Mediator;
-class View;
+//class Mediator;
+//typedef unique_ptr<Mediator> MediatorPtr;
 
 class MediatorMap
 {
@@ -15,6 +17,10 @@ public:
 
     EventDispatcherPtr&     GetDispatcher()     { return m_EventDispatcher; }
     InjectorPtr&            GetInjector()       { return m_Injector; }
+
+    void                    DisposeView(View& view);
+    void                    DisposeView(const char* id);
+    void                    UnMap(const char* viewId);
 
     template<class V, class M>
     void Map(const char* viewId);
@@ -49,17 +55,17 @@ private:
     {
     public:
         ViewMediatorItem(const char* id, View& view, Mediator& mediator) 
-            : m_Id(id), m_View(view), m_Mediator(mediator) {}
+            : m_Id(id), m_View(ViewPtr(&view)), m_Mediator(MediatorPtr(&mediator)) {}
         ~ViewMediatorItem() {}
 
         const char*     GetId()         { return m_Id; }
-        View&           GetView()       { return m_View; }
-        Mediator&       GetMediator()   { return m_Mediator; }
+        ViewPtr&        GetView()       { return m_View; }
+        MediatorPtr&    GetMediator()   { return m_Mediator; }
 
     private:
-        const char*         m_Id;
-        View&               m_View;
-        Mediator&           m_Mediator;
+        const char*     m_Id;
+        ViewPtr         m_View;
+        MediatorPtr     m_Mediator;
     };
 
     typedef unique_ptr<ViewMediatorItem> ViewMediatorItemPtr;
@@ -113,6 +119,9 @@ C& MediatorMap::GetView(const char* id)
         if (item->GetViewId() == id)
         {
             view = static_cast<C*>(&item->GetView());
+
+            //ViewPtr viewPtr = ViewPtr(view);
+            //MediatorPtr mediator = MediatorPtr(&item->GetMediator());
             Mediator& mediator = item->GetMediator();
             mediator.SetMediatorMap(*this);
             mediator.SetView(*view);

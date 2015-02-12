@@ -3,14 +3,22 @@
 
 #include "events\Event.h"
 #include "events\EventDispatcher.h"
-#include "mediator\View.h"
-#include "MediatorMap.h"
+#include <memory>
+
+class MediatorMap;
+class View;
+
+class Injector;
+typedef unique_ptr<Injector> InjectorPtr;
 
 class Mediator
 {
     friend class MediatorMap;
 
 public:
+    Mediator() {}
+    virtual ~Mediator() {}
+
     template<class C>
     C&                  GetView()               { return static_cast<C&>(*m_View); }
 
@@ -18,13 +26,10 @@ public:
     void                SetView(View& value)    { m_View = &value; }
 
     MediatorMap&            GetMediatorMap()    { return *m_MediatorMap; }
-    InjectorPtr&            GetInjector()       { return m_MediatorMap->GetInjector(); } 
-    EventDispatcherPtr&     GetDispatcher()     { return m_MediatorMap->GetDispatcher(); }
+    InjectorPtr&            GetInjector();
+    EventDispatcherPtr&     GetDispatcher();
 
 protected:
-    Mediator() {}
-    virtual ~Mediator() {}
-
     template<class C>
     int     AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
@@ -42,6 +47,7 @@ private:
     MediatorMap*        m_MediatorMap;
 };
 
+typedef unique_ptr<Mediator> MediatorPtr;
 
 template<class C>
 int Mediator::AddContextListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)

@@ -1,10 +1,11 @@
 #include "mediator\Mediator.h"
+#include "mediator\View.h"
 
 class MediatorA : public Mediator
 {
 public:
-    MediatorA() {}
-    ~MediatorA() {}
+    MediatorA();
+    ~MediatorA();
 
     virtual void OnInitialized() override;
 };
@@ -15,8 +16,8 @@ public:
     static const char* ID;
 
 public:
-    ViewA() {}
-    ~ViewA() {}
+    ViewA();
+    ~ViewA();
 };
 
 class Config

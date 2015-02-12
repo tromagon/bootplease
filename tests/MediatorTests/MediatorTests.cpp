@@ -11,6 +11,26 @@ using namespace std;
 
 const char* ViewA::ID = "ViewA";
 
+ViewA::ViewA()
+{
+    cout << "ViewA constructor" << endl;
+}
+
+ViewA::~ViewA()
+{
+    cout << "ViewA destructor" << endl;
+}
+
+MediatorA::MediatorA() 
+{
+    cout << "MediatorA constructor" << endl;
+}
+
+MediatorA::~MediatorA() 
+{
+    cout << "MediatorA destructor" << endl;
+}
+
 void MediatorA::OnInitialized()
 {
     cout << "Mediator A initialized" << endl;
@@ -27,6 +47,9 @@ int main(array<System::String ^> ^args)
     mediatorMap.Map<ViewA, MediatorA>(ViewA::ID);
 
     ViewA& view = mediatorMap.GetView<ViewA>(ViewA::ID);
+    mediatorMap.DisposeView(view);
+
+    mediatorMap.UnMap(ViewA::ID);
 
     system("pause");
     return 0;

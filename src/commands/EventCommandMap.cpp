@@ -5,6 +5,7 @@
 void EventCommandMap::UnMapAll()
 {
     m_Maps.clear();
+    m_NumMap = 0;
 }
 
 void EventCommandMap::OnCommandEvent(const Event& evt)

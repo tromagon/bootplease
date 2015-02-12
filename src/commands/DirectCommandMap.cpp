@@ -21,4 +21,5 @@ void DirectCommandMap::Execute()
 void DirectCommandMap::UnMapAll()
 {
     m_Maps.clear();
+    m_NumMap = 0;
 }

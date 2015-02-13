@@ -41,13 +41,13 @@ private:
     class InjectorMappingSpec : public IInjectorMappingSpec
     {
     public:
-        explicit InjectorMappingSpec(C& instance) : m_Instance(instance) {};
+        explicit InjectorMappingSpec(C& instance) : m_Instance(move(instance)) {};
         virtual ~InjectorMappingSpec() {};
 
         C&  GetInstance()   { return m_Instance; }
 
     private:
-        C&  m_Instance;
+        C  m_Instance;
     };
 
     class InjectorMapping

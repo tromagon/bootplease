@@ -6,9 +6,6 @@
 #include "mediator\View.h"
 #include "mediator\Mediator.h"
 
-//class Mediator;
-//typedef unique_ptr<Mediator> MediatorPtr;
-
 class MediatorMap
 {
 public:
@@ -86,6 +83,8 @@ private:
     Mediator& CreateMediator();
 };
 
+ typedef unique_ptr<MediatorMap> MediatorMapPtr;
+
 template<class V>
 View& MediatorMap::CreateView()
 {
@@ -120,8 +119,6 @@ C& MediatorMap::GetView(const char* id)
         {
             view = static_cast<C*>(&item->GetView());
 
-            //ViewPtr viewPtr = ViewPtr(view);
-            //MediatorPtr mediator = MediatorPtr(&item->GetMediator());
             Mediator& mediator = item->GetMediator();
             mediator.SetMediatorMap(*this);
             mediator.SetView(*view);

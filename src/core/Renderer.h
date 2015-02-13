@@ -3,21 +3,24 @@
 
 #include "Renderable.h"
 #include <list>
+#include <memory>
 
 using namespace std;
 
 class Renderer
 {
 private:
-	list<Renderable*> m_Renderables;
+    list<Renderable*> m_Renderables;
 
 public:
-	Renderer() {}
-	~Renderer() {}
+    Renderer() {}
+    ~Renderer() {}
 
-	void    Render();
-	void    Add(Renderable& renderable);
-	void    Remove(Renderable& renderable);
+    void    Render();
+    void    Add(Renderable& renderable);
+    void    Remove(Renderable& renderable);
 };
+
+typedef unique_ptr<Renderer> RendererPtr;
 
 #endif

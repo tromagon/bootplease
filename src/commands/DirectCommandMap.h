@@ -78,6 +78,8 @@ private:
     vector<DirectCommandMapItemPtr>   m_Maps;
 };
 
+typedef unique_ptr<DirectCommandMap> DirectCommandMapPtr;
+
 template<class T>
 Command& DirectCommandMap::CreateCommand()
 {

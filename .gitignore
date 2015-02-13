@@ -62,7 +62,9 @@ tests/CommandMapTests/TestResults
 tests/MediatorTests/Debug
 tests/MediatorTests/ipch
 tests/MediatorTests/TestResults
-
+tests/ContextTests/Debug
+tests/ContextTests/ipch
+tests/ContextTests/TestResults
 *.free
 *.ico
 *.rc

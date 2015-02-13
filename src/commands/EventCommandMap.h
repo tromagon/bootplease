@@ -2,7 +2,6 @@
 #define _EVENTCOMMANDMAP_H_
 
 #include "events\EventDispatcher.h"
-#include "injection\Context.h"
 #include "commands\CommandMap.h"
 #include <unordered_map>
 
@@ -79,6 +78,8 @@ private:
 
     vector<EventCommandMapItemPtr>  m_Maps;
 };
+
+typedef unique_ptr<EventCommandMap> EventCommandMapPtr;
 
 template<class T>
 Command& EventCommandMap::CreateCommand()

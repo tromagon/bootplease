@@ -3,21 +3,24 @@
 
 #include "Updateable.h"
 #include <list>
+#include <memory>
 
 using namespace std;
 
 class UpdateManager
 {
 private:
-	list<Updateable*> m_Updateables;
+    list<Updateable*> m_Updateables;
 
 public:
-	UpdateManager() {}
-	~UpdateManager() {}
+    UpdateManager() {}
+    ~UpdateManager() {}
 
-	void    Update(float deltaTime = 0.0f);
-	void    Add(Updateable& updateable);
-	void    Remove(Updateable& updateable);
+    void    Update(float deltaTime = 0.0f);
+    void    Add(Updateable& updateable);
+    void    Remove(Updateable& updateable);
 };
+
+typedef unique_ptr<UpdateManager> UpdateManagerPtr;
 
 #endif

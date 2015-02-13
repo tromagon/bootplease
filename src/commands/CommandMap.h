@@ -1,22 +1,24 @@
 #ifndef _COMMANDMAP_H_
 #define _COMMANDMAP_H_
 
-#include "events\EventDispatcher.h"
-#include "injection\Injector.h"
+#include "commands\Command.h"
 #include <vector>
 #include <memory>
 
 using namespace std;
 
-class Command;
-typedef unique_ptr<Command> CommandPtr;
+class EventDispatcher;
+typedef unique_ptr<EventDispatcher> EventDispatcherPtr;
+
+class Injector;
+typedef unique_ptr<Injector> InjectorPtr;
 
 class CommandMap
 {
 public:
     explicit CommandMap(EventDispatcherPtr& dispatcher, InjectorPtr& injector) 
         : m_Dispatcher(dispatcher), m_Injector(injector), m_NumMap(0), m_NumDetained(0) {}
-    virtual ~CommandMap() {};
+    ~CommandMap() {}
 
     void                    Detain(Command& command);
     void                    Release(Command& command);

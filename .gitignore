@@ -65,6 +65,9 @@ tests/MediatorTests/TestResults
 tests/ContextTests/Debug
 tests/ContextTests/ipch
 tests/ContextTests/TestResults
+tests/DisplayTests/Debug
+tests/DisplayTests/ipch
+tests/DisplayTests/TestResults
 *.free
 *.ico
 *.rc

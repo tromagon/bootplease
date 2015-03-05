@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MediatorTests", "..\Mediato
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ContextTests", "..\ContextTests\ContextTests.vcxproj", "{FDED3976-ADD6-4E5E-9073-D72BF7E2686C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DisplayTests", "..\DisplayTests\DisplayTests.vcxproj", "{0CEA7EFE-D11E-4309-B554-812B73CA1834}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -43,6 +45,10 @@ Global
 		{FDED3976-ADD6-4E5E-9073-D72BF7E2686C}.Debug|Win32.Build.0 = Debug|Win32
 		{FDED3976-ADD6-4E5E-9073-D72BF7E2686C}.Release|Win32.ActiveCfg = Release|Win32
 		{FDED3976-ADD6-4E5E-9073-D72BF7E2686C}.Release|Win32.Build.0 = Release|Win32
+		{0CEA7EFE-D11E-4309-B554-812B73CA1834}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0CEA7EFE-D11E-4309-B554-812B73CA1834}.Debug|Win32.Build.0 = Debug|Win32
+		{0CEA7EFE-D11E-4309-B554-812B73CA1834}.Release|Win32.ActiveCfg = Release|Win32
+		{0CEA7EFE-D11E-4309-B554-812B73CA1834}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

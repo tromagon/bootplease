@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0CEA7EFE-D11E-4309-B554-812B73CA1834}</ProjectGuid>
+    <RootNamespace>DisplayTests</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>F:\2015\lib\SDL2_image-2.0.0\include;F:\2015\lib\glew-1.12.0\include;F:\2015\lib\SDL2-2.0.3\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\2015\lib\SDL2_image-2.0.0\lib\x86;F:\2015\lib\glew-1.12.0\lib\Release\Win32;F:\2015\lib\SDL2-2.0.3\lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>F:\2015\lib\glm;F:\2015\bootplease\libs\cJSON;F:\2015\bootplease\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OpenGL32.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;glew32.lib;glew32s.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\libs\cJSON\cJSON.c" />
+    <ClCompile Include="..\..\src\display\AssetManager.cpp" />
+    <ClCompile Include="..\..\src\display\Confiture.cpp" />
+    <ClCompile Include="..\..\src\display\DisplayObject.cpp" />
+    <ClCompile Include="..\..\src\display\DisplayObjectContainer.cpp" />
+    <ClCompile Include="..\..\src\display\DisplayObjectEvent.cpp" />
+    <ClCompile Include="..\..\src\display\Image.cpp" />
+    <ClCompile Include="..\..\src\display\RenderSupport.cpp" />
+    <ClCompile Include="..\..\src\display\ShaderProgram.cpp" />
+    <ClCompile Include="..\..\src\display\Stage.cpp" />
+    <ClCompile Include="..\..\src\display\TextureAtlas.cpp" />
+    <ClCompile Include="..\..\src\events\EventDispatcher.cpp" />
+    <ClCompile Include="..\..\src\utils\Matrix.cpp" />
+    <ClCompile Include="..\..\src\utils\MatrixUtil.cpp" />
+    <ClCompile Include="..\..\src\utils\Rectangle.cpp" />
+    <ClCompile Include="..\..\src\utils\Vec2d.cpp" />
+    <ClCompile Include="DisplayTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\libs\cJSON\cJSON.h" />
+    <ClInclude Include="..\..\src\display\AssetManager.h" />
+    <ClInclude Include="..\..\src\display\Confiture.h" />
+    <ClInclude Include="..\..\src\display\DisplayObject.h" />
+    <ClInclude Include="..\..\src\display\DisplayObjectContainer.h" />
+    <ClInclude Include="..\..\src\display\DisplayObjectEvent.h" />
+    <ClInclude Include="..\..\src\display\Image.h" />
+    <ClInclude Include="..\..\src\display\RenderSupport.h" />
+    <ClInclude Include="..\..\src\display\ShaderProgram.h" />
+    <ClInclude Include="..\..\src\display\Stage.h" />
+    <ClInclude Include="..\..\src\display\SubTexture.h" />
+    <ClInclude Include="..\..\src\display\Texture.h" />
+    <ClInclude Include="..\..\src\display\TextureAtlas.h" />
+    <ClInclude Include="..\..\src\display\TexturedVertex2D.h" />
+    <ClInclude Include="..\..\src\events\Event.h" />
+    <ClInclude Include="..\..\src\events\EventDispatcher.h" />
+    <ClInclude Include="..\..\src\utils\Matrix.h" />
+    <ClInclude Include="..\..\src\utils\MatrixUtil.h" />
+    <ClInclude Include="..\..\src\utils\Pool.h" />
+    <ClInclude Include="..\..\src\utils\Rectangle.h" />
+    <ClInclude Include="..\..\src\utils\Vec2d.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,68 @@
+{"frames": [
+
+{
+	"filename": "blue.png",
+	"frame": {"x":104,"y":97,"w":98,"h":93},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":98,"h":93},
+	"sourceSize": {"w":98,"h":93}
+},
+{
+	"filename": "green.png",
+	"frame": {"x":95,"y":192,"w":89,"h":96},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":89,"h":96},
+	"sourceSize": {"w":89,"h":96}
+},
+{
+	"filename": "grid_bgnd.png",
+	"frame": {"x":2,"y":2,"w":100,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
+	"sourceSize": {"w":100,"h":100}
+},
+{
+	"filename": "orange.png",
+	"frame": {"x":85,"y":290,"w":76,"h":97},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":76,"h":97},
+	"sourceSize": {"w":76,"h":97}
+},
+{
+	"filename": "purple.png",
+	"frame": {"x":104,"y":2,"w":98,"h":93},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":98,"h":93},
+	"sourceSize": {"w":98,"h":93}
+},
+{
+	"filename": "red.png",
+	"frame": {"x":2,"y":104,"w":91,"h":91},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":91,"h":91},
+	"sourceSize": {"w":91,"h":91}
+},
+{
+	"filename": "yellow.png",
+	"frame": {"x":2,"y":197,"w":81,"h":96},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":81,"h":96},
+	"sourceSize": {"w":81,"h":96}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "my-atlas.png",
+	"format": "RGBA8888",
+	"size": {"w":256,"h":512},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:805cde9f919358b1e72848bb0f818993:1/1$"
+}
+}

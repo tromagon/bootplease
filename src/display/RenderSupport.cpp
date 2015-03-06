@@ -152,10 +152,14 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     float y = image.GetY();
     float w = texture.GetWidth();
     float h = texture.GetHeight();
-    float srcX = texture.GetX();
-    float srcY = texture.GetY();
-    float srcW = texture.GetWidth();
-    float srcH = texture.GetHeight();
+    float clipX = texture.GetX();
+    float clipY = texture.GetY();
+    float clipW = texture.GetWidth();
+    float clipH = texture.GetHeight();
+
+    const ITexture* parent = texture.GetParent();
+    int textureWidth = (parent) ? parent->GetWidth() : texture.GetWidth();
+    int textureHeight = (parent) ? parent->GetHeight() : texture.GetHeight();
 
     float a = m_ModelViewMatrix.m_A;
     float b = m_ModelViewMatrix.m_B;
@@ -168,13 +172,17 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     float sy = (d / abs(d)) * (sqrt(pow(b, 2.0f) + pow(d, 2.0f)));
     float q = atan2(b, d);
 
-    
-
     //Texture coordinates
     GLfloat texTop = 0.f;
-    GLfloat texBottom = (GLfloat)h / (GLfloat)srcH;
+    GLfloat texBottom = (GLfloat)h / (GLfloat)clipH;
     GLfloat texLeft = 0.f;
-    GLfloat texRight = (GLfloat)w / (GLfloat)srcW;
+    GLfloat texRight = (GLfloat)w / (GLfloat)clipW;
+
+    //Texture coordinates
+    texLeft = clipX / textureWidth;
+    texRight = (clipX + clipW) / textureWidth;
+    texTop = clipY / textureHeight;
+    texBottom = (clipY + clipH) / textureHeight;
 
     //Vertex coordinates
     GLfloat quadWidth = w;
@@ -235,7 +243,7 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     mat.SetTrans(CIwFVec2(tx, ty));
     Iw2DSetTransformMatrix(mat);*/
 
-    //Iw2DDrawImageRegion(cIw2DImage, CIwFVec2(0, 0), CIwFVec2(w, h), CIwFVec2(srcX, srcY), CIwFVec2(srcW, srcH));
+    //Iw2DDrawImageRegion(cIw2DImage, CIwFVec2(0, 0), CIwFVec2(w, h), CIwFVec2(srcX, clipY), CIwFVec2(srcW, srcH));
 }
 
 void RenderSupport::ResetMatrix()

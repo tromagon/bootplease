@@ -17,7 +17,7 @@ int main(int argc, char* args[])
 
     TextureAtlasPtr& atlas = assetManager.GetTextureAtlas("my-atlas");
 
-    Image* image = new Image(*(atlas->GetTexture("blue.png")));
+    Image* image = new Image(*(atlas->GetTexture("yellow.png")));
     confiture.GetStage().AddChild(*image);
 
     //Main loop flag

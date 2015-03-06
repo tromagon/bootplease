@@ -5,16 +5,20 @@
 
 using namespace std;
 
+class Texture;
+typedef unique_ptr<Texture> TexturePtr;
+
 class ITexture
 {
 public:
-    virtual const int           GetX() = 0;
-    virtual const int           GetY() = 0;
-    virtual const int           GetWidth() = 0;
-    virtual const int           GetHeight() = 0;
-    virtual const unsigned int  GetId() = 0;
-    virtual const unsigned int  GetVertexBufferId() = 0;
-    virtual const unsigned int  GetIndexBufferId() = 0;
+    virtual const int           GetX() const = 0;
+    virtual const int           GetY() const = 0;
+    virtual const int           GetWidth() const = 0;
+    virtual const int           GetHeight() const = 0;
+    virtual const unsigned int  GetId() const = 0;
+    virtual const unsigned int  GetVertexBufferId() const = 0;
+    virtual const unsigned int  GetIndexBufferId() const = 0;
+    virtual const Texture*      GetParent() const = 0;
 };
 
 class Texture : public ITexture
@@ -23,13 +27,14 @@ public:
     explicit Texture(const unsigned int textureId, int textureWidth, int textureHeight, const unsigned int vertexBufferId, const unsigned int indexBufferId) 
         : m_textureId(textureId), m_textureWidth(textureWidth), m_textureHeight(textureHeight), m_vertexBufferId(vertexBufferId), m_indexBufferId(indexBufferId) {}
 
-    const int           GetX()                  { return 0; }
-    const int           GetY()                  { return 0; }
-    const int           GetWidth()              { return m_textureWidth; }
-    const int           GetHeight()             { return m_textureHeight; }
-    const unsigned int  GetId()                 { return m_textureId; }
-    const unsigned int  GetVertexBufferId()     { return m_vertexBufferId; }
-    const unsigned int  GetIndexBufferId()      { return m_indexBufferId; }
+    const int           GetX() const                { return 0; }
+    const int           GetY() const                { return 0; }
+    const int           GetWidth() const            { return m_textureWidth; }
+    const int           GetHeight() const           { return m_textureHeight; }
+    const unsigned int  GetId() const               { return m_textureId; }
+    const unsigned int  GetVertexBufferId() const   { return m_vertexBufferId; }
+    const unsigned int  GetIndexBufferId() const    { return m_indexBufferId; }
+    const Texture*      GetParent() const           { return nullptr; }
 
 protected:
     const unsigned int  m_textureId;
@@ -38,7 +43,5 @@ protected:
     int                 m_textureWidth;
     int                 m_textureHeight;
 };
-
-typedef unique_ptr<Texture> TexturePtr;
 
 #endif

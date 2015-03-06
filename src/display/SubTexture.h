@@ -16,13 +16,14 @@ private:
     TexturePtr&             m_ParentTexture;
     bootplease::Rectangle   m_Region;
 
-    const int           GetX()                  { return static_cast<int>(m_Region.m_X); }
-    const int           GetY()                  { return static_cast<int>(m_Region.m_Y); }
-    const int           GetWidth()              { return static_cast<int>(m_Region.m_Width); }
-    const int           GetHeight()             { return static_cast<int>(m_Region.m_Height); }
-    const unsigned int  GetId()                 { return m_ParentTexture->GetId(); }
-    const unsigned int  GetVertexBufferId()     { return m_ParentTexture->GetVertexBufferId(); }
-    const unsigned int  GetIndexBufferId()      { return m_ParentTexture->GetIndexBufferId(); }
+    const int           GetX() const                { return static_cast<int>(m_Region.m_X); }
+    const int           GetY() const                { return static_cast<int>(m_Region.m_Y); }
+    const int           GetWidth() const            { return static_cast<int>(m_Region.m_Width); }
+    const int           GetHeight() const           { return static_cast<int>(m_Region.m_Height); }
+    const unsigned int  GetId() const               { return m_ParentTexture->GetId(); }
+    const unsigned int  GetVertexBufferId() const   { return m_ParentTexture->GetVertexBufferId(); }
+    const unsigned int  GetIndexBufferId() const    { return m_ParentTexture->GetIndexBufferId(); }
+    const Texture*      GetParent() const           { return m_ParentTexture.get(); }
 };
 
 #endif

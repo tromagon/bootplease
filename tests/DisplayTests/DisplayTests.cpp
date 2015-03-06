@@ -17,8 +17,18 @@ int main(int argc, char* args[])
 
     TextureAtlasPtr& atlas = assetManager.GetTextureAtlas("my-atlas");
 
-    Image* image = new Image(*(atlas->GetTexture("yellow.png")));
-    confiture.GetStage().AddChild(*image);
+    DisplayObjectContainer* container = new DisplayObjectContainer();
+
+    Image* image = new Image(*(atlas->GetTexture("grid_bgnd.png")));
+    confiture.GetStage().AddChild(*container);
+
+    container->AddChild(*image);
+    container->SetX(100);
+    //container->SetY(100);
+    //container->SetScaleX(0.5f);
+
+    float angle = 0.f;
+    
 
     //Main loop flag
     bool quit = false;
@@ -49,6 +59,8 @@ int main(int argc, char* args[])
             }
         }
 
+        angle += 0.01f;
+        container->SetRotation(angle);
         confiture.Render();   
     }
 

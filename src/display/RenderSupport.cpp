@@ -83,11 +83,11 @@ void RenderSupport::NextFrame()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //Reset transformations
-    m_shaderProgram.setModelView(glm::mat4());
+    ////Reset transformations
+    //m_shaderProgram.setModelView(glm::mat4());
 
-    //Render texture centered
-    m_shaderProgram.setTextureColor(m_textureColor);
+    ////Render texture centered
+    //m_shaderProgram.setTextureColor(m_textureColor);
 
     ResetMatrix();
 
@@ -148,18 +148,16 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     ITexture& texture = image.GetTexture();
     //CIw2DImage* cIw2DImage = &(texture.GetImage());
 
-    float x = image.GetX();
-    float y = image.GetY();
-    float w = texture.GetWidth();
-    float h = texture.GetHeight();
-    float clipX = texture.GetX();
-    float clipY = texture.GetY();
-    float clipW = texture.GetWidth();
-    float clipH = texture.GetHeight();
+    const float x = image.GetX();
+    const float y = image.GetY();
+    const float clipX = texture.GetX();
+    const float clipY = texture.GetY();
+    const float clipW = texture.GetWidth();
+    const float clipH = texture.GetHeight();
 
     const ITexture* parent = texture.GetParent();
-    int textureWidth = (parent) ? parent->GetWidth() : texture.GetWidth();
-    int textureHeight = (parent) ? parent->GetHeight() : texture.GetHeight();
+    const int textureWidth = (parent) ? parent->GetWidth() : clipW;
+    const int textureHeight = (parent) ? parent->GetHeight() : clipH;
 
     float a = m_ModelViewMatrix.m_A;
     float b = m_ModelViewMatrix.m_B;
@@ -172,45 +170,56 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     float sy = (d / abs(d)) * (sqrt(pow(b, 2.0f) + pow(d, 2.0f)));
     float q = atan2(b, d);
 
-    //Texture coordinates
-    GLfloat texTop = 0.f;
-    GLfloat texBottom = (GLfloat)h / (GLfloat)clipH;
-    GLfloat texLeft = 0.f;
-    GLfloat texRight = (GLfloat)w / (GLfloat)clipW;
+    //Reset transformations
+    m_shaderProgram.setModelView(glm::mat4());
+
+    //Render texture centered
+    m_shaderProgram.setTextureColor(m_textureColor);
+
+
 
     //Texture coordinates
-    texLeft = clipX / textureWidth;
-    texRight = (clipX + clipW) / textureWidth;
-    texTop = clipY / textureHeight;
-    texBottom = (clipY + clipH) / textureHeight;
-
-    //Vertex coordinates
-    GLfloat quadWidth = w;
-    GLfloat quadHeight = h;
-
-    //Move to rendering point
-    m_shaderProgram.leftMultModelView(glm::translate(glm::vec3(x, y, 0.f)));
-    m_shaderProgram.updateModelView();
+    GLfloat texLeft = clipX / textureWidth;
+    GLfloat texRight = (clipX + clipW) / textureWidth;
+    GLfloat texTop = clipY / textureHeight;
+    GLfloat texBottom = (clipY + clipH) / textureHeight;
 
     //Set vertex data
     TexturedVertex2D vData[4];
 
     //Texture coordinates
-    vData[0].texCoord.s =  texLeft; vData[0].texCoord.t =    texTop;
-    vData[1].texCoord.s = texRight; vData[1].texCoord.t =    texTop;
-    vData[2].texCoord.s = texRight; vData[2].texCoord.t = texBottom;
-    vData[3].texCoord.s =  texLeft; vData[3].texCoord.t = texBottom;
+    vData[0].texCoord.s = texLeft; 
+    vData[0].texCoord.t = texTop;
+    vData[1].texCoord.s = texRight; 
+    vData[1].texCoord.t = texTop;
+    vData[2].texCoord.s = texRight; 
+    vData[2].texCoord.t = texBottom;
+    vData[3].texCoord.s = texLeft; 
+    vData[3].texCoord.t = texBottom;
 
     //Vertex positions
-    vData[0].position.x =       0.f; vData[0].position.y =        0.f;
-    vData[1].position.x = quadWidth; vData[1].position.y =        0.f;
-    vData[2].position.x = quadWidth; vData[2].position.y = quadHeight;
-    vData[3].position.x =       0.f; vData[3].position.y = quadHeight;
+    vData[0].position.x = 0.f; 
+    vData[0].position.y = 0.f;
+    vData[1].position.x = clipW; 
+    vData[1].position.y = 0.f;
+    vData[2].position.x = clipW; 
+    vData[2].position.y = clipH;
+    vData[3].position.x = 0.f; 
+    vData[3].position.y = clipH;
+
+    //Move to rendering point
+    glm::mat4 matrix = glm::mat4();
+    matrix = glm::scale(matrix, glm::vec3(sx, sy, 0.f));
+    matrix = glm::rotate(matrix, q, glm::vec3(0,0,1));
+    matrix = glm::translate(matrix, glm::vec3(tx, ty, 0.f) );
+
+    m_shaderProgram.leftMultModelView(matrix);
+    m_shaderProgram.updateModelView();
 
     //Set texture ID
     glBindTexture(GL_TEXTURE_2D, texture.GetId());
 
-        //Enable vertex and texture coordinate arrays
+    //Enable vertex and texture coordinate arrays
     m_shaderProgram.enableVertexPointer();
     m_shaderProgram.enableTexCoordPointer();
 

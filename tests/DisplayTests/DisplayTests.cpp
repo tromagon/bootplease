@@ -36,8 +36,9 @@ int main(int argc, char* args[])
     bootplease::Rectangle viewport = bootplease::Rectangle(0, 0, 800, 600);
     Confiture confiture(viewport);
 
-    SDLInputAdapter inputAdapter;
-    GestureManager gestureManager(inputAdapter, confiture.GetStage()); 
+    //SDLInputAdapter inputAdapter;
+    GestureManager gestureManager = GestureManager(confiture.GetStage()); 
+    gestureManager.registerAdapter<SDLInputAdapter>();
 
     AssetManager assetManager;
     assetManager.loadAtlas("my-atlas", "atlas/my-atlas.png", "atlas/my-atlas.json");

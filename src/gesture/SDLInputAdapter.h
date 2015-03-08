@@ -7,7 +7,7 @@
 class SDLInputAdapter : public InputAdapter
 {
 public:
-    SDLInputAdapter() {}
+    SDLInputAdapter(TouchesManagerPtr& touchesManager) : InputAdapter(touchesManager) {}
     ~SDLInputAdapter() {}
 
     virtual bool Update(float deltaTime = 0.0f) override;

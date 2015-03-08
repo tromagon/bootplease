@@ -2,23 +2,29 @@
 #define _INPUTADAPTER_H_
 
 #include "core\Updateable.h"
+#include "gesture\TouchesManager.h"
+#include <memory>
 
-class TouchesManager;
+using namespace std;
+
+//class TouchesManager;
+//typedef unique_ptr<TouchesManager> TouchesManagerPtr;
 
 class InputAdapter
 {
 protected:
-    TouchesManager*     m_TouchesManager;
+    TouchesManagerPtr&  m_TouchesManager;
 
 public:
-    TouchesManager&     GetTouchesManager()                         { return *m_TouchesManager; }
-    void                SetTouchesManager(TouchesManager& value)    { m_TouchesManager = &value; }
+    TouchesManagerPtr&  GetTouchesManager() { return m_TouchesManager; }
 
 public:
-    InputAdapter() {}
+    InputAdapter(TouchesManagerPtr& touchesManager) : m_TouchesManager(touchesManager) {}
     virtual ~InputAdapter() {}
 
     virtual bool Update(float deltaTime = 0.0f) = 0;
 };
+
+typedef unique_ptr<InputAdapter> InputAdapterPtr;
 
 #endif

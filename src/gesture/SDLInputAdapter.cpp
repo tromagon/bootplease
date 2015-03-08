@@ -21,17 +21,17 @@ bool SDLInputAdapter::Update(float deltaTime)
 
     case SDL_MOUSEMOTION:
         SDL_GetMouseState(&x, &y);
-        GetTouchesManager().OnTouchMove(DEFAULT_TOUCH_ID, Vec2d(x, y));
+        GetTouchesManager()->OnTouchMove(DEFAULT_TOUCH_ID, Vec2d(x, y));
         break;
 
     case SDL_MOUSEBUTTONDOWN:
         SDL_GetMouseState(&x, &y);
-        GetTouchesManager().OnTouchBegin(DEFAULT_TOUCH_ID, Vec2d(x, y));
+        GetTouchesManager()->OnTouchBegin(DEFAULT_TOUCH_ID, Vec2d(x, y));
         break;
 
     case SDL_MOUSEBUTTONUP:
         SDL_GetMouseState(&x, &y);
-        GetTouchesManager().OnTouchEnd(DEFAULT_TOUCH_ID, Vec2d(x, y));
+        GetTouchesManager()->OnTouchEnd(DEFAULT_TOUCH_ID, Vec2d(x, y));
         break;
     }
 

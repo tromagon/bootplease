@@ -10,7 +10,7 @@ using namespace std;
 class EventDispatcher
 {
 public:
-    EventDispatcher() : m_NumListeners(0) {}
+    EventDispatcher() {}
     virtual ~EventDispatcher() {}
 
     bool    HasListener(const char* eventType);
@@ -21,6 +21,9 @@ public:
 
     template<class C>
     void    RemoveListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
+
+    template<class C>
+    bool    HasListener(const char* eventType, void (C::*fct)(const Event&), C& proxy);
 
 private:
     class IEventCallBackSpec
@@ -72,7 +75,6 @@ private:
     typedef unique_ptr<EventCallBack> EventCallBackPtr;
 
     vector<EventCallBackPtr>    m_EventCallBacks;
-    int                         m_NumListeners;
 };
 
 typedef unique_ptr<EventDispatcher> EventDispatcherPtr;
@@ -82,13 +84,12 @@ void EventDispatcher::AddListener(const char* eventType, void (C::*fct)(const Ev
 {
     EventCallBackPtr cb = EventCallBackPtr(new EventCallBack(eventType, proxy, fct));
     m_EventCallBacks.push_back(move(cb));
-    m_NumListeners++;
 }
 
 template<class C>
 void EventDispatcher::RemoveListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
 {
-    for (int i = 0 ; i < m_NumListeners ; i++)
+    for (int i = 0 ; i < m_EventCallBacks.size() ; ++i)
     {
         EventCallBackPtr& cb = m_EventCallBacks[i];
         
@@ -96,10 +97,26 @@ void EventDispatcher::RemoveListener(const char* eventType, void (C::*fct)(const
             && &(cb->GetProxy<C>()) == &proxy)
         {
             m_EventCallBacks.erase(m_EventCallBacks.begin() + i);
-            m_NumListeners--;
             break;
         }
     }
+}
+
+template<class C>
+bool EventDispatcher::HasListener(const char* eventType, void (C::*fct)(const Event&), C& proxy)
+{
+    for (int i = 0 ; i < m_EventCallBacks.size() ; ++i)
+    {
+        EventCallBackPtr& cb = m_EventCallBacks[i];
+
+        if (cb->GetType() == eventType && cb->GetFct<C>() == fct
+            && &(cb->GetProxy<C>()) == &proxy)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 #endif

@@ -4,116 +4,90 @@
 #include "Gesture.h"
 #include "GestureEvent.h"
 #include "core\Updateable.h"
-#include "InputAdapter.h"
 #include "Touch.h"
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
 class TouchesManager;
+typedef unique_ptr<TouchesManager> TouchesManagerPtr;
+
+class InputAdapter;
+typedef unique_ptr<InputAdapter> InputAdapterPtr;
+
 class Stage;
 
 class GestureManager : public Updateable
 {
 public:
-	static const char* ID;
+    explicit GestureManager(Stage& stage);
 
-private:
-    class GestureMapItem
-    {
-    public:
-        DisplayObject&      m_Target;
-        vector<Gesture*>    m_GestureList;
+    static const char* ID;
 
-    public:
-	    explicit GestureMapItem(DisplayObject& target) : m_Target(target) {}
-	    ~GestureMapItem() {}
-    };
+    template<class G, class C>
+    G& AddGesture(DisplayObject& target, void (C::*fct)(const Event&), C& proxy);
 
-    class TouchMapItem
-    {
-    public:
-        Touch*              m_Touch;
-        vector<Gesture*>    m_GestureList;
-    };
+    template<class C>
+    void RemoveGesture(DisplayObject& target, void (C::*fct)(const Event&), C& proxy);
 
-private:
-	InputAdapter&				m_InputAdapter;
-	TouchesManager*				m_TouchesManager;
-	vector<GestureMapItem*>		m_GestureMapItems;
-    vector<TouchMapItem*>       m_TouchMapItems;
-    Stage&						m_Stage;
+    void RemoveGesture(Gesture& gesture);
 
-public:
-	InputAdapter&				GetInputAdapter() { return m_InputAdapter; }
+    template<class C>
+    void RemoveAllGesturesOf(C& proxy) {}
 
-public:
-	explicit GestureManager(InputAdapter& inputAdapter, Stage& stage);
-	~GestureManager();
-
-	template<class G, class C>
-	G& AddGesture(DisplayObject& target, void (C::*fct)(const Event&), C& proxy);
-
-	template<class C>
-	void RemoveGesture(Gesture& gesture, void (C::*fct)(const Event&), C& proxy);
-
-	template<class C>
-	void RemoveAllGesturesOf(C& proxy) {};
+    template<class C>
+    void registerAdapter();
 
     bool Update(float deltaTime = 0.0f) override;
 
-	void OnTouchBegin(Touch& touch);
-	void OnTouchEnd(Touch& point);
-	void OnTouchMove(Touch& point);
+    void OnTouchBegin(Touch& touch);
+    void OnTouchEnd(Touch& point);
+    void OnTouchMove(Touch& point);
 
 private:
-	void			RemoveAllGestures();
-	void			RemoveAllTouches();
-	GestureMapItem* GetGestureMapItemByTarget(DisplayObject& target);
-    TouchMapItem*   GetTouchMapItemByTouch(Touch& touch);
-    int             GetTouchMapItemIndexByTouch(Touch& touch);
-	int				GetGestureMapIndexByTarget(DisplayObject& target);
-    void            GetHierarchy(DisplayObject& target, vector<DisplayObject*>& result);
+    void GetHierarchy(DisplayObject& target, vector<DisplayObject*>& result);
+
+    typedef unordered_map<DisplayObject*, GesturePtr> GestureMap;
+    typedef unordered_map<Touch*, GesturePtr> TouchGestureMap;
+
+    InputAdapterPtr             m_InputAdapter;
+    TouchesManagerPtr           m_TouchesManager;
+    Stage&                      m_Stage;
+
+    GestureMap                  m_gestureMap;
+    TouchGestureMap             m_currentGestures;
 };
+
+template<class C>
+void GestureManager::registerAdapter()
+{
+    m_InputAdapter = InputAdapterPtr(new C(m_TouchesManager));
+}
 
 template<class G, class C>
 G& GestureManager::AddGesture(DisplayObject& target, void (C::*fct)(const Event&), C& proxy)
 {
-	G* gesture = new G(target);
-	gesture->AddListener(GestureEvent::GESTURE_RECOGNIZED, fct, proxy);
-
-    GestureMapItem* item = GetGestureMapItemByTarget(target);
-    if (!item)
-    {
-        item = new GestureMapItem(target);
-        m_GestureMapItems.push_back(item);
-    }
-
-    item->m_GestureList.push_back(gesture);
-	return *gesture;
+    G* gesture = new G(target);
+    gesture->AddListener(GestureEvent::GESTURE_RECOGNIZED, fct, proxy);
+    m_gestureMap.insert(make_pair(&target, GesturePtr(gesture)));
+    return *gesture;
 }
 
 template<class C>
-void GestureManager::RemoveGesture(Gesture& gesture, void (C::*fct)(const Event&), C& proxy)
+void GestureManager::RemoveGesture(DisplayObject& target, void (C::*fct)(const Event&), C& proxy)
 {
-	int index = GetGestureMapIndexByTarget(gesture.GetTarget());
-    if (index == -1) return;
-
-	GestureMapItem* item = m_GestureMapItems[index];
-	vector<Gesture*>* gestureList = &item->m_GestureList;
-	int i = gestureList->size();
-
-    while (i-- > 0)
-	{
-		if ((*gestureList)[i] == &gesture)
-		{
-			gestureList->erase(gestureList->begin() + i);
-			if (gestureList->size() == 0)
-			{
-				m_GestureMapItems.erase(m_GestureMapItems.begin() + index);
-				delete item;
-			}
-		}
+    GestureMap::iterator it;
+    for (it = m_gestureMap.begin() ; it != m_gestureMap.end() ; )
+    {
+        if (it->first == &target && it->second->HasListener(GestureEvent::GESTURE_RECOGNIZED, fct, proxy))
+        {
+            m_gestureMap.erase(it++);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 

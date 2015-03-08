@@ -8,6 +8,7 @@
 #include "utils\Pool.h"
 
 #include <vector>
+#include <memory>
 
 using namespace std;
 
@@ -40,5 +41,7 @@ private:
 	Touch*	GetTouchByTouchID(int touchID);
 	int		GetIndexByTouchID(int touchID);
 };
+
+typedef unique_ptr<TouchesManager> TouchesManagerPtr;
 
 #endif

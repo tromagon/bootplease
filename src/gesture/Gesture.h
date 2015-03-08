@@ -4,6 +4,9 @@
 #include "events\EventDispatcher.h"
 #include "display\DisplayObject.h"
 #include "Touch.h"
+#include <memory>
+
+using namespace std;
 
 class Gesture : public EventDispatcher
 {
@@ -50,5 +53,7 @@ protected:
 	virtual void OnTouchEnd(Touch& touch) {}
 	virtual void OnTouchMove(Touch& touch) {}
 };
+
+typedef shared_ptr<Gesture> GesturePtr;
 
 #endif

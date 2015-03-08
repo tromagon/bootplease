@@ -148,8 +148,8 @@ Matrix& DisplayObject::GetTransformationMatrix()
         }
         else
         {
-            float cosa = static_cast<float>(cos(m_Rotation));
-            float sina = static_cast<float>(sin(m_Rotation));
+            float cosa = cos(m_Rotation);
+            float sina = sin(m_Rotation);
             float a = m_ScaleX * cosa;
             float b = m_ScaleX * sina;
             float c = m_ScaleY * -sina;

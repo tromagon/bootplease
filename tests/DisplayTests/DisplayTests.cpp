@@ -3,6 +3,8 @@
 #include "display\AssetManager.h"
 #include "display\Image.h"
 
+#define PI 3.14159265
+
 using namespace std;
 
 int main(int argc, char* args[])
@@ -18,17 +20,35 @@ int main(int argc, char* args[])
     TextureAtlasPtr& atlas = assetManager.GetTextureAtlas("my-atlas");
 
     DisplayObjectContainer* container = new DisplayObjectContainer();
+    DisplayObjectContainer* root = new DisplayObjectContainer();
 
     Image* image = new Image(*(atlas->GetTexture("grid_bgnd.png")));
-    confiture.GetStage().AddChild(*container);
+    confiture.GetStage().AddChild(*root);
+    root->AddChild(*container);
 
+    root->SetScaleX(.5f);
+    root->SetScaleY(.5f);
+
+    //confiture.GetStage().AddChild(*image);
+
+    //image->SetScaleX(2.f);
     container->AddChild(*image);
+    //image->SetX(200);
+    //image->SetY(100);
+    //image->SetScaleX(2.f);
+    //image->SetScaleX(-1.f);
+    //image->SetRotation(3.f * M_PI / 4.f);
+
+    //image->SetScaleX(-0.5f);
+    //image->SetScaleY(0.5f);
+    image->SetX(-100 / 2);
+    image->SetY(-100 / 2);
+
+    //image->SetScaleX(.5f);
     container->SetX(100);
-    //container->SetY(100);
-    //container->SetScaleX(0.5f);
+    container->SetY(100);
 
     float angle = 0.f;
-    
 
     //Main loop flag
     bool quit = false;

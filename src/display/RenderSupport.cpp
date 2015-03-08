@@ -47,18 +47,19 @@ void RenderSupport::initSDL()
 void RenderSupport::initGL()
 {
     //Enable texturing
-    glEnable( GL_TEXTURE_2D );
+    glEnable(GL_TEXTURE_2D);
 
     //Set blending
-    glEnable( GL_BLEND );
-    glDisable( GL_DEPTH_TEST );
-    glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    glEnable(GL_BLEND);
+    //glEnable(GL_NORMALIZE);
+    glDisable(GL_DEPTH_TEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //Check for error
     GLenum error = glGetError();
-    if( error != GL_NO_ERROR )
+    if(error != GL_NO_ERROR)
     {
-        printf( "Error initializing OpenGL! %s\n", gluErrorString( error ) );
+        printf("Error initializing OpenGL! %s\n", gluErrorString(error));
         return;
     }
 
@@ -146,7 +147,6 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     //m_CurrentTexture = &image.GetTexture();
 
     ITexture& texture = image.GetTexture();
-    //CIw2DImage* cIw2DImage = &(texture.GetImage());
 
     const float x = image.GetX();
     const float y = image.GetY();
@@ -163,20 +163,11 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     float b = m_ModelViewMatrix.m_B;
     float c = m_ModelViewMatrix.m_C;
     float d = m_ModelViewMatrix.m_D;
-
     float tx = m_ModelViewMatrix.m_Tx;
     float ty = m_ModelViewMatrix.m_Ty;
-    float sx = (a / abs(a)) * (sqrt(pow(a, 2.0f) + pow(c, 2.0f)));
-    float sy = (d / abs(d)) * (sqrt(pow(b, 2.0f) + pow(d, 2.0f)));
-    float q = atan2(b, d);
-
-    //Reset transformations
-    m_shaderProgram.setModelView(glm::mat4());
-
-    //Render texture centered
-    m_shaderProgram.setTextureColor(m_textureColor);
-
-
+    float sx = (a / abs(a)) * sqrt(a * a + c * c);
+    float sy = (d / abs(d)) * sqrt(b * b + d * d);
+    float q = atan(-c / a);
 
     //Texture coordinates
     GLfloat texLeft = clipX / textureWidth;
@@ -209,9 +200,15 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
 
     //Move to rendering point
     glm::mat4 matrix = glm::mat4();
+    matrix = glm::translate(matrix, glm::vec3(tx, ty, 0.f) );
     matrix = glm::scale(matrix, glm::vec3(sx, sy, 0.f));
     matrix = glm::rotate(matrix, q, glm::vec3(0,0,1));
-    matrix = glm::translate(matrix, glm::vec3(tx, ty, 0.f) );
+
+    //Reset transformations
+    m_shaderProgram.setModelView(glm::mat4());
+
+    //Render texture centered
+    m_shaderProgram.setTextureColor(m_textureColor);
 
     m_shaderProgram.leftMultModelView(matrix);
     m_shaderProgram.updateModelView();
@@ -242,17 +239,6 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     //Disable vertex and texture coordinate arrays
     m_shaderProgram.disableVertexPointer();
     m_shaderProgram.disableTexCoordPointer();
-
-    /*Iw2DSetColour(0xffffffff);
-    Iw2DSetTransformMatrix(CIwFMat2D::g_Identity);
-    CIwFMat2D mat;
-    mat.SetRot(q);
-    mat.m[0][0] = sx;
-    mat.m[1][1] = sy;
-    mat.SetTrans(CIwFVec2(tx, ty));
-    Iw2DSetTransformMatrix(mat);*/
-
-    //Iw2DDrawImageRegion(cIw2DImage, CIwFVec2(0, 0), CIwFVec2(w, h), CIwFVec2(srcX, clipY), CIwFVec2(srcW, srcH));
 }
 
 void RenderSupport::ResetMatrix()

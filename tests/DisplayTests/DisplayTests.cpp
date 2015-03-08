@@ -2,10 +2,17 @@
 #include "display\Confiture.h"
 #include "display\AssetManager.h"
 #include "display\Image.h"
+#include "tween\TweenManager.h"
+#include "tween\Easing.h"
 
-#define PI 3.14159265
+#define FRAME_TIME  (30.0f / 1000.0f)
 
 using namespace std;
+
+TweenManager tweenManager;
+DisplayObjectContainer root;
+DisplayObjectContainer container;
+DisplayObjectPtr image;
 
 int main(int argc, char* args[])
 {
@@ -19,34 +26,27 @@ int main(int argc, char* args[])
 
     TextureAtlasPtr& atlas = assetManager.GetTextureAtlas("my-atlas");
 
-    DisplayObjectContainer* container = new DisplayObjectContainer();
-    DisplayObjectContainer* root = new DisplayObjectContainer();
+    TweenX& tweenX = tweenManager.CreateTween<TweenX>(root);
+    tweenX
+        .From(0).To(500).Duration(2.0f)
+        .Delay(1.0f)
+        .Easing(Linear::EaseNone)
+        .Play();
 
-    Image* image = new Image(atlas->GetTexture("grid_bgnd.png"));
-    confiture.GetStage().AddChild(*root);
-    root->AddChild(*container);
+    image = DisplayObjectPtr(new Image(atlas->GetTexture("grid_bgnd.png")));
+    confiture.GetStage().AddChild(root);
+    root.AddChild(container);
 
-    root->SetScaleX(.5f);
-    root->SetScaleY(.5f);
+    root.SetScaleX(.5f);
+    root.SetScaleY(.5f);
 
-    //confiture.GetStage().AddChild(*image);
+    container.AddChild(image);
 
-    //image->SetScaleX(2.f);
-    container->AddChild(*image);
-    //image->SetX(200);
-    //image->SetY(100);
-    //image->SetScaleX(2.f);
-    //image->SetScaleX(-1.f);
-    //image->SetRotation(3.f * M_PI / 4.f);
-
-    //image->SetScaleX(-0.5f);
-    //image->SetScaleY(0.5f);
     image->SetX(-100 / 2);
     image->SetY(-100 / 2);
 
-    //image->SetScaleX(.5f);
-    container->SetX(100);
-    container->SetY(100);
+    container.SetX(100);
+    container.SetY(100);
 
     float angle = 0.f;
 
@@ -79,8 +79,10 @@ int main(int argc, char* args[])
             }
         }
 
+        tweenManager.Update(FRAME_TIME);
+
         angle += 0.01f;
-        container->SetRotation(angle);
+        container.SetRotation(angle);
         confiture.Render();   
     }
 

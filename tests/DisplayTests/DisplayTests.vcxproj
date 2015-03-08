@@ -82,6 +82,10 @@
     <ClCompile Include="..\..\src\display\Stage.cpp" />
     <ClCompile Include="..\..\src\display\TextureAtlas.cpp" />
     <ClCompile Include="..\..\src\events\EventDispatcher.cpp" />
+    <ClCompile Include="..\..\src\tween\Timeline.cpp" />
+    <ClCompile Include="..\..\src\tween\Tween.cpp" />
+    <ClCompile Include="..\..\src\tween\TweenEvent.cpp" />
+    <ClCompile Include="..\..\src\tween\TweenManager.cpp" />
     <ClCompile Include="..\..\src\utils\Rectangle.cpp" />
     <ClCompile Include="DisplayTests.cpp" />
   </ItemGroup>
@@ -102,6 +106,11 @@
     <ClInclude Include="..\..\src\display\TexturedVertex2D.h" />
     <ClInclude Include="..\..\src\events\Event.h" />
     <ClInclude Include="..\..\src\events\EventDispatcher.h" />
+    <ClInclude Include="..\..\src\tween\Easing.h" />
+    <ClInclude Include="..\..\src\tween\Timeline.h" />
+    <ClInclude Include="..\..\src\tween\Tween.h" />
+    <ClInclude Include="..\..\src\tween\TweenEvent.h" />
+    <ClInclude Include="..\..\src\tween\TweenManager.h" />
     <ClInclude Include="..\..\src\utils\Matrix.h" />
     <ClInclude Include="..\..\src\utils\MatrixUtil.h" />
     <ClInclude Include="..\..\src\utils\Pool.h" />

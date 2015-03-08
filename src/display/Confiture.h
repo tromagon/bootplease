@@ -7,7 +7,7 @@
 #include "core\Updateable.h"
 #include "core\Renderable.h"
 
-class Confiture : public Updateable, public Renderable
+class Confiture : public Renderable
 {
 public:
     explicit Confiture(bootplease::Rectangle viewport)
@@ -17,7 +17,6 @@ public:
 
     Stage&  GetStage() { return m_Stage; }
 
-    void Update(float deltaTime) override;
     void Render() override;
 
 private:

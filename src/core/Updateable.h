@@ -4,10 +4,10 @@
 class Updateable
 {
 public:
-	Updateable() {}
-	virtual ~Updateable() {}
+    Updateable() {}
+    virtual ~Updateable() {}
 
-	virtual void Update(float deltaTime = 0.0f) {}
+    virtual bool Update(float deltaTime = 0.0f) = 0;
 };
 
 #endif

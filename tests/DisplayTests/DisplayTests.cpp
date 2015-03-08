@@ -4,15 +4,30 @@
 #include "display\Image.h"
 #include "tween\TweenManager.h"
 #include "tween\Easing.h"
+#include "gesture\SDLInputAdapter.h"
+#include "gesture\GestureManager.h"
+#include "gesture\TapGesture.h"
 
 #define FRAME_TIME  (30.0f / 1000.0f)
 
 using namespace std;
 
+class GestureHandler
+{
+public:
+    void OnUpTap(const Event& evt);
+};
+
+void GestureHandler::OnUpTap(const Event& evt)
+{
+    cout << "tap tap" << endl;
+}
+
 TweenManager tweenManager;
 DisplayObjectContainer root;
 DisplayObjectContainer container;
 DisplayObjectPtr image;
+GestureHandler gestureHandler;
 
 int main(int argc, char* args[])
 {
@@ -21,10 +36,15 @@ int main(int argc, char* args[])
     bootplease::Rectangle viewport = bootplease::Rectangle(0, 0, 800, 600);
     Confiture confiture(viewport);
 
+    SDLInputAdapter inputAdapter;
+    GestureManager gestureManager(inputAdapter, confiture.GetStage()); 
+
     AssetManager assetManager;
     assetManager.loadAtlas("my-atlas", "atlas/my-atlas.png", "atlas/my-atlas.json");
 
     TextureAtlasPtr& atlas = assetManager.GetTextureAtlas("my-atlas");
+
+    TapGesture* m_UpTap = &(gestureManager.AddGesture<TapGesture>(root, &GestureHandler::OnUpTap, gestureHandler));
 
     TweenX& tweenX = tweenManager.CreateTween<TweenX>(root);
     tweenX
@@ -52,9 +72,6 @@ int main(int argc, char* args[])
 
     //Main loop flag
     bool quit = false;
-
-    //Event handler
-    SDL_Event e;
         
     //Enable text input
     SDL_StartTextInput();
@@ -62,22 +79,7 @@ int main(int argc, char* args[])
     //While application is running
     while( !quit )
     {
-        //Handle events on queue
-        while( SDL_PollEvent( &e ) != 0 )
-        {
-            //User requests quit
-            if( e.type == SDL_QUIT )
-            {
-                quit = true;
-            }
-            //Handle keypress with current mouse position
-            else if( e.type == SDL_TEXTINPUT )
-            {
-                int x = 0, y = 0;
-                SDL_GetMouseState( &x, &y );
-                //handleKeys( e.text.text[ 0 ], x, y );
-            }
-        }
+        quit = gestureManager.Update(FRAME_TIME);
 
         tweenManager.Update(FRAME_TIME);
 

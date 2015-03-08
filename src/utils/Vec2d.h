@@ -17,11 +17,15 @@ public:
         return sqrt(pow(x, 2) + pow(y, 2));
     }
 
-    Vec2d& operator-(Vec2d& vec)
+    Vec2d operator-(Vec2d& vec)
     {
-        x -= vec.x;
-        y -= vec.y;
-        return *this;
+        return Vec2d(x - vec.x, y - vec.y);
+    }
+
+    void Set(float x, float y)
+    {
+        x = x;
+        y = y;
     }
 };
 

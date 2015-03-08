@@ -2,11 +2,6 @@
 
 const char* Confiture::ID = "Confiture_CONFITURE_ID";
 
-void Confiture::Update(float deltaTime)
-{
-    // is there anything to update ?
-}
-
 void Confiture::Render()
 {
     m_RenderSupport.NextFrame();

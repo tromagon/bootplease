@@ -17,7 +17,7 @@ public:
 
     static const char* ID;
     
-    void    Update(float deltaTime = 0.0f) override;
+    bool    Update(float deltaTime = 0.0f) override;
 
     template<class C>
     C&      CreateTween(DisplayObject& target);

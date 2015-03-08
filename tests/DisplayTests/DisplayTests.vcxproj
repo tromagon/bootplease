@@ -117,7 +117,6 @@
     <ClInclude Include="..\..\src\gesture\Gesture.h" />
     <ClInclude Include="..\..\src\gesture\GestureEvent.h" />
     <ClInclude Include="..\..\src\gesture\GestureManager.h" />
-    <ClInclude Include="..\..\src\gesture\HitTester.h" />
     <ClInclude Include="..\..\src\gesture\InputAdapter.h" />
     <ClInclude Include="..\..\src\gesture\SDLInputAdapter.h" />
     <ClInclude Include="..\..\src\gesture\SwipeGesture.h" />

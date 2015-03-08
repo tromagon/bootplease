@@ -182,9 +182,6 @@
     <ClInclude Include="..\..\src\gesture\GestureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\gesture\HitTester.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\gesture\InputAdapter.h">
       <Filter>Header Files</Filter>
     </ClInclude>

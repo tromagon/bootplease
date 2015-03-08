@@ -7,14 +7,13 @@
 class GestureEvent : public Event
 {
 public:
-	static const char* GESTURE_RECOGNIZED;
+    explicit GestureEvent(const char* type, const Gesture& gesture) 
+        : Event(type), m_Gesture(gesture) {}
+    ~GestureEvent() {}
 
-	const Gesture& m_Gesture;
+    static const char* GESTURE_RECOGNIZED;
 
-public:
-	explicit GestureEvent(const char* type, const Gesture& gesture) 
-		: Event(type), m_Gesture(gesture) {}
-	~GestureEvent() {};
+    const Gesture& m_Gesture;
 };
 
 #endif

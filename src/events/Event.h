@@ -3,15 +3,14 @@
 
 class Event
 {
-private:
-    const char* m_Type;
-
 public:
+    explicit Event(const char* type):m_Type(type) {}
+    virtual ~Event() {}
+
     const char* GetType() const { return m_Type; }
 
-public:
-    explicit Event(const char* type):m_Type(type) {};
-    virtual ~Event() {};
+private:
+    const char* m_Type;
 };
 
 #endif

@@ -10,23 +10,20 @@
 class Confiture : public Updateable, public Renderable
 {
 public:
+    explicit Confiture(bootplease::Rectangle viewport)
+        : m_Viewport(viewport), m_Stage(viewport.m_Width, viewport.m_Height) {}
+
     static const char* ID;
 
-private:
-    Stage*          m_Stage;
-    RenderSupport   m_RenderSupport;
-    bootplease::Rectangle       m_Viewport;
-
-public:
-    Stage&  GetStage() { return *m_Stage; }
-
-public:
-    explicit Confiture(bootplease::Rectangle viewport);
-    ~Confiture();
+    Stage&  GetStage() { return m_Stage; }
 
     void Update(float deltaTime) override;
-
     void Render() override;
+
+private:
+    Stage                   m_Stage;
+    RenderSupport           m_RenderSupport;
+    bootplease::Rectangle   m_Viewport;
 };
 
 #endif

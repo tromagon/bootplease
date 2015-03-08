@@ -6,35 +6,26 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 using namespace std;
 
 class TextureAtlas
 {
+    typedef unordered_map<string, ITexturePtr> TextureMap;
+
 public:
     explicit TextureAtlas(TexturePtr& atlasTexture, const string atlasData);
-    ~TextureAtlas();
+    //~TextureAtlas();
 
-    TexturePtr& GetAtlasTexture() { return m_AtlasTexture; }
-    ITexture*    GetTexture(const string name);
+    TexturePtr&     GetAtlasTexture() { return m_AtlasTexture; }
+    ITexturePtr&    GetTexture(const string name);
     
 private:
     void ParseAtlas(const string atlasData);
-    void AddRegion(const string name, bootplease::Rectangle region);
 
-    class SubTextureItem
-    {
-    public:
-        const string    m_Name;
-        SubTexture&     m_SubTexture;
-
-    public:
-        explicit SubTextureItem(const string name, SubTexture& texture) 
-            : m_Name(name), m_SubTexture(texture) {}
-    };
-
-    TexturePtr              m_AtlasTexture;
-    vector<SubTextureItem*> m_SubTextures;
+    TexturePtr      m_AtlasTexture;
+    TextureMap      m_subTextures;
 };
 
 typedef unique_ptr<TextureAtlas> TextureAtlasPtr;

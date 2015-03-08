@@ -22,7 +22,7 @@ int main(int argc, char* args[])
     DisplayObjectContainer* container = new DisplayObjectContainer();
     DisplayObjectContainer* root = new DisplayObjectContainer();
 
-    Image* image = new Image(*(atlas->GetTexture("grid_bgnd.png")));
+    Image* image = new Image(atlas->GetTexture("grid_bgnd.png"));
     confiture.GetStage().AddChild(*root);
     root->AddChild(*container);
 

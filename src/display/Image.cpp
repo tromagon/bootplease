@@ -6,10 +6,10 @@
 #include "Texture.h"
 #include <limits> 
 
-Image::Image(ITexture& texture) : m_Texture(&texture)
+Image::Image(ITexturePtr& texture) : m_Texture(texture)
 {
-    float width = texture.GetWidth();
-    float height = texture.GetHeight();
+    float width = texture->GetWidth();
+    float height = texture->GetHeight();
 
     m_Vertex.push_back(Vec2d(0.0f, 0.0f));
     m_Vertex.push_back(Vec2d(width, 0.0f));

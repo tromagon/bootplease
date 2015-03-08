@@ -21,6 +21,8 @@ public:
     virtual const Texture*      GetParent() const = 0;
 };
 
+typedef unique_ptr<ITexture> ITexturePtr;
+
 class Texture : public ITexture
 {
 public:

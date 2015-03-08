@@ -8,6 +8,14 @@ bootplease::Rectangle   DisplayObject::helperRect;
 Matrix                  DisplayObject::helperMatrix;
 Vec2d                   DisplayObject::helperVec2d;
 
+DisplayObject::~DisplayObject()
+{
+    if (GetParent())
+    {
+        GetParent()->RemoveChild(*this);
+    }
+}
+
 void DisplayObject::SetX(float value)
 {
     if (m_X != value)

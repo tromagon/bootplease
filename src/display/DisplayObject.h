@@ -7,6 +7,7 @@
 #include "events\EventDispatcher.h"
 
 #include <vector>
+#include <memory>
 
 using namespace std;
 
@@ -16,22 +17,13 @@ class Stage;
 
 class DisplayObject : public EventDispatcher
 {
-private:
-    float                       m_X;
-    float                       m_Y;
-    float                       m_PivotX;
-    float                       m_PivotY;
-    float                       m_ScaleX;
-    float                       m_ScaleY;
-    float                       m_Rotation;
-    float                       m_Alpha;
-    bool                        m_Visible;
-    DisplayObjectContainer*     m_Parent;
-    Matrix                      m_TransformationMatrix;
-    bool                        m_OrientationChanged;
-    bool                        m_Touchable;
-
 public:
+    DisplayObject() 
+        : m_X(0.0f), m_Y(0.0f), m_PivotX(0.0f), m_PivotY(0.0f), m_ScaleX(1.0f), m_ScaleY(1.0f), m_Rotation(0.0f), 
+        m_Alpha(1.0f), m_Visible(true), m_Parent(nullptr), m_OrientationChanged(false), m_Touchable(true) {}
+
+    virtual ~DisplayObject();
+
     float       GetX()                          { return m_X; }
     void        SetX(float value);
 
@@ -74,19 +66,6 @@ public:
     Stage*                      GetStage();
     DisplayObject&              GetBase();
 
-protected:
-    static vector<DisplayObject*>   ancestors;
-    static bootplease::Rectangle    helperRect;
-    static Matrix                   helperMatrix;
-    static Vec2d                    helperVec2d;
-
-public:
-    DisplayObject() 
-        : m_X(0.0f), m_Y(0.0f), m_PivotX(0.0f), m_PivotY(0.0f), m_ScaleX(1.0f), m_ScaleY(1.0f), m_Rotation(0.0f), 
-        m_Alpha(1.0f), m_Visible(true), m_Parent(nullptr), m_OrientationChanged(false), m_Touchable(true) {}
-
-    virtual ~DisplayObject() {}
-
     bool                    hasVisibleArea();
     virtual bootplease::Rectangle&      GetBounds(DisplayObject& target, bootplease::Rectangle& resultRect) { return resultRect; }
     Matrix&                 GetTransformationMatrix();
@@ -95,9 +74,31 @@ public:
     virtual void            Render(RenderSupport& renderSupport, float parentAlpha) {}
     void                    RemoveFromParent();
 
+protected:
+    static vector<DisplayObject*>   ancestors;
+    static bootplease::Rectangle    helperRect;
+    static Matrix                   helperMatrix;
+    static Vec2d                    helperVec2d;
+
 private:
     DisplayObject*          FindCommonParent(DisplayObject& objectA, DisplayObject& objectB);
     int                     GetIndexOf(vector<DisplayObject*> list, DisplayObject& target);
+
+    float                       m_X;
+    float                       m_Y;
+    float                       m_PivotX;
+    float                       m_PivotY;
+    float                       m_ScaleX;
+    float                       m_ScaleY;
+    float                       m_Rotation;
+    float                       m_Alpha;
+    bool                        m_Visible;
+    DisplayObjectContainer*     m_Parent;
+    Matrix                      m_TransformationMatrix;
+    bool                        m_OrientationChanged;
+    bool                        m_Touchable;
 };
+
+typedef unique_ptr<DisplayObject> DisplayObjectPtr;
 
 #endif

@@ -82,10 +82,7 @@
     <ClCompile Include="..\..\src\display\Stage.cpp" />
     <ClCompile Include="..\..\src\display\TextureAtlas.cpp" />
     <ClCompile Include="..\..\src\events\EventDispatcher.cpp" />
-    <ClCompile Include="..\..\src\utils\Matrix.cpp" />
-    <ClCompile Include="..\..\src\utils\MatrixUtil.cpp" />
     <ClCompile Include="..\..\src\utils\Rectangle.cpp" />
-    <ClCompile Include="..\..\src\utils\Vec2d.cpp" />
     <ClCompile Include="DisplayTests.cpp" />
   </ItemGroup>
   <ItemGroup>

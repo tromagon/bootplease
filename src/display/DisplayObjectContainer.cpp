@@ -11,6 +11,18 @@ DisplayObjectContainer::~DisplayObjectContainer()
     RemoveAllChildren();
 }
 
+DisplayObjectPtr& DisplayObjectContainer::AddChild(DisplayObjectPtr& child)
+{
+    AddChildAt(*child.get(), m_Children.size());
+    return child;
+}
+
+DisplayObjectPtr& DisplayObjectContainer::AddChildAt(DisplayObjectPtr& child, int index)
+{
+    AddChildAt(*child.get(), index);
+    return child;
+}
+
 DisplayObject& DisplayObjectContainer::AddChild(DisplayObject& child)
 {
     return AddChildAt(child, m_Children.size());
@@ -43,6 +55,12 @@ DisplayObject& DisplayObjectContainer::AddChildAt(DisplayObject& child, int inde
 DisplayObject& DisplayObjectContainer::RemoveChild(DisplayObject& child)
 {
     return CleanChild(child, GetChildIndex(child));
+}
+
+DisplayObjectPtr& DisplayObjectContainer::RemoveChild(DisplayObjectPtr& child)
+{
+    CleanChild(*child.get(), GetChildIndex(*child.get()));
+    return child;
 }
 
 DisplayObject& DisplayObjectContainer::RemoveChildAt(int index)
@@ -144,7 +162,6 @@ void DisplayObjectContainer::Render(RenderSupport& renderSupport, float parentAl
             renderSupport.PopMatrix();
         }
     }
-
 }
 
 DisplayObject& DisplayObjectContainer::CleanChild(DisplayObject& child, int index)

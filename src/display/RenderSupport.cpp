@@ -84,12 +84,6 @@ void RenderSupport::NextFrame()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    ////Reset transformations
-    //m_shaderProgram.setModelView(glm::mat4());
-
-    ////Render texture centered
-    //m_shaderProgram.setTextureColor(m_textureColor);
-
     ResetMatrix();
 
     m_DrawCount = 0;
@@ -146,16 +140,16 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
 
     //m_CurrentTexture = &image.GetTexture();
 
-    ITexture& texture = image.GetTexture();
+    ITexturePtr& texture = image.GetTexture();
 
     const float x = image.GetX();
     const float y = image.GetY();
-    const float clipX = texture.GetX();
-    const float clipY = texture.GetY();
-    const float clipW = texture.GetWidth();
-    const float clipH = texture.GetHeight();
+    const float clipX = texture->GetX();
+    const float clipY = texture->GetY();
+    const float clipW = texture->GetWidth();
+    const float clipH = texture->GetHeight();
 
-    const ITexture* parent = texture.GetParent();
+    const ITexture* parent = texture->GetParent();
     const int textureWidth = (parent) ? parent->GetWidth() : clipW;
     const int textureHeight = (parent) ? parent->GetHeight() : clipH;
 
@@ -214,14 +208,14 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     m_shaderProgram.updateModelView();
 
     //Set texture ID
-    glBindTexture(GL_TEXTURE_2D, texture.GetId());
+    glBindTexture(GL_TEXTURE_2D, texture->GetId());
 
     //Enable vertex and texture coordinate arrays
     m_shaderProgram.enableVertexPointer();
     m_shaderProgram.enableTexCoordPointer();
 
     //Bind vertex buffer
-    glBindBuffer(GL_ARRAY_BUFFER, texture.GetVertexBufferId());
+    glBindBuffer(GL_ARRAY_BUFFER, texture->GetVertexBufferId());
 
     //Update vertex buffer data
     glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(TexturedVertex2D), vData);
@@ -233,7 +227,7 @@ void RenderSupport::DrawImage(Image& image, float parentAlpha)
     m_shaderProgram.setVertexPointer( sizeof(TexturedVertex2D), (GLvoid*)offsetof(TexturedVertex2D, position));
 
     //Draw quad using vertex data and index data
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture.GetIndexBufferId());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, texture->GetIndexBufferId());
     glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
 
     //Disable vertex and texture coordinate arrays

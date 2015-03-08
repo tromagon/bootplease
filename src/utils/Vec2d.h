@@ -1,22 +1,28 @@
 #ifndef _VEC2D_H_
 #define _VEC2D_H_
 
+#include <math.h>
+
 class Vec2d
 {
 public:
     float x, y;
 
 public:
-    Vec2d();
-    explicit Vec2d(float x, float y );  
-    explicit Vec2d(int x, int y);
-    ~Vec2d() {}
+    Vec2d(float x = 0, float y = 0) : x(x), y(y) {}
+    Vec2d(const Vec2d& v) : x(v.x), y(v.y) {}
 
-    void    Set(float x, float y);
-    void    Set(int x, int y);
-    Vec2d   Clone();
-    double  GetLength();
-    Vec2d&  operator-(Vec2d& vec);
+    double GetLength()
+    {
+        return sqrt(pow(x, 2) + pow(y, 2));
+    }
+
+    Vec2d& operator-(Vec2d& vec)
+    {
+        x -= vec.x;
+        y -= vec.y;
+        return *this;
+    }
 };
 
 #endif

@@ -2,39 +2,16 @@
 #include "cJSON.h"
 #include <memory>
 
-
 TextureAtlas::TextureAtlas(TexturePtr& atlasTexture, const string atlasData) 
     : m_AtlasTexture(move(atlasTexture))
 {
     ParseAtlas(atlasData);
 }
 
-TextureAtlas::~TextureAtlas()
+ITexturePtr& TextureAtlas::GetTexture(const string name)
 {
-    const int l = m_SubTextures.size();
-    for (int i = l - 1 ; i >= 0 ; i--)
-    {
-        SubTextureItem* item = m_SubTextures[i];
-        delete &(item->m_SubTexture);
-
-        m_SubTextures.erase(m_SubTextures.begin() + i);
-        delete item;
-    }
-}
-
-ITexture* TextureAtlas::GetTexture(const string name)
-{
-    const int l = m_SubTextures.size();
-    for (int i = 0 ; i < l ; i++)
-    {
-        SubTextureItem* item = m_SubTextures[i];
-        if (item->m_Name == name)
-        {
-            return &(item->m_SubTexture);
-        }
-    }
-
-    return nullptr;
+    TextureMap::iterator it = m_subTextures.find(name);
+    return it->second;
 }
 
 void TextureAtlas::ParseAtlas(const string atlasData)
@@ -53,17 +30,10 @@ void TextureAtlas::ParseAtlas(const string atlasData)
         int y = cJSON_GetObjectItem(frame, "y")->valueint;
         int w = cJSON_GetObjectItem(frame, "w")->valueint;
         int h = cJSON_GetObjectItem(frame, "h")->valueint;
-        
-        AddRegion(name, bootplease::Rectangle(x, y, w, h));
+
+        bootplease::Rectangle region(x, y, w, h);
+        m_subTextures.insert(pair<string, ITexturePtr>(name, ITexturePtr(new SubTexture(m_AtlasTexture, region))));
     }
 
     cJSON_Delete(root);
-}
-
-void TextureAtlas::AddRegion(const string name, bootplease::Rectangle region)
-{
-    SubTexture* subTexture = new SubTexture(m_AtlasTexture, region);
-    SubTextureItem* item = new SubTextureItem(name, *subTexture);
-    m_SubTextures.push_back(item);
-
 }
